@@ -70,10 +70,10 @@ $(".SemanaLotesFilter").select2({
 // });
 
 ///CARGA EMPLEADOS
-$(".LoteTeseoFilter").select2({
+$(".LotesProceso").select2({
   placeholder: "Selecciona un lote",
   ajax: {
-    url: "../Controller/rendimiento.php?op=select2lotessets",
+    url: "../Controller/rendimiento.php?op=select2lotesprocesos",
     dataType: "json",
     type: "post",
 

@@ -66,6 +66,19 @@ switch ($_GET["op"]) {
         $json_string = json_encode($Data);
         echo $json_string;
         break;
+    case "select2lotesprocesos":
+        if (!isset($_POST['palabraClave'])) {
+            $Data = $obj_rendimiento->getLotesProceso();
+            $Data = Excepciones::validaConsulta($Data);
+        } else {
+            $search = $_POST['palabraClave']; // Palabra a buscar
+            $Data = $obj_rendimiento->getLotesProceso($search);
+            $Data = Excepciones::validaConsulta($Data);
+        }
+        $response = array();
+        $json_string = json_encode($Data);
+        echo $json_string;
+        break;
         //**************** Registrar Inicio del Lote **************
     case "initRendimiento":
         $fechaEngrase = (!empty($_POST['fechaEngrase'])) ? trim($_POST['fechaEngrase']) : '';

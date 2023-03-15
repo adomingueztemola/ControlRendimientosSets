@@ -38,6 +38,19 @@ class Rendimiento extends ConexionBD
         ORDER BY cp.nombre, CAST(r.loteTemola AS UNSIGNED)";
         return  $this->consultarQuery($sql, "consultar lotes");
     }
+
+    public function getLotesProceso($busqId = '')
+    {
+        $filtradoID = $busqId == '' ? '1=1' : "r.loteTemola LIKE '%$busqId%'";
+
+        $sql = "SELECT r.*, cp.nombre AS nPrograma
+        FROM rendimientos r
+        INNER JOIN catprogramas cp ON r.idCatPrograma=cp.id
+        WHERE $filtradoID AND r.tipoProceso='1' AND
+        r.estado !='4'
+        ORDER BY cp.nombre, CAST(r.loteTemola AS UNSIGNED)";
+        return  $this->consultarQuery($sql, "consultar lotes");
+    }
     /***********************************
      * PROCESO: INGRESO DE LOTE A SISTEMA
      *********************************/
