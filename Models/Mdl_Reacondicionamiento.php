@@ -128,8 +128,10 @@ class Reacondicionamiento extends ConexionBD
     public function disminuirScrap($id)
     {
         $sql = "UPDATE inventariorechazado i
+        INNER JOIN rendimientos r ON i.idRendimiento=r.id
         INNER JOIN materialesrecuperados m ON m.idRendInicio=i.idRendimiento
-        SET i.pzasTotales= i.pzasTotales-m.totalRecuperacion, i._12=IFNULL(i._12,0)-IFNULL(m._12,0),
+        SET r.totalRech=r.totalRech-m.totalRecuperacion,  
+        i.pzasTotales= i.pzasTotales-m.totalRecuperacion, i._12=IFNULL(i._12,0)-IFNULL(m._12,0),
         i._3=IFNULL(i._3,0)-IFNULL(m._3,0),  i._6=IFNULL(i._6,0)-IFNULL(m._6,0),  i._9=IFNULL(i._9,0)-IFNULL(m._9,0)
         WHERE m.id='$id'";
         return  $this->runQuery($sql, "disminución a inventario rechazado");

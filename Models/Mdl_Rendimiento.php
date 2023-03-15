@@ -1140,11 +1140,11 @@ class Rendimiento extends ConexionBD
       IFNULL(SUM(r.setsRechazados),0) AS setsRechazados,
       (IFNULL(SUM(r.setsRechazados),0)/IFNULL(SUM( r.setsCortadosTeseo ), 0))*100 AS porcRechazoInicial,
       ((IFNULL(SUM(r.totalRecu),0)/conf.pzasEnSets)/IFNULL(SUM( r.setsCortadosTeseo ), 0))* 100 AS porcSetsRecuperados,
-      ((IFNULL(SUM(i.totalRech),0)/conf.pzasEnSets)/IFNULL(SUM( r.setsCortadosTeseo ), 0))* 100 AS porcFinalRechazo,
+      ((IFNULL(SUM(r.totalRech),0)/conf.pzasEnSets)/IFNULL(SUM( r.setsCortadosTeseo ), 0))* 100 AS porcFinalRechazo,
       SUM( r.areaCrust) / (IFNULL(SUM(r.totalEmp),0)/conf.pzasEnSets) AS areaRealCrustXSet,
       SUM( r.areaWB)/(SUM(r.totalEmp)/conf.pzasEnSets) AS areaWBXSet,
       SUM( r.areaWB)/(SUM(r.pzasCortadasTeseo)/conf.pzasEnSets) AS areaWBXSetTeseo,
-      IFNULL(SUM(i.totalRech),0)/conf.pzasEnSets AS setsRechazoFinales,
+      IFNULL(SUM(r.totalRech),0)/conf.pzasEnSets AS setsRechazoFinales,
       p.precioUnitFactUsd,
       (SUM( r.areaWB)/(SUM(r.totalEmp)/conf.pzasEnSets))*p.precioUnitFactUsd AS costoWBXSet,
       (
