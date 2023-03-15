@@ -1,0 +1,5 @@
+[15-Dec-2022 13:55:21 Mexico/General] PHP Warning:  mysqli_connect(): (HY000/1045): Access denied for user 'temolaco'@'localhost' (using password: YES) in /home/temolaco/controlrendimiento.temola.com.mx/include/connect.php on line 17
+[15-Dec-2022 13:55:46 Mexico/General] PHP Warning:  mysqli_connect(): (HY000/1045): Access denied for user 'temolaco'@'localhost' (using password: YES) in /home/temolaco/controlrendimiento.temola.com.mx/include/connect.php on line 17
+[15-Dec-2022 13:57:12 Mexico/General] PHP Warning:  mysqli_connect(): (HY000/1045): Access denied for user 'temolaco'@'localhost' (using password: YES) in /home/temolaco/controlrendimiento.temola.com.mx/include/connect.php on line 17
+[15-Dec-2022 14:11:31 Mexico/General] PHP Warning:  mysqli_connect(): (HY000/1045): Access denied for user 'temolaco'@'localhost' (using password: YES) in /home/temolaco/controlrendimiento.temola.com.mx/include/connect.php on line 17
+[15-Dec-2022 15:46:28 Mexico/General] PHP Warning:  mysqli_connect(): (HY000/1045): Access denied for user 'temolaco'@'localhost' (using password: YES) in /home/temolaco/controlrendimiento.temola.com.mx/include/connect.php on line 17

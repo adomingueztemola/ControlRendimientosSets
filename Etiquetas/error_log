@@ -1,0 +1,13 @@
+[23-Feb-2023 14:47:47 Mexico/General] PHP Warning:  mysqli_query(): Empty query in /home/temolaco/controlrendimiento.temola.com.mx/Etiquetas/seg.php on line 439
+[23-Feb-2023 14:47:59 Mexico/General] PHP Warning:  mysqli_query(): Empty query in /home/temolaco/controlrendimiento.temola.com.mx/Etiquetas/seg.php on line 439
+[23-Feb-2023 14:50:54 Mexico/General] PHP Warning:  mysqli_query(): Empty query in /home/temolaco/controlrendimiento.temola.com.mx/Etiquetas/seg.php on line 439
+[23-Feb-2023 14:53:36 Mexico/General] PHP Warning:  mysqli_query(): Empty query in /home/temolaco/controlrendimiento.temola.com.mx/Etiquetas/seg.php on line 439
+[23-Feb-2023 14:56:19 Mexico/General] PHP Warning:  mysqli_query(): Empty query in /home/temolaco/controlrendimiento.temola.com.mx/Etiquetas/seg.php on line 439
+[23-Feb-2023 14:58:38 Mexico/General] PHP Warning:  mysqli_query(): Empty query in /home/temolaco/controlrendimiento.temola.com.mx/Etiquetas/seg.php on line 439
+[23-Feb-2023 14:59:10 Mexico/General] PHP Warning:  Illegal string offset 'total' in /home/temolaco/controlrendimiento.temola.com.mx/Etiquetas/etiquetas.php on line 19
+[23-Feb-2023 14:59:10 Mexico/General] PHP Warning:  number_format() expects parameter 1 to be float, string given in /home/temolaco/controlrendimiento.temola.com.mx/assets/scripts/cadenas.php on line 57
+[23-Feb-2023 14:59:10 Mexico/General] PHP Warning:  mysqli_query(): Empty query in /home/temolaco/controlrendimiento.temola.com.mx/Etiquetas/seg.php on line 436
+[23-Feb-2023 15:00:12 Mexico/General] PHP Warning:  Illegal string offset 'total' in /home/temolaco/controlrendimiento.temola.com.mx/Etiquetas/etiquetas.php on line 19
+[23-Feb-2023 15:00:12 Mexico/General] PHP Warning:  number_format() expects parameter 1 to be float, string given in /home/temolaco/controlrendimiento.temola.com.mx/assets/scripts/cadenas.php on line 57
+[23-Feb-2023 15:00:12 Mexico/General] PHP Warning:  mysqli_query(): Empty query in /home/temolaco/controlrendimiento.temola.com.mx/Etiquetas/seg.php on line 436
+[23-Feb-2023 15:00:14 Mexico/General] PHP Warning:  mysqli_query(): Empty query in /home/temolaco/controlrendimiento.temola.com.mx/Etiquetas/seg.php on line 439

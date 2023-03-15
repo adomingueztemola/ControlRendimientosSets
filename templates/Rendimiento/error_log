@@ -1,0 +1,5 @@
+[01-Mar-2023 17:32:28 Mexico/General] PHP Parse error:  syntax error, unexpected 'public' (T_PUBLIC) in /home/temolaco/controlrendimiento.temola.com.mx/Models/Mdl_Rendimiento.php on line 1135
+[01-Mar-2023 17:32:34 Mexico/General] PHP Parse error:  syntax error, unexpected 'public' (T_PUBLIC) in /home/temolaco/controlrendimiento.temola.com.mx/Models/Mdl_Rendimiento.php on line 1135
+[01-Mar-2023 17:32:37 Mexico/General] PHP Parse error:  syntax error, unexpected 'public' (T_PUBLIC) in /home/temolaco/controlrendimiento.temola.com.mx/Models/Mdl_Rendimiento.php on line 1135
+[14-Mar-2023 11:43:00 Mexico/General] PHP Warning:  Invalid argument supplied for foreach() in /home/temolaco/controlrendimiento.temola.com.mx/templates/Rendimiento/historialSets.php on line 142
+[14-Mar-2023 11:43:00 Mexico/General] PHP Warning:  Division by zero in /home/temolaco/controlrendimiento.temola.com.mx/templates/Rendimiento/historialSets.php on line 270

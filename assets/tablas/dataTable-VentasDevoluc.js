@@ -1,0 +1,78 @@
+$(document).ready(function () {
+    var dt = $("#table-ventasdevoluc").DataTable({
+      dom: "Bfrltip",
+      data: datsJson.data,
+      columns: [
+        {
+          class: "details-control",
+          orderable: false,
+          data: null,
+          defaultContent:
+            '<div class="text-center"><i class="fas fa-plus-circle text-TWM"></i> </div>',
+        },
+        {
+          data: "f_fechaFact",
+        },
+        {
+          data: "numFactura",
+        },  
+        {
+            data: "numPL",
+          },  
+        {
+          data: null,
+          render: function (data, type, row) {
+            return (
+              "<small>" + data.n_tipoVenta+ "</small>"
+            );
+          },
+        },
+      
+        {
+          data: "n_userRegistro",
+        },
+        {
+          data: "f_fechaReg",
+        } 
+       
+      ],
+    });
+  
+    //Add event listener for opening and closing details
+    var o = this;
+    $("#table-ventasdevoluc tbody").on("click", "td.details-control", function () {
+      var tr = $(this).closest("tr");
+      var row = dt.row(tr);
+  
+      if (row.child.isShown()) {
+        // This row is already open - close it
+        row.child.hide();
+        tr.removeClass("shown");
+      } else {
+        // Open this row
+        row.child(lanzaLoading(row.data())).show();
+        tr.addClass("shown");
+        row.child(cargaContenido(row.data()));
+        //alert("hola");
+      }
+    });
+  
+    var lanzaLoading = function (d) {
+      //alert(d.idPyme + " La varGlob ");
+      return (
+        '<div id="DIV' +
+        d.id +
+        '" class="col-lg-12 ">' +
+        '<div class="spinner-border" text-center role="status"><span class="sr-only">Loading...</span></div>' +
+        "</div>"
+      );
+    };
+  
+    var cargaContenido = function (d) {
+      ejecutandoCarga(d.id);
+    };
+    $(
+      ".buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel"
+    ).addClass("btn btn-TWM mr-1");
+  }); // Cierre de document ready
+  

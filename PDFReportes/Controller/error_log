@@ -1,0 +1,20 @@
+[21-Jul-2022 09:07:49 Mexico/General] PHP Warning:  getimagesize(/home/temolaco/controlrendimiento.temola.com.mx/PDFReportes/Models/../../assets/images/logo.jpg): failed to open stream: No such file or directory in /home/temolaco/controlrendimiento.temola.com.mx/PDFReportes/Models/Mdl_MarcadoDocto.php on line 42
+[21-Jul-2022 09:07:49 Mexico/General] PHP Warning:  getimagesize(/home/temolaco/controlrendimiento.temola.com.mx/PDFReportes/Models/../../assets/images/logo.jpg): failed to open stream: No such file or directory in /home/temolaco/controlrendimiento.temola.com.mx/PDFReportes/Libs/fpdf/fpdf.php on line 1239
+[21-Jul-2022 09:07:49 Mexico/General] PHP Fatal error:  Uncaught Exception: FPDF error: Missing or incorrect image file: /home/temolaco/controlrendimiento.temola.com.mx/PDFReportes/Models/../../assets/images/logo.jpg in /home/temolaco/controlrendimiento.temola.com.mx/PDFReportes/Libs/fpdf/fpdf.php:271
+Stack trace:
+#0 /home/temolaco/controlrendimiento.temola.com.mx/PDFReportes/Libs/fpdf/fpdf.php(1241): FPDF->Error('Missing or inco...')
+#1 /home/temolaco/controlrendimiento.temola.com.mx/PDFReportes/Libs/fpdf/fpdf.php(886): FPDF->_parsejpg('/home/temolaco/...')
+#2 /home/temolaco/controlrendimiento.temola.com.mx/PDFReportes/Libs/fpdf/html2pdf.php(125): FPDF->Image('/home/temolaco/...', 35, 26, 0, 26.458333333333)
+#3 /home/temolaco/controlrendimiento.temola.com.mx/PDFReportes/Libs/fpdf/html2pdf.php(95): PDF_HTML->OpenTag('IMG', Array)
+#4 /home/temolaco/controlrendimiento.temola.com.mx/PDFReportes/Models/Mdl_MarcadoDocto.php(55): PDF_HTML->WriteHTML('<img src="/home...')
+#5 /home/temolaco/controlrendimiento.temola.com.mx/PDFReportes/Controller/Ctrl_Marcado.php(30): PDFM in /home/temolaco/controlrendimiento.temola.com.mx/PDFReportes/Libs/fpdf/fpdf.php on line 271
+[21-Jul-2022 09:09:47 Mexico/General] PHP Warning:  getimagesize(/home/temolaco/controlrendimiento.temola.com.mx/PDFReportes/Models/../../assets/images/logo.jpg): failed to open stream: No such file or directory in /home/temolaco/controlrendimiento.temola.com.mx/PDFReportes/Models/Mdl_MarcadoDocto.php on line 42
+[21-Jul-2022 09:09:47 Mexico/General] PHP Warning:  getimagesize(/home/temolaco/controlrendimiento.temola.com.mx/PDFReportes/Models/../../assets/images/logo.jpg): failed to open stream: No such file or directory in /home/temolaco/controlrendimiento.temola.com.mx/PDFReportes/Libs/fpdf/fpdf.php on line 1239
+[21-Jul-2022 09:09:47 Mexico/General] PHP Fatal error:  Uncaught Exception: FPDF error: Missing or incorrect image file: /home/temolaco/controlrendimiento.temola.com.mx/PDFReportes/Models/../../assets/images/logo.jpg in /home/temolaco/controlrendimiento.temola.com.mx/PDFReportes/Libs/fpdf/fpdf.php:271
+Stack trace:
+#0 /home/temolaco/controlrendimiento.temola.com.mx/PDFReportes/Libs/fpdf/fpdf.php(1241): FPDF->Error('Missing or inco...')
+#1 /home/temolaco/controlrendimiento.temola.com.mx/PDFReportes/Libs/fpdf/fpdf.php(886): FPDF->_parsejpg('/home/temolaco/...')
+#2 /home/temolaco/controlrendimiento.temola.com.mx/PDFReportes/Libs/fpdf/html2pdf.php(125): FPDF->Image('/home/temolaco/...', 35, 26, 0, 26.458333333333)
+#3 /home/temolaco/controlrendimiento.temola.com.mx/PDFReportes/Libs/fpdf/html2pdf.php(95): PDF_HTML->OpenTag('IMG', Array)
+#4 /home/temolaco/controlrendimiento.temola.com.mx/PDFReportes/Models/Mdl_MarcadoDocto.php(55): PDF_HTML->WriteHTML('<img src="/home...')
+#5 /home/temolaco/controlrendimiento.temola.com.mx/PDFReportes/Controller/Ctrl_Marcado.php(30): PDFM in /home/temolaco/controlrendimiento.temola.com.mx/PDFReportes/Libs/fpdf/fpdf.php on line 271
