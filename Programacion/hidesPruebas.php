@@ -58,12 +58,12 @@ $idCatMateriaPrima = $_abierto ? $DataRendimientoAbierto[0]['idCatMateriaPrima']
                             <div class="card-header">
                                 <h4>Registro de Hides para Prueba</h4>
                             </div>
-                            <form id="form-pruebas">
+                            <form id="formPruebas">
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
                                             <label for="lote"> Lote: </label>
-                                            <select name="lote" style="width:100%" class="form-control LotesProceso" id="lote"></select>
+                                            <select name="lote" style="width:100%" class="form-control select2Form LotesProceso" id="lote"></select>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -75,7 +75,7 @@ $idCatMateriaPrima = $_abierto ? $DataRendimientoAbierto[0]['idCatMateriaPrima']
                                     <div class="row">
                                         <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
                                             <label class="text-danger" for="lote"> Hides a Descontar: </label>
-                                            <input type="number" step="1" min="1" class="form-control" name="hides" id="hides">
+                                            <input type="number" step="1" min="1" class="form-control focusCampo" name="hides" id="hides">
                                         </div>
                                     </div>
 
@@ -91,7 +91,7 @@ $idCatMateriaPrima = $_abierto ? $DataRendimientoAbierto[0]['idCatMateriaPrima']
 
                                             </div>
                                             <div id="desbloqueo-btn-1">
-                                                <button type="reset" class="button btn btn-danger">Cancelar</button>
+                                                <button type="reset" onclick="clearForm('formPruebas')" class="button btn btn-danger">Cancelar</button>
                                                 <button type="submit" class="button btn btn-success">Guardar</button>
                                             </div>
                                         </div>
@@ -121,32 +121,9 @@ $idCatMateriaPrima = $_abierto ? $DataRendimientoAbierto[0]['idCatMateriaPrima']
 <script src="../assets/extra-libs/datatables.net/js/jquery.dataTables.min-ESP.js"></script>
 <script src="../assets/scripts/selectFiltros.js"></script>
 <script>
-    update();
-    <?php
-    if (isset($_SESSION['CRESuccessRendimiento']) and $_SESSION['CRESuccessRendimiento'] != '') { ?>
-        notificaSuc('<?= $_SESSION['CRESuccessRendimiento'] ?>')
-    <?php
-        unset($_SESSION['CRESuccessRendimiento']);
-    }
-    if (isset($_SESSION['CREErrorRendimiento']) and $_SESSION['CREErrorRendimiento'] != '') { ?>
-        notificaBad('<?= $_SESSION['CREErrorRendimiento'] ?>')
-    <?php
-        unset($_SESSION['CREErrorRendimiento']);
-    }
-
-    if ($_abierto) { ?>
-        $('#formAddProveedor').find('input, textarea, button, select').attr('disabled', 'disabled');
-        $(".Disabled").attr("disabled", false)
-
-    <?php } ?>
-
-    function update() {
-        $('#content-lotes').html('<div class="loading text-center"><img src="../assets/images/loading.gif" alt="loading" /><br/>Un momento, por favor...</div>');
-        $('#content-lotes').load('../templates/Rendimiento/cargaGestionLotes.php');
-    }
-
+    update('templates/PruebasHides/cargaPruebasHides.php', 'content-pruebas', 1);
     /********** ALMACENAR PRUEBA ***********/
-    $("#form-pruebas").submit(function(e) {
+    $("#formPruebas").submit(function(e) {
         e.preventDefault();
         formData = $(this).serialize();
         $.ajax({
@@ -159,8 +136,8 @@ $idCatMateriaPrima = $_abierto ? $DataRendimientoAbierto[0]['idCatMateriaPrima']
                     notificaSuc(resp[1])
                     setTimeout(() => {
                         bloqueoBtn("bloqueo-btn-1", 2)
-                        update()
-                        $('#formAddRendimiento').find('input,textarea, button, select').attr('disabled', 'disabled');
+                        update('templates/PruebasHides/cargaPruebasHides.php', 'content-pruebas', 1);
+                        clearForm("formPruebas")
                     }, 1000);
 
                 } else if (resp[0] == 0) {
@@ -176,69 +153,7 @@ $idCatMateriaPrima = $_abierto ? $DataRendimientoAbierto[0]['idCatMateriaPrima']
 
         });
     });
-    /********** ELIMINAR PRE REGISTRO  ***********/
-    function eliminarPreRegistro(id) {
-        $.ajax({
-            url: '../Controller/rendimiento.php?op=eliminarprerendimiento',
-            data: {
-                id: id
-            },
-            type: 'POST',
-            success: function(json) {
-                resp = json.split('|')
-                if (resp[0] == 1) {
-                    // notificaSuc(resp[1])
-                    setTimeout(() => {
-                        bloqueoBtn("bloqueo-btn-2", 2)
-                        location.reload()
-                    }, 1000);
-
-
-                } else if (resp[0] == 0) {
-                    notificaBad(resp[1])
-                    bloqueoBtn("bloqueo-btn-2", 2)
-
-
-                }
-            },
-            beforeSend: function() {
-                bloqueoBtn("bloqueo-btn-2", 1)
-            }
-
-        });
-    }
-    /********** CIERRE PRE REGISTRO  ***********/
-    function cierrePreRegistro() {
-        log_result = validaCamposLlenos()
-        if (log_result) {
-            $.ajax({
-                url: '../Controller/rendimiento.php?op=cierrerendimiento',
-                type: 'POST',
-                success: function(json) {
-                    resp = json.split('|')
-                    if (resp[0] == 1) {
-                        notificaSuc(resp[1])
-                        setTimeout(() => {
-                            bloqueoBtn("bloqueo-btn-2", 2)
-                            location.reload()
-                        }, 1000);
-
-
-                    } else if (resp[0] == 0) {
-                        notificaBad(resp[1])
-                        bloqueoBtn("bloqueo-btn-2", 2)
-
-
-                    }
-                },
-                beforeSend: function() {
-                    bloqueoBtn("bloqueo-btn-2", 1)
-                }
-
-            });
-        }
-
-    }
+   
 </script>
 
 </html>

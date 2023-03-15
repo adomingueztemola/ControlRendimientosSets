@@ -150,3 +150,13 @@ function abrirNuevoTab(url) {
   // Cambiar el foco al nuevo tab (punto opcional)
   win.focus();
 }
+
+function update(url, id, folder = 0) {
+  str_separator = "../".repeat(folder);
+  $("#" + id).html(
+    '<div class="loading text-center"><img src="' +
+      str_separator +
+      'assets/images/loading.gif" alt="loading" /><br/>Un momento, por favor...</div>'
+  );
+  $("#" + id).load(str_separator + url);
+}

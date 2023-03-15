@@ -3,11 +3,12 @@ session_start();
 define('INCLUDE_CHECK', 1);
 require_once "../include/connect_mvc.php";
 include('../Models/Mdl_Static.php');
+include('../assets/scripts/cadenas.php');
 
-$debug = 1;
+$debug = 0;
 $idUser = $_SESSION['CREident'];
 
-$obj_pzas = new PzasOKNOK($debug, $idUser);
+$obj_pruebas = new PruebaHide($debug, $idUser);
 
 $ErrorLog = 'No se recibió';
 if ($debug == 1) {
@@ -18,6 +19,24 @@ if ($debug == 1) {
 }
 
 switch ($_GET["op"]) {
+    case "getpruebasregistradas":
+        $Data = $obj_pruebas->getPruebasHeads();
+        $Data = Excepciones::validaConsulta($Data);
+        $response = array();
+        $count = 1;
+        foreach ($Data as $value) {
+            array_push($response, [
+                $count,  $value['semanaAnio'], $value['fFecha'],
+                $value['loteTemola'],
+                $value['hides'], formatoMil($value['porcent'] * 100, 2) . '%'
+            ]);
+            $count++;
+        }
+        //Creamos el JSON
+        $response = array("data" => $response);
+        $json_string = json_encode($response);
+        echo $json_string;
+        break;
     case "agregarpruebas":
         $lote = (isset($_POST['lote'])) ? trim($_POST['lote']) : '';
         $fecha = (isset($_POST['fecha'])) ? trim($_POST['fecha']) : '';
@@ -27,14 +46,39 @@ switch ($_GET["op"]) {
             " Cantidad" => $hides,
             " Fecha" => $fecha,
             " Lote" => $lote,
-        ), $obj_pzas);
+        ), $obj_pruebas);
+        $obj_pruebas->beginTransaction();
+        #AGREGAR PRUEBAS DE HIDE 
+        $datos = $obj_pruebas->agregarPruebaHide($lote, $fecha, $hides);
+        try {
+            Excepciones::validaMsjError($datos);
+        } catch (Exception $e) {
+            $obj_pruebas->errorBD($e->getMessage(), 1);
+        }
+        $idInsert = $datos[2];
+        #PASE A LOTE NUEVO CALCULO DE CUEROS
+        $datos = $obj_pruebas->paseCuerosLote($idInsert);
+        try {
+            Excepciones::validaMsjError($datos);
+        } catch (Exception $e) {
+            $obj_pruebas->errorBD($e->getMessage(), 1);
+        }
+        #ACTUALIZACION DE MATERIA PRIMA
+        $datos = $obj_pruebas->actualizacionMateriaPrima($idInsert);
+        try {
+            Excepciones::validaMsjError($datos);
+        } catch (Exception $e) {
+            $obj_pruebas->errorBD($e->getMessage(), 1);
+        }
+        #ACTUALIZACION DE VENTAS
+        $datos = $obj_pruebas->actualizacionVentas($idInsert);
+        try {
+            Excepciones::validaMsjError($datos);
+        } catch (Exception $e) {
+            $obj_pruebas->errorBD($e->getMessage(), 1);
+        }
+        $obj_pruebas->insertarCommit();
 
-
-
-
-
-
-        
+        echo '1|Prueba de Hides Almacenada Correctamente.';
         break;
 }
-?>
