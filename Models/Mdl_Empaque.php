@@ -81,18 +81,26 @@ class Empaque extends ConexionBD
     public function aumentoStckReverseRem($idLote, $_12, $_3, $_6, $_9)
     {
         $total = $_12 + $_3 + $_6 + $_9;
-        $sql = "UPDATE inventariorechazado SET 
-        _12=_12+'$_12', _3=_3+'$_3', _6=_6+'$_6',_9=_9+'$_9',
-        pzasTotales=pzasTotales+'$total'  WHERE idRendimiento='$idLote'";
+        $sql = "UPDATE inventariorechazado i
+        INNER JOIN rendimientos r ON r.id=i.idRendimiento
+        SET 
+        i._12=i._12+'$_12', i._3=i._3+'$_3', i._6=i._6+'$_6',i._9=i._9+'$_9',
+        i.pzasTotales=i.pzasTotales+'$total',
+        r.totalRech=IFNULL(r.totalRech,0)+'$total'
+        WHERE i.idRendimiento='$idLote'";
         return $this->runQuery($sql, "aumento de stock por reverse de Remanente",);
     }
     /// REVERSA DE LOTE QUE HA PASADO A ALMACEN 0
     public function aumentoDetTarimaReverseRem($idLote, $_12, $_3, $_6, $_9)
     {
         $total = $_12 + $_3 + $_6 + $_9;
-        $sql = "UPDATE dettarimas SET 
-        _12Scrap=_12Scrap+'$_12', _3Scrap=_3Scrap+'$_3', _6Scrap=_6Scrap+'$_6',_9Scrap=_9Scrap+'$_9',
-        totalScrap=totalScrap+'$total'  WHERE idLote='$idLote'";
+        $sql = "UPDATE dettarimas d
+                INNER JOIN rendimientos r ON r.id=d.idLote
+
+        SET 
+        r.totalRech=IFNULL(r.totalRech,0)+'$total',
+        d._12Scrap=d._12Scrap+'$_12', d._3Scrap=d._3Scrap+'$_3', d._6Scrap=d._6Scrap+'$_6',d._9Scrap=d._9Scrap+'$_9',
+        d.totalScrap=d.totalScrap+'$total'  WHERE d.idLote='$idLote'";
         return $this->runQuery($sql, "aumento de detalle de tarima por reverse de Remanente",);
     }
     /// AGREGAR DETALLADO DE REVERSA DE LOTE 
@@ -351,7 +359,8 @@ class Empaque extends ConexionBD
                 r.setsRechazados= IFNULL(r.setsRechazados, 0)+(IFNULL(t.totalScrap,0)/conf.pzasEnSets),
                 r.pzasSetsRechazadas= (IFNULL(r.pzasSetsRechazadas, 0)+IFNULL(t.totalScrap,0)),
                 r.porcSetsRechazoInicial= ((IFNULL(r.setsRechazados, 0)+(IFNULL(t.totalScrap,0)/conf.pzasEnSets))/r.setsCortadosTeseo)*100,
-                r.porcFinalRechazo= ((IFNULL(r.setsRechazados, 0)+(IFNULL(t.totalScrap,0)/conf.pzasEnSets))/r.setsCortadosTeseo)*100
+                r.porcFinalRechazo= ((IFNULL(r.setsRechazados, 0)+(IFNULL(t.totalScrap,0)/conf.pzasEnSets))/r.setsCortadosTeseo)*100,
+                r.totalRech= (IFNULL(r.pzasSetsRechazadas, 0)+IFNULL(t.totalScrap,0))
 
                 WHERE r.id='$idLote'";
         return $this->runQuery($sql, "registro de Totales");
