@@ -8,7 +8,14 @@
                         <th>Semana Producción</th>
                         <th>Fecha</th>
                         <th>Lote</th>
-                        <th>Hides Descontados</th>
+                        <th>1s</th>
+                        <th>2s</th>
+                        <th>3s</th>
+                        <th>4s</th>
+                        <th>20</th>
+                        <th>Total</th>
+
+                        <th class="table-danger">(-) Hides</th>
                         <th>Porcentaje Descontado</th>
 
                     </tr>
@@ -21,6 +28,9 @@
 <script>
     //Declaracion de Tabla
     $("#table-pruebas").DataTable({
+        rowCallback: function(row, data) {
+            $(row).find('td:eq(10)').addClass("table-danger");
+        },
         ajax: {
             "url": "../Controller/pruebasHide.php?op=getpruebasregistradas",
             "type": "POST"

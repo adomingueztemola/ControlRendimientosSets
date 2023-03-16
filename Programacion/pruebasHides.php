@@ -62,20 +62,49 @@ $idCatMateriaPrima = $_abierto ? $DataRendimientoAbierto[0]['idCatMateriaPrima']
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
-                                            <label for="lote"> Lote: </label>
-                                            <select name="lote" style="width:100%" class="form-control select2Form LotesProceso" id="lote"></select>
+                                            <label for="lote" class="form-label required"> Lote: </label>
+                                            <select name="lote" style="width:100%" required class="form-control select2Form LotesProceso" id="lote"></select>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+                                            <table class="table table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-center">1s</th>
+                                                        <th class="text-center">2s</th>
+                                                        <th class="text-center">3s</th>
+                                                        <th class="text-center">4s</th>
+                                                        <th class="text-center">20</th>
+                                                        <th class="text-center">Total</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="table-active text-center" id="_1s">0</td>
+                                                        <td class="table-active text-center" id="_2s">0</td>
+                                                        <td class="table-active text-center" id="_3s">0</td>
+                                                        <td class="table-active text-center" id="_4s">0</td>
+                                                        <td class="table-active text-center" id="_20">0</td>
+                                                        <td class="table-active text-center" id="total_s">0</td>
+                                                    </tr>
+                                                </tbody>
+
+                                            </table>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
-                                            <label for="fecha"> Fecha de Prueba: </label>
-                                            <input type="date" class="form-control" name="fecha" id="fecha">
+                                            <label for="fecha" class="form-label required"> Fecha de Prueba: </label>
+                                            <input type="date" required class="form-control" name="fecha" id="fecha">
                                         </div>
                                     </div>
+
                                     <div class="row">
                                         <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
-                                            <label class="text-danger" for="lote"> Hides a Descontar: </label>
-                                            <input type="number" step="1" min="1" class="form-control focusCampo" name="hides" id="hides">
+                                            <label class="form-label required text-danger" for="lote"> Hides a Descontar: </label>
+                                            <input type="number" required step="1" min="1" class="form-control focusCampo" name="hides" id="hides">
                                         </div>
                                     </div>
 
@@ -122,6 +151,7 @@ $idCatMateriaPrima = $_abierto ? $DataRendimientoAbierto[0]['idCatMateriaPrima']
 <script src="../assets/scripts/selectFiltros.js"></script>
 <script>
     update('templates/PruebasHides/cargaPruebasHides.php', 'content-pruebas', 1);
+    mostrar_info()
     /********** ALMACENAR PRUEBA ***********/
     $("#formPruebas").submit(function(e) {
         e.preventDefault();
@@ -153,7 +183,52 @@ $idCatMateriaPrima = $_abierto ? $DataRendimientoAbierto[0]['idCatMateriaPrima']
 
         });
     });
-   
+
+    function mostrar_info() {
+        $('select#lote').on('change', function() {
+            valor = $(this).val();
+            $.ajax({
+                    data: {
+                        "ident": valor
+                    },
+                    type: "POST",
+                    dataType: "json",
+                    url: "../Controller/pruebasHide.php?op=detalleslote",
+                    beforeSend: function() {
+                        // setting a timeout
+                        $("#_1s").text("")
+                        $("#_2s").text("")
+                        $("#_3s").html("<div class='spinner-border spinner-border-sm' role='status'><span class='sr-only'></span></div>")
+                        $("#_4s").text("")
+                        $("#_20").text("")
+                        $("#total_s").text("")
+                    },
+                })
+                .done(function(data, textStatus, jqXHR) {
+                    if (data != null) {
+                        $("#_1s").text(data["1s"] * 2)
+                        $("#_2s").text(data["2s"] * 2)
+                        $("#_3s").text(data["3s"] * 2)
+                        $("#_4s").text(data["4s"] * 2)
+                        $("#_20").text(data["_20"] * 2)
+                        $("#total_s").text(data["total_s"] * 2)
+                        $("#hides").prop("max", data["total_s"] * 2)
+                    }else{
+                        $("#_1s").text("0")
+                        $("#_2s").text("0")
+                        $("#_3s").text("0")
+                        $("#_4s").text("0")
+                        $("#_20").text("0")
+                        $("#total_s").text("0")
+                        $("#hides").prop("max", "0")
+                    }
+
+
+                }).fail(function(jqXHR, textStatus, errorThrown) {
+
+                });
+        });
+    }
 </script>
 
 </html>

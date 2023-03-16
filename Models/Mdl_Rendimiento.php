@@ -28,7 +28,7 @@ class Rendimiento extends ConexionBD
     }
     public function getLotesTeseoSelect2($busqId = '')
     {
-        $filtradoID = $busqId == '' ? '1=1' : "r.loteTemola LIKE '%$busqId%'";
+        $filtradoID = $busqId == '' ? '1=1' : "r.loteTemola COLLATE SQL_Latin1_General_Cp1_CI_AI LIKE '%$busqId%'";
 
         $sql = "SELECT r.*, cp.nombre AS nPrograma
         FROM rendimientos r
@@ -42,12 +42,10 @@ class Rendimiento extends ConexionBD
     public function getLotesProceso($busqId = '')
     {
         $filtradoID = $busqId == '' ? '1=1' : "r.loteTemola LIKE '%$busqId%'";
-
         $sql = "SELECT r.*, cp.nombre AS nPrograma
         FROM rendimientos r
         INNER JOIN catprogramas cp ON r.idCatPrograma=cp.id
-        WHERE $filtradoID AND r.tipoProceso='1' AND
-        r.estado !='4'
+        WHERE $filtradoID 
         ORDER BY cp.nombre, CAST(r.loteTemola AS UNSIGNED)";
         return  $this->consultarQuery($sql, "consultar lotes");
     }

@@ -27,7 +27,9 @@ switch ($_GET["op"]) {
         foreach ($Data as $value) {
             array_push($response, [
                 $count,  $value['semanaAnio'], $value['fFecha'],
-                $value['loteTemola'],
+                $value['loteTemola'], formatoMil($value['1s'] * 2, 2), formatoMil($value['2s'] * 2, 2),
+                formatoMil($value['3s'] * 2, 2),   formatoMil($value['4s'] * 2, 2), formatoMil($value['_20'] * 2, 2),
+                formatoMil($value['total_s'] * 2, 2),
                 $value['hides'], formatoMil($value['porcent'] * 100, 2) . '%'
             ]);
             $count++;
@@ -35,6 +37,36 @@ switch ($_GET["op"]) {
         //Creamos el JSON
         $response = array("data" => $response);
         $json_string = json_encode($response);
+        echo $json_string;
+        break;
+    case "getpruebassemana":
+        $fechaInit= date('Y-m-01');
+        $fechaFinal= date('Y-m-t');
+
+        $filtradoFecha= "p.fecha BETWEEN '$fechaInit' AND '$fechaFinal'";
+        $Data = $obj_pruebas->getPruebasHeads($filtradoFecha);
+        $Data = Excepciones::validaConsulta($Data);
+        $response = array();
+        $count = 1;
+        foreach ($Data as $value) {
+            array_push($response, [
+                $value['semanaAnio'], 
+                $value['loteTemola'],$value['hides'], formatoMil($value['1s'] * 2, 0), formatoMil($value['2s'] * 2, 0),
+                formatoMil($value['3s'] * 2, 0),   formatoMil($value['4s'] * 2, 0), formatoMil($value['_20'] * 2, 0),
+                formatoMil($value['total_s'] * 2, 0)
+            ]);
+            $count++;
+        }
+        //Creamos el JSON
+        $response = array("data" => $response);
+        $json_string = json_encode($response);
+        echo $json_string;
+        break;
+    case "detalleslote":
+        $ident = (isset($_POST['ident'])) ? trim($_POST['ident']) : '';
+        $Data = $obj_pruebas->getDetRendimientos($ident);
+        $Data = Excepciones::validaConsulta($Data);
+        $json_string = json_encode($Data[0]);
         echo $json_string;
         break;
     case "agregarpruebas":
@@ -55,30 +87,15 @@ switch ($_GET["op"]) {
         } catch (Exception $e) {
             $obj_pruebas->errorBD($e->getMessage(), 1);
         }
-        $idInsert = $datos[2];
-        #PASE A LOTE NUEVO CALCULO DE CUEROS
-        $datos = $obj_pruebas->paseCuerosLote($idInsert);
-        try {
-            Excepciones::validaMsjError($datos);
-        } catch (Exception $e) {
-            $obj_pruebas->errorBD($e->getMessage(), 1);
-        }
-        #ACTUALIZACION DE MATERIA PRIMA
-        $datos = $obj_pruebas->actualizacionMateriaPrima($idInsert);
-        try {
-            Excepciones::validaMsjError($datos);
-        } catch (Exception $e) {
-            $obj_pruebas->errorBD($e->getMessage(), 1);
-        }
-        #ACTUALIZACION DE VENTAS
-        $datos = $obj_pruebas->actualizacionVentas($idInsert);
+
+        #RECALCULAR RENDIMIENTO                                                                
+        $datos = $obj_pruebas->calcularRendimientoEnPrueba($lote);
         try {
             Excepciones::validaMsjError($datos);
         } catch (Exception $e) {
             $obj_pruebas->errorBD($e->getMessage(), 1);
         }
         $obj_pruebas->insertarCommit();
-
         echo '1|Prueba de Hides Almacenada Correctamente.';
         break;
 }

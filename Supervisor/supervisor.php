@@ -26,6 +26,7 @@ $totalLotes = $DataKPIS['totalLotes'] == '' ? '0' : formatoMil($DataKPIS['totalL
 
 <?php include("../templates/header.php"); ?>
 <link rel="stylesheet" type="text/css" href="../assets/extra-libs/c3/c3.min.css">
+<link href="../assets/extra-libs/datatables.net-bs4/css/dataTables.bootstrap4.css" rel="stylesheet">
 
 
 <body>
@@ -82,7 +83,7 @@ $totalLotes = $DataKPIS['totalLotes'] == '' ? '0' : formatoMil($DataKPIS['totalL
 
                 </div>
                 <div class="row">
-                    <div class="col-md-8 col-lg-8 col-sm-8 col-xs-8">
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
                         <!----- contenedor de card y boton de consulta --->
                         <div class="card">
                             <h5 class="card-header bg-TWM text-white">Tablero de Empaque</h5>
@@ -110,6 +111,16 @@ $totalLotes = $DataKPIS['totalLotes'] == '' ? '0' : formatoMil($DataKPIS['totalL
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
+                        <div class="card">
+                            <h5 class="card-header bg-TWM text-white"><i class="fas fa-flask"></i> Disminución Mensual de Hides por Pruebas</h5>
+                            <div class="card-body">
+                                <div id="content-disminucionpruebas">
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -245,13 +256,14 @@ $totalLotes = $DataKPIS['totalLotes'] == '' ? '0' : formatoMil($DataKPIS['totalL
 
 <?= $info->creaFooter(); ?>
 <?php include("../templates/libsJS.php"); ?>
+<script src="../assets/extra-libs/datatables.net/js/jquery.dataTables.min-ESP.js"></script>
 
 
 <script>
     actualizarGrafica()
     actualizarTablero()
-    
-   
+    actualizarPruebasHides()
+
     /*********** ACTUALIZA GRAFICA***************/
     function actualizarGrafica() {
         $('#contentGrafica').html('<div class="loading text-center"><img src="../assets/images/loading.gif" alt="loading" /><br/>Un momento, por favor...</div>');
@@ -278,6 +290,10 @@ $totalLotes = $DataKPIS['totalLotes'] == '' ? '0' : formatoMil($DataKPIS['totalL
     function actualizarPiezasrechazadas() {
         cargaContenido("content-Piezasrechazadas", "../templates/Rendimiento/Estadistica/detalladoPiezasrechazadas.php", '1')
         clearForm("filtrado-conteocajas")
+    }
+
+    function actualizarPruebasHides(){
+        update("templates/Rendimiento/Estadistica/disminucionPruebasMensualHides.php", "content-disminucionpruebas", 1)
     }
 
 
