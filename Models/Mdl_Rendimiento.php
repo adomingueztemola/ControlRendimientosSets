@@ -406,17 +406,27 @@ class Rendimiento extends ConexionBD
     ) {
         $sql = "SELECT r.*, DATE_FORMAT(r.fechaEngrase,'%d/%m/%Y') AS f_fechaEngrase,
         DATE_FORMAT(r.fechaEmpaque,'%d/%m/%Y') f_fechaEmpaque,
+        CONCAT(IFNULL(r.yearWeek, '0000'), '-SEM. ', LPAD(r.semanaProduccion,2,'0')) AS semanaAnio,
         pr.nombre AS n_proceso, pr.codigo AS c_proceso, pg.nombre AS n_programa, mp.nombre AS n_materia,
         CONCAT(u.nombre, ' ', u.apellidos) AS str_usuario,
-        DATE_FORMAT(r.fechaReg, '%d/%m/%Y %H:%m') AS f_fechaReg, (r.perdidaAreaWBCrust+r.perdidaAreaCrustTeseo) AS totalDifArea
+        DATE_FORMAT(r.fechaReg, '%d/%m/%Y %H:%m') AS f_fechaReg, (r.perdidaAreaWBCrust+r.perdidaAreaCrustTeseo) AS totalDifArea,
+        GROUP_CONCAT(pv.nombre) AS proveedores
+
         FROM rendimientos r
+
+        LEFT JOIN detpedidos dp ON r.id=dp.idRendimiento
+        LEFT JOIN pedidos p ON dp.idPedido=p.id
+        LEFT JOIN catproveedores pv ON p.idCatProveedor=pv.id
+
         INNER JOIN catprocesos pr ON r.idCatProceso=pr.id
         INNER JOIN catprogramas pg ON r.idCatPrograma=pg.id
         INNER JOIN catmateriasprimas mp ON r.idCatMateriaPrima=mp.id
         LEFT JOIN segusuarios u ON r.idUserRend=u.id
         WHERE $filtradoEstatus  AND $filtradoFecha AND $filtradoMateria AND $filtradoPrograma AND $filtradoProceso AND $filtradoLote
         AND $filtradoSemana
-        ORDER BY r.semanaProduccion DESC, r.loteTemola";
+  
+        GROUP BY dp.idRendimiento
+        ORDER BY r.yearWeek DESC, r.semanaProduccion DESC";
         return  $this->ejecutarQuery($sql, "consultar Rendimientos Almacenados", true);
     }
     //GET RENDIMIENTOS ETIQUETAS

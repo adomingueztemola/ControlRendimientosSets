@@ -23,15 +23,14 @@ $materia = !empty($_POST['materia']) ? $_POST['materia'] : '';
 $semana = !empty($_POST['semana']) ? $_POST['semana'] : '';
 
 /***************** CASTEO DE FECHAS ****************** */
-if($semana==''){
+if ($semana == '') {
     $date_start = date("Y-m-d", strtotime(str_replace("/", "-", $date_start)));
     $date_end = date("Y-m-d", strtotime(str_replace("/", "-", $date_end)));
     $filtradoFecha = "r.fechaEmpaque BETWEEN '$date_start' AND '$date_end'";
-    $filtradoSemana="1=1";
-}else{
-    $filtradoFecha ='1=1';
+    $filtradoSemana = "1=1";
+} else {
+    $filtradoFecha = '1=1';
     $filtradoSemana = " CONCAT(r.yearWeek,'-W',LPAD(r.semanaProduccion,2,0)) = '$semana'";
-
 }
 
 $filtradoProceso = $proceso != '' ? "r.idCatProceso='$proceso'" : "1=1";
@@ -45,17 +44,19 @@ $DataRendimiento = $obj_rendimiento->getRendimientos(
     $filtradoMateria,
     "r.tipoProceso='1'",
     "r.estado='4'",
-    $filtradoSemana);
+    $filtradoSemana
+);
 ?>
 
 <div class="table-responsive">
-    <table id="table-pedidos"  class="table table-sm display nowrap  table-hover table-bordered">
+    <table id="table-pedidos" class="table table-sm display nowrap  table-hover table-bordered">
         <thead>
             <tr class="">
                 <th>#</th>
                 <th>Fecha de Engrase</th>
                 <th>Semana</th>
                 <th>Fecha de Empaque</th>
+                <th>Proveedores</th>
 
                 <th>Lote</th>
                 <th>Programa</th>
@@ -141,7 +142,7 @@ $DataRendimiento = $obj_rendimiento->getRendimientos(
             $suma_costoUnidad = 0;
             $suma_recorteAcabado = 0;
             $suma_porcRecorteAcabado = 0;
-
+            $suma_areaProveedorLote = 0;
             foreach ($DataRendimiento as $key => $value) {
                 $count++;
                 $suma_areaWB += $DataRendimiento[$key]['areaWB'];
@@ -202,8 +203,9 @@ $DataRendimiento = $obj_rendimiento->getRendimientos(
                 <tr>
                     <td><?= $btnSolicitud ?></td>
                     <td><?= $DataRendimiento[$key]['f_fechaEngrase'] ?></td>
-                    <td><?= $DataRendimiento[$key]['semanaProduccion'] ?></td>
+                    <td><?= $DataRendimiento[$key]['semanaAnio'] ?></td>
                     <td><?= $DataRendimiento[$key]['f_fechaEmpaque'] ?></td>
+                    <td><?= $DataRendimiento[$key]['proveedores'] ?></td>
 
                     <td><?= $DataRendimiento[$key]['loteTemola'] ?></td>
                     <td><small><?= $DataRendimiento[$key]['n_programa'] ?></small></td>
@@ -264,6 +266,8 @@ $DataRendimiento = $obj_rendimiento->getRendimientos(
                 <td></td>
                 <td></td>
                 <td></td>
+
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -271,7 +275,7 @@ $DataRendimiento = $obj_rendimiento->getRendimientos(
                 <td>Totales:</td>
                 <?php
                 $suma_porcDifAreaWB = ($suma_diferenciaWB / $suma_areaProveedorLote) * 100;
-                
+
                 ?>
                 <td><?= formatoMil($suma_areaProveedorLote) ?></td>
 
@@ -364,11 +368,16 @@ $DataRendimiento = $obj_rendimiento->getRendimientos(
 <!-- Fin Modal Editar Rendimiento -->
 
 <script>
-   table= $("#table-pedidos").DataTable({
+    table = $("#table-pedidos").DataTable({
             dom: 'Bfrltip',
             autoWidth: false,
             responsive: true,
+            "aaSorting": [],//Agregar o Quitar segun se necesite desactivar orden
 
+            columnDefs: [{
+                targets: "0",
+                ordering: false
+            }],
             drawCallback: function() {
                 $('[data-toggle="popover"]').popover();
             },
