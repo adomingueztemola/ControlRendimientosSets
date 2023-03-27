@@ -45,7 +45,7 @@ class Rendimiento extends ConexionBD
         $sql = "SELECT r.*, cp.nombre AS nPrograma
         FROM rendimientos r
         INNER JOIN catprogramas cp ON r.idCatPrograma=cp.id
-        WHERE $filtradoID 
+        WHERE $filtradoID  AND r.estado<>'0'
         ORDER BY cp.nombre, CAST(r.loteTemola AS UNSIGNED)";
         return  $this->consultarQuery($sql, "consultar lotes");
     }
