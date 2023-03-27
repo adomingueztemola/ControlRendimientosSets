@@ -80,6 +80,7 @@ switch ($_GET["op"]) {
             " Lote" => $lote,
         ), $obj_pruebas);
         $obj_pruebas->beginTransaction();
+        
         #AGREGAR PRUEBAS DE HIDE 
         $datos = $obj_pruebas->agregarPruebaHide($lote, $fecha, $hides);
         try {
