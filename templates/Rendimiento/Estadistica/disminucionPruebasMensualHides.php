@@ -1,6 +1,7 @@
+<?php setlocale(LC_TIME, 'es_ES.UTF-8'); ?>
 <div class="row align-items-center bg-light mb-2">
     <div class="col-xs-12 col-md-6">
-        <h3 class="m-b-0 font-light"><?=date("F Y")?></h3>
+        <h3 class="m-b-0 font-light"><?=strftime("%B %Y")?></h3>
         <span class="font-14 text-muted">REPORTE DE DISMINUCIONES</span>
     </div>
 </div>
