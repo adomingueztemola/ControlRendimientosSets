@@ -134,7 +134,7 @@ $f_setsEmpacados = formatoMil($DataLotes[0]['total']);
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-9 col-lg-9 col-sm-12 col-xs-12">
+                    <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
                         <div class="card border">
                             <div class="card-body">
 
@@ -161,18 +161,7 @@ $f_setsEmpacados = formatoMil($DataLotes[0]['total']);
 
                         </div>
                     </div>
-                    <div class="col-md-3 col-lg-3 col-sm-12 col-xs-12">
-                        <div class="card border">
-                            <div class="card-header bg-TWM text-white">
-                                <h6>Requerimientos de piezas para venta</h6>
-                            </div>
-                            <div class="card-body" style="height:450px; overflow: scroll;">
-                                <div id="contentRequerimientos">
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
+                  
                 </div>
 
 
