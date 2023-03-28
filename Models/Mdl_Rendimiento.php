@@ -828,7 +828,7 @@ class Rendimiento extends ConexionBD
         INNER JOIN catmateriasprimas cmp ON r.idCatMateriaPrima=cmp.id
         WHERE  
          r.estado='2' AND $filtradoFecha AND $filtradoProceso AND $filtradoMateria AND $filtradoPrograma AND r.tipoProceso='1'
-        ORDER BY r.fechaEngrase";
+        ORDER BY r.fechaEngrase DESC";
         return  $this->consultarQuery($sql, "consultar Lotes");
     }
     public function getLotesXCapturarTeseo($filtradoFecha = '1=1', $filtradoProceso = '1=1', $filtradoMateria = '1=1', $filtradoPrograma = '1=1')

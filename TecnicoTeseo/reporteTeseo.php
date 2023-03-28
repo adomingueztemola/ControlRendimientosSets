@@ -43,11 +43,11 @@ $obj_materia = new MateriaPrima($debug, $idUser);
                                         <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                                             <label for="date-range">Búsqueda de por Rangos de Fechas: </label>
                                             <div class="input-daterange input-group" id="date-range">
-                                                <input type="text" autocomplete="off" class="form-control" name="date-start" value="">
+                                                <input type="text" autocomplete="off" class="form-control" name="date-start" value="<?=date("01/01/Y")?>">
                                                 <div class="input-group-append">
                                                     <span class="input-group-text bg-TWM b-0 text-white">AL</span>
                                                 </div>
-                                                <input type="text" autocomplete="off" class="form-control" name="date-end" value="">
+                                                <input type="text" autocomplete="off" class="form-control" name="date-end" value="<?=date("t/12/Y")?>">
                                             </div>
                                         </div>
                                         <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
