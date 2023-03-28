@@ -46,7 +46,7 @@ if (count($DataDetallado) <= 0) {
 </div>
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <div class="table-responsive">
+        <div class="table-responsive-sm">
             <table class="table table-sm table-bordered table-striped" id="datos<?= $id ?>">
                 <thead>
                     <tr>
@@ -145,47 +145,48 @@ if (count($DataDetallado) <= 0) {
                 <h5>Detallado de Remanentes</h5>
             </div>
             <div class="card-body border">
-                <table class="table table-sm table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th>Lote</th>
-                            <th>12:00</th>
-                            <th>03:00</th>
-                            <th>06:00</th>
-                            <th>09:00</th>
-                            <th class="text-center">Detallado de Uso</th>
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Lote</th>
+                                <th>12:00</th>
+                                <th>03:00</th>
+                                <th>06:00</th>
+                                <th>09:00</th>
+                                <th class="text-center">Detallado de Uso</th>
 
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        $Data = $obj_empaque->consultaRemanentexEmpaque($id);
-                        $Data = Excepciones::validaConsulta($Data);
-                        if (count($Data) <= 0) {
-                            echo "<tr class=''>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $Data = $obj_empaque->consultaRemanentexEmpaque($id);
+                            $Data = Excepciones::validaConsulta($Data);
+                            if (count($Data) <= 0) {
+                                echo "<tr class=''>
                             <td colspan='6' class='text-center'>Sin Registro de Remanentes</td>
                             </tr>";
-                        }
-                        foreach ($Data as $value) {
-                            $iconRemanente = ($value['usoRemanente'] == '' or $value['usoRemanente'] == '0') ? "fas fa-search text-danger" : 'fas fa-search text-success';
-                            $iconColor = ($value['usoRemanente'] == '' or $value['usoRemanente'] == '0') ? "btn-outline-danger" : 'btn-outline-success';
+                            }
+                            foreach ($Data as $value) {
+                                $iconRemanente = ($value['usoRemanente'] == '' or $value['usoRemanente'] == '0') ? "fas fa-search text-danger" : 'fas fa-search text-success';
+                                $iconColor = ($value['usoRemanente'] == '' or $value['usoRemanente'] == '0') ? "btn-outline-danger" : 'btn-outline-success';
 
-                            $btnReverse = ($value['usoRemanente'] == '' or $value['usoRemanente'] == '0')
-                                ? "<button data-toggle='modal' data-target='#remanenteModal' data-doce='{$value['_12Rem']}' 
+                                $btnReverse = ($value['usoRemanente'] == '' or $value['usoRemanente'] == '0')
+                                    ? "<button data-toggle='modal' data-target='#remanenteModal' data-doce='{$value['_12Rem']}' 
                                 data-tres='{$value['_3Rem']}' data-seis='{$value['_6Rem']}' data-nueve='{$value['_9Rem']}'
                                 data-nlote='{$value['loteTemola']}' data-pasescrap='{$value['paseScrap']}' data-id='{$value['idLote']}'
                                 onclick='cargaDatosRemanente(this)' class='btn btn-danger btn-xs'><i class='ti-reload'></i></button>" : '';
 
-                            $lblUsoDelRem = "<b>Piezas de 12.00:</b> {$value['_12Rem']} <br>
+                                $lblUsoDelRem = "<b>Piezas de 12.00:</b> {$value['_12Rem']} <br>
                             <b>Piezas de 03.00:</b> {$value['_3Rem']} <br>
                             <b>Piezas de 06.00:</b> {$value['_6Rem']} <br>
                             <b>Piezas de 09.00:</b> {$value['_9Rem']} <br>";
-                            $usoRemanente = <<<EOD
-<button class='btn {$iconColor} btn-xs btn-light' data-container="body" data-toggle="popover" title="PIEZAS DISPONIBLES" animation:true, delay: {hide: 100}
-data-placement="top" data-content="{$lblUsoDelRem}" data-html="true">
-<i class="$iconRemanente"></i></button>
-EOD;
-                            echo "<tr>
+                                $usoRemanente = <<<EOD
+                                <button class='btn {$iconColor} btn-xs btn-light' data-container="body" data-toggle="popover" title="PIEZAS DISPONIBLES" animation:true, delay: {hide: 100}
+                                data-placement="top" data-content="{$lblUsoDelRem}" data-html="true">
+                                <i class="$iconRemanente"></i></button>
+                                EOD;
+                                echo "<tr>
                                 <td>{$value['loteTemola']}</td>
                                 <td>{$value['_12']}</td>
                                 <td>{$value['_3']}</td>
@@ -193,11 +194,11 @@ EOD;
                                 <td>{$value['_9']}</td>
                                 <td  class=''>$usoRemanente $btnReverse</td>
                             </tr>";
-                        }
-                        ?>
-                    </tbody>
-                </table>
-
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -294,7 +295,8 @@ EOD;
         $('[data-toggle="popover"]').popover()
 
     })
-    function limpiar(){
+
+    function limpiar() {
         clearForm("formReverseRemanente")
     }
     //Datos de Remanente para empezar a disminuir
@@ -354,7 +356,7 @@ EOD;
                     cerrarModal("remanenteModal")
                     setTimeout(() => {
 
-                        cargaContent('<?=$id?>')
+                        cargaContent('<?= $id ?>')
                     }, 1000);
 
 

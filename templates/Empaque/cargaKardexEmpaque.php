@@ -219,7 +219,7 @@ if ($completedCaja == '0') { ?>
 
         </div>
         <div class="row mt-2">
-            <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+            <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 table-responsive">
                 <table class="table table-sm">
                     <thead class="bg-TWM text-white">
                         <tr>
