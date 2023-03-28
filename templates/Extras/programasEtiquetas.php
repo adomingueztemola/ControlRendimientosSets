@@ -6,7 +6,7 @@ include('../../Models/Mdl_ConexionBD.php');
 include('../../Models/Mdl_Programa.php');
 include('../../assets/scripts/cadenas.php');
 
-$debug = 1;
+$debug = 0;
 $idUser = $_SESSION['CREident'];
 $obj_programas = new Programa($debug, $idUser);
 if ($debug == 1) {

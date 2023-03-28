@@ -118,7 +118,7 @@ $obj_materia = new MateriaPrima($debug, $idUser);
                                     </div>
                                     <div class="col-md-7"></div>
                                     <div class="col-md-1 text-right">
-                                        <button class="btn button btn-rounded btn-sm btn-light" onclick="update()" title="Actualizar Historial"> <i class="fas fa-history"></i></button>
+                                        <button class="btn button btn-rounded btn-sm btn-light" onclick=" update('templates/Rendimiento/cargaReasignacionLotes.php','content-reasignacion',1 )" title="Actualizar Historial"> <i class="fas fa-history"></i></button>
                                     </div>
                                 </div>
 
@@ -147,7 +147,7 @@ $obj_materia = new MateriaPrima($debug, $idUser);
 <!-- INICIO MODAL REASIGNACION DE PROGRAMA -->
 <div class="modal fade" id="reasignarModal" role="dialog" aria-labelledby="reasignarModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content block-reasignarModal" >
+        <div class="modal-content block-reasignarModal">
             <div class="modal-header bg-TWM text-white">
                 <h5 class="modal-title" id="reasignarModalLabel">Reasignar Programa al Lote: <span id="txt-nameLote"></span></h5>
                 <button type="button" class="close  text-white" data-dismiss="modal" aria-label="Close">
@@ -184,9 +184,10 @@ $obj_materia = new MateriaPrima($debug, $idUser);
 <script src="../assets/libs/block-ui/jquery.blockUI.js"></script>
 <script src="../assets/libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 <script src="../assets/libs/bootstrap-datepicker/dist/locales/bootstrap-datepicker.es.min.js"></script>
+<script src="../assets/scripts/clearData.js"></script>
 
 <script>
-    update()
+    update('templates/Rendimiento/cargaReasignacionLotes.php','content-reasignacion',1 )
     jQuery('#date-range').datepicker({
         toggleActive: true,
         format: 'dd/mm/yyyy',
@@ -197,12 +198,6 @@ $obj_materia = new MateriaPrima($debug, $idUser);
 
     });
 
-    function update() {
-        $('#content-reasignacion').html('<div class="loading text-center"><img src="../assets/images/loading.gif" alt="loading" /><br/>Un momento, por favor...</div>');
-        $('#content-reasignacion').load('../templates/Rendimiento/cargaReasignacionLotes.php');
-        clearForm("filtrado");
-
-    }
 
 
     /*************** FILTRADO DE TABLA *********************/
@@ -237,10 +232,9 @@ $obj_materia = new MateriaPrima($debug, $idUser);
                 if (resp[0] == 1) {
                     notificaSuc(resp[1])
                     bloqueoModal(e, "block-reasignarModal", 2)
-                    setTimeout(() => {
-                        update()
-                        $("#reasignarModal").modal("hide");
-                    }, 1000);
+                    $("#reasignarModal").modal("hide");
+                    update('templates/Rendimiento/cargaReasignacionLotes.php','content-reasignacion',1 )
+                    
 
                 } else if (resp[0] == 0) {
                     notificaBad(resp[1])

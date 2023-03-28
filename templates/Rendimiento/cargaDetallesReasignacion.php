@@ -37,42 +37,19 @@ $DataLote = $obj_rendimiento->getDetRendimientos($data);
 <input type="hidden" name="idLote" value="<?= $data ?>">
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <label for="programaEdita">Selecciona Nuevo Programa:</label>
-        <?php
-        $DataPrograma = $obj_programa->getPrograma("p.estado='1'", "p.tipo='1'");
-        $DataPrograma = Excepciones::validaConsulta($DataPrograma);
-        ?>
-        <select class="form-control select2" id="programaEdita" style="width:100%" name="programa">
-            <option value="">Selecciona Programa</option>
-
-            <?php
-            foreach ($DataPrograma as $key => $value) {
-                $f_AreaNeta = formatoMil($DataPrograma[$key]['areaNeta'], 2);
-                $selected = $DataLote[0]['idCatPrograma'] == $DataPrograma[$key]['id'] ? 'selected' : '';
-                echo "<option $selected value='{$DataPrograma[$key]['id']}'>{$DataPrograma[$key]['nombre']} (Área Neta: {$f_AreaNeta})</option>";
-            }
-            ?>
+        <label for="programaEdita" class="form-label required">Selecciona Nuevo Programa:</label>
+       
+        <select class="form-control ProgramasFilter" id="programaEdita" required style="width:100%" name="programa">
         </select>
     </div>
 </div>
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <label for="procesoEdita">Selecciona Nuevo Proceso:</label>
-        <?php
-        $DataProceso = $obj_proceso->getProcesos("pr.estado='1'");
-        $DataProceso = Excepciones::validaConsulta($DataProceso);
-        ?>
-        <select class="form-control select2" id="procesoEdita" style="width:100%" name="proceso">
-
-            <option value="">Selecciona Proceso</option>
-            <?php
-            foreach ($DataProceso as $key => $value) {
-                $selected = $DataLote[0]['idCatProceso'] == $DataProceso[$key]['id'] ? 'selected' : '';
-                echo "<option $selected value='{$DataProceso[$key]['id']}'>{$DataProceso[$key]['codigo']} - {$DataProceso[$key]['nombre']}</option>";
-            }
-            ?>
+        <label for="procesoEdita" class="form-label required">Selecciona Nuevo Proceso:</label>
+        <select class="form-control ProcesosFilter" id="procesoEdita" required style="width:100%" name="proceso">
         </select>
     </div>
 </div>
 </form>
-<script src="../assets/scripts/clearData.js"></script>
+<script src="../assets/scripts/selectFiltros.js"></script>
+<script src="../assets/scripts/clearDataSinSelect.js"></script>

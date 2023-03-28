@@ -41,7 +41,16 @@ $space = 1;
                                         </div>
                                         <div class="col-md-12">
                                             <label class="form-label required" for="areaNeta">Ingresa Área Neta:</label>
-                                            <input type="number" step="0.00001" min="0" class="form-control" autocomplete="off" required name="areaNeta" id="areaNeta">
+                                            <input type="number" step="0.00001" min="0" value="0" class="form-control" autocomplete="off" required name="areaNeta" id="areaNeta">
+                                        </div>
+                                        <div class="col-md-12">
+                                            <label class="form-label required" for="tipo">Tipo:</label>
+                                            <select name="tipo" class="form-control" id="tipo">
+                                                <option value="" selected disabled>Selecciona tipo de programa ...</option>
+                                                <option value="1">Set's</option>
+                                                <option value="3">M<sup>2</sup></option>
+
+                                            </select>
                                         </div>
                                     </div>
                                     <hr>
@@ -196,8 +205,8 @@ $space = 1;
 
         });
     });
-      /********** EDICION DE UN PROGRAMA ***********/
-      $("#formEditPrograma").submit(function(e) {
+    /********** EDICION DE UN PROGRAMA ***********/
+    $("#formEditPrograma").submit(function(e) {
         e.preventDefault();
         formData = $(this).serialize();
         $.ajax({
@@ -253,8 +262,8 @@ $space = 1;
                 }
             });
     }
-     /*********************** FUNCION PARA CARGAR DATOS DE LA EDICION ******************************/
-     function cargarEdicion(id) {
+    /*********************** FUNCION PARA CARGAR DATOS DE LA EDICION ******************************/
+    function cargarEdicion(id) {
         $.ajax({
             type: 'POST',
             url: '../Controller/programas.php?op=detallado',

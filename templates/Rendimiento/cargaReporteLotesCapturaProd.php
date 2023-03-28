@@ -34,11 +34,10 @@ if ($date_start != '' and $date_end != '') {
     $date_start = date("Y-m-d", strtotime(str_replace("/", "-", $date_start)));
     $date_end = date("Y-m-d", strtotime(str_replace("/", "-", $date_end)));
 }
-$inicioAnio=date("Y-01-01");
-$finAnio=date("Y-12-t");
+
 
 $filtradoFecha = ($date_start != '' and $date_end != '') ?
-    "r.fechaEngrase BETWEEN '$date_start' AND '$date_end'" : "r.fechaEngrase BETWEEEN '$inicioAnio' AND '$finAnio'";
+    "r.fechaEngrase BETWEEN '$date_start' AND '$date_end'" : "1=1";
 $filtradoProceso = $proceso != '' ? "r.idCatProceso='$proceso'" : "1=1";
 $filtradoPrograma = $programa != '' ? "r.idCatPrograma='$programa'" : "1=1";
 $filtradoMateria = $materiaPrima != '' ? "r.idCatMateriaPrima='$materiaPrima'" : "1=1";

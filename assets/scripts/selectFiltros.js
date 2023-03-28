@@ -21,7 +21,94 @@ $(".ProgramaSetsFilter").select2({
     cache: true,
   },
 });
-//Filtro de Programas para Sets
+
+//Filtro de Proceso
+$(".ProcesosFilter").select2({
+  placeholder: "Selecciona un proceso",
+  allowClear: true,
+
+  ajax: {
+    url: "../Controller/procesosSecado.php?op=select2procesos",
+    type: "post",
+    dataType: "json",
+    delay: 250,
+    data: function (params) {
+      return {
+        palabraClave: params.term, // search term
+      };
+    },
+    processResults: function (response) {
+      return {
+        results: response,
+      };
+    },
+    cache: true,
+  },
+});
+
+//Filtro de Programas para sets/metros
+$(".ProgramasFilter").select2({
+  placeholder: "Selecciona un programa",
+  allowClear: true,
+
+  ajax: {
+    url: "../Controller/programas.php?op=select2programas",
+    type: "post",
+    dataType: "json",
+    delay: 250,
+    data: function (params) {
+      return {
+        palabraClave: params.term, // search term
+      };
+    },
+    processResults: function (data) {
+       //Recorre JSON para generar option group de areas
+       textOpt = "";
+       jsonOpt = [];
+       childrenOpt = [];
+       data.forEach((element) => {
+         hijoOpt = {};
+         if (textOpt != element.nTipo) {
+           //Agrega a jsonOpt
+           if (textOpt != "" && childrenOpt.length > 0) {
+             jsonOpt.push({
+               text: textOpt,
+               children: childrenOpt,
+               element: HTMLOptGroupElement,
+             });
+           }
+           /*********************/
+           childrenOpt = [];
+           //Agrega su hijito
+           hijoOpt.id = element.id ;
+           hijoOpt.text = element.nombre;
+           hijoOpt.element = HTMLOptionElement;
+           childrenOpt.push(hijoOpt); //Agraga children OPT
+         } else {
+           //Agrega su hijito
+           hijoOpt.id = element.id ;
+           hijoOpt.text = element.nombre;
+           hijoOpt.element = HTMLOptionElement;
+           childrenOpt.push(hijoOpt); //Agraga children OPT
+         }
+         textOpt = element.nTipo;
+       });
+       //Agrega a jsonOpt
+       if (textOpt != "" && childrenOpt.length > 0) {
+         jsonOpt.push({
+           text: textOpt,
+           children: childrenOpt,
+           element: HTMLOptGroupElement,
+         });
+       }
+       return {
+         results: jsonOpt,
+       };
+    },
+    cache: true,
+  },
+});
+//Filtro de Semana de Lotes
 $(".SemanaLotesFilter").select2({
   placeholder: "Selecciona una semana",
   allowClear: true,
@@ -60,10 +147,49 @@ $(".LoteTeseoFilter").select2({
         palabraClave: params.term, // search term
       };
     },
-    processResults: function (response) {
-      return {
-        results: response,
-      };
+    processResults: function (data) {
+     //Recorre JSON para generar option group de areas
+     textOpt = "";
+     jsonOpt = [];
+     childrenOpt = [];
+     data.forEach((element) => {
+       hijoOpt = {};
+       if (textOpt != element.nPrograma) {
+         //Agrega a jsonOpt
+         if (textOpt != "" && childrenOpt.length > 0) {
+           jsonOpt.push({
+             text: textOpt,
+             children: childrenOpt,
+             element: HTMLOptGroupElement,
+           });
+         }
+         /*********************/
+         childrenOpt = [];
+         //Agrega su hijito
+         hijoOpt.id = element.id ;
+         hijoOpt.text = element.loteTemola;
+         hijoOpt.element = HTMLOptionElement;
+         childrenOpt.push(hijoOpt); //Agraga children OPT
+       } else {
+         //Agrega su hijito
+         hijoOpt.id = element.id ;
+         hijoOpt.text = element.loteTemola;
+         hijoOpt.element = HTMLOptionElement;
+         childrenOpt.push(hijoOpt); //Agraga children OPT
+       }
+       textOpt = element.nPrograma;
+     });
+     //Agrega a jsonOpt
+     if (textOpt != "" && childrenOpt.length > 0) {
+       jsonOpt.push({
+         text: textOpt,
+         children: childrenOpt,
+         element: HTMLOptGroupElement,
+       });
+     }
+     return {
+       results: jsonOpt,
+     };
     },
     cache: true,
   },

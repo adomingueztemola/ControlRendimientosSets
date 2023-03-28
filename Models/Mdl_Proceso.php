@@ -16,6 +16,14 @@ class ProcesoSecado extends ConexionBD
     {
         $this->close();
     }
+    public function getProcesosSelect2($busqId=''){
+        $filtradoID = $busqId == '' ? '1=1' : "ca.nombre LIKE '%$busqId%'";
+        $sql = "SELECT ca.*
+        FROM catprocesos ca
+        WHERE $filtradoID AND 
+        ca.estado ='1'";
+        return  $this->consultarQuery($sql, "consultar Procesos");
+    }
     public function agregarProceso($codigo, $name, $tipo)
     {
         $debug = $this->debug;

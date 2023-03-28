@@ -50,7 +50,7 @@ $obj_materia = new MateriaPrima($debug, $idUser);
                                                 <input type="text" autocomplete="off" class="form-control" name="date-end" value="<?=date("t/12/Y")?>">
                                             </div>
                                         </div>
-                                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                                             <label for="programa">Programa:</label>
                                             <select class="form-control select2" style="width:100%" name="programa" id="programaFilter">
                                                 <option value="">Todos los Programas</option>
@@ -58,32 +58,6 @@ $obj_materia = new MateriaPrima($debug, $idUser);
                                                 $DataPrograma = $obj_programa->getPrograma("p.estado='1'", "p.tipo='1'");
                                                 foreach ($DataPrograma as $key => $value) {
                                                     echo "<option value='{$DataPrograma[$key]['id']}'>{$DataPrograma[$key]['nombre']}</option>";
-                                                }
-                                                ?>
-                                            </select>
-
-                                        </div>
-                                        <div class="col-lg-1 col-md-1 col-sm-12 col-xs-12">
-                                            <label for="proceso">Proceso:</label>
-                                            <select class="form-control select2" style="width:100%" name="proceso" id="proceso">
-                                                <option value="">-</option>
-                                                <?php
-                                                $DataProceso = $obj_proceso->getProcesos("pr.estado='1'", "pr.tipo='1'");
-                                                foreach ($DataProceso as $key => $value) {
-                                                    echo "<option value='{$DataProceso[$key]['id']}'>{$DataProceso[$key]['codigo']}</option>";
-                                                }
-                                                ?>
-                                            </select>
-
-                                        </div>
-                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                                            <label for="materia">Materia Prima:</label>
-                                            <select class="form-control select2" style="width:100%" name="materia" id="materia">
-                                                <option value="">Todos las Materias Primas</option>
-                                                <?php
-                                                $DataMateria = $obj_materia->getMaterias("mt.estado='1'");
-                                                foreach ($DataMateria as $key => $value) {
-                                                    echo "<option value='{$DataMateria[$key]['id']}'>{$DataMateria[$key]['nombre']}</option>";
                                                 }
                                                 ?>
                                             </select>

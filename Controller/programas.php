@@ -23,11 +23,11 @@ if ($debug == 1) {
 switch ($_GET["op"]) {
     case "select2programassets":
         if (!isset($_POST['palabraClave'])) {
-            $Data = $obj_programa->getProgramasSetsSelect2();
+            $Data = $obj_programa->getProgramasSetsSelect2("ca.tipo='1'");
             $Data = Excepciones::validaConsulta($Data);
         } else {
             $search = $_POST['palabraClave']; // Palabra a buscar
-            $Data = $obj_programa->getProgramasSetsSelect2($search);
+            $Data = $obj_programa->getProgramasSetsSelect2("ca.tipo='1'",$search);
             $Data = Excepciones::validaConsulta($Data);
         }
         $response = array();
@@ -44,10 +44,24 @@ switch ($_GET["op"]) {
         $json_string = json_encode($response);
         echo $json_string;
         break;
+    case "select2programas":
+        if (!isset($_POST['palabraClave'])) {
+            $Data = $obj_programa->getProgramasSetsSelect2("ca.tipo<>'2'");
+            $Data = Excepciones::validaConsulta($Data);
+        } else {
+            $search = $_POST['palabraClave']; // Palabra a buscar
+            $Data = $obj_programa->getProgramasSetsSelect2("ca.tipo<>'2'",$search);
+            $Data = Excepciones::validaConsulta($Data);
+        }
+
+           //Creamos el JSON
+        $json_string = json_encode($Data);
+        echo $json_string;
+        break;
     case "agregarprograma":
         $programa = (isset($_POST['programa'])) ? trim($_POST['programa']) : '';
         $areaNeta = (isset($_POST['areaNeta'])) ? trim($_POST['areaNeta']) : '';
-        $tipo = '1';
+        $tipo = (isset($_POST['tipo'])) ? trim($_POST['tipo']) : '';
         $log = '';
         if ($programa == '') {
             $ErrorLog .= ' Programa,';
@@ -55,6 +69,10 @@ switch ($_GET["op"]) {
         }
         if ($areaNeta == '') {
             $ErrorLog .= ' Área Neta,';
+            $log = '1';
+        }
+        if ($tipo == '') {
+            $ErrorLog .= ' Tipo,';
             $log = '1';
         }
         if ($log == '1') {

@@ -98,4 +98,6 @@ $DataLotes = $obj_rendimiento->getLotesCapturados($filtradoProceso, $filtradoPro
         $('#modalBodyReasignacion').html('<div class="loading text-center"><img src="../assets/images/loading.gif" alt="loading" /><br/>Un momento, por favor...</div>');
         $('#modalBodyReasignacion').load('../templates/Rendimiento/cargaDetallesReasignacion.php?data=' + idLote);
     }
+
+   
 </script>

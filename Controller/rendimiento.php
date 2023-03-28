@@ -55,15 +55,15 @@ switch ($_GET["op"]) {
         $response = array();
 
         // // Leer la informacion
-        foreach ($Data as $area) {
+       /* foreach ($Data as $area) {
             $response[] = array(
                 "id" => $area['id'],
                 "text" => $area['loteTemola']
             );
-        }
+        }*/
 
         //Creamos el JSON
-        $json_string = json_encode($response);
+        $json_string = json_encode($Data);
         echo $json_string;
         break;
     case "select2lotesprocesos":

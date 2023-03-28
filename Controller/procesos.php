@@ -18,6 +18,7 @@ if ($debug == 1) {
 }
 
 switch ($_GET["op"]) {
+   
     case "agregarproc":
        $proceso = (isset($_POST['proceso'])) ? trim($_POST['proceso']) : '';
         $log = '';
