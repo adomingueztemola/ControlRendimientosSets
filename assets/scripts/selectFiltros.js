@@ -45,29 +45,29 @@ $(".SemanaLotesFilter").select2({
   },
 });
 
-//Filtro de lotes de sets en teseo/sin empacar
-// $(".LoteTeseoFilter").select2({
-//   placeholder: "Selecciona un lote",
-//   allowClear: true,
+// Filtro de lotes de sets en teseo/sin empacar
+$(".LoteTeseoFilter").select2({
+  placeholder: "Selecciona un lote",
+  allowClear: true,
 
-//   ajax: {
-//     url: "../Controller/rendimiento.php?op=select2lotessets",
-//     type: "post",
-//     dataType: "json",
-//     delay: 250,
-//     data: function (params) {
-//       return {
-//         palabraClave: params.term, // search term
-//       };
-//     },
-//     processResults: function (response) {
-//       return {
-//         results: response,
-//       };
-//     },
-//     cache: true,
-//   },
-// });
+  ajax: {
+    url: "../Controller/rendimiento.php?op=select2lotessets",
+    type: "post",
+    dataType: "json",
+    delay: 250,
+    data: function (params) {
+      return {
+        palabraClave: params.term, // search term
+      };
+    },
+    processResults: function (response) {
+      return {
+        results: response,
+      };
+    },
+    cache: true,
+  },
+});
 
 ///CARGA EMPLEADOS
 $(".LotesProceso").select2({

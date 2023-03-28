@@ -77,7 +77,7 @@ if ($completedCaja == '0') { ?>
                 <?php
                 $Data = $obj_empaque->getLotesDisponibles($idCatPrograma);
                 ?>
-                <select name="lote" id="lote" onchange="cambioDeLote(this)" required class="color-prioridad custom-select form-control">
+                <select name="lote" id="lote" onchange="cambioDeLote(this)" style="width:100%!important;" required class="color-prioridad custom-select form-control">
                     <option value="">Selecciona un Lote</option>
                     <?php
                     $tipoPieza = "";
