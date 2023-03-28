@@ -24,14 +24,11 @@ class Programa extends ConexionBD
             WHEN ca.tipo = '1' THEN 'Sets'
             WHEN ca.tipo = '2' THEN 'Etiquetas'
             WHEN ca.tipo = '3' THEN 'Metros'
-
         END AS nTipo
-
-
-
         FROM catprogramas ca
         WHERE $filtradoID AND 
-        ca.estado ='1' AND $fitradoTipo";
+        ca.estado ='1' AND $fitradoTipo
+        ORDER BY ca.tipo";
         return  $this->consultarQuery($sql, "consultar Programas");
     }
     public function agregarPrograma($name, $areaNeta, $tipo)
