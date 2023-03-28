@@ -360,7 +360,7 @@ class Empaque extends ConexionBD
                 r.pzasSetsRechazadas= (IFNULL(r.pzasSetsRechazadas, 0)+IFNULL(t.totalScrap,0)),
                 r.porcSetsRechazoInicial= ((IFNULL(r.setsRechazados, 0)+(IFNULL(t.totalScrap,0)/conf.pzasEnSets))/r.setsCortadosTeseo)*100,
                 r.porcFinalRechazo= ((IFNULL(r.setsRechazados, 0)+(IFNULL(t.totalScrap,0)/conf.pzasEnSets))/r.setsCortadosTeseo)*100,
-                r.totalRech= (IFNULL(r.pzasSetsRechazadas, 0)+IFNULL(t.totalScrap,0))
+                r.totalRech= IFNULL(t.totalScrap,0)
 
                 WHERE r.id='$idLote'";
         return $this->runQuery($sql, "registro de Totales");

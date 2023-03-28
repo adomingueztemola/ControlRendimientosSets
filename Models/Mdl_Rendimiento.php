@@ -410,7 +410,7 @@ class Rendimiento extends ConexionBD
         pr.nombre AS n_proceso, pr.codigo AS c_proceso, pg.nombre AS n_programa, mp.nombre AS n_materia,
         CONCAT(u.nombre, ' ', u.apellidos) AS str_usuario,
         DATE_FORMAT(r.fechaReg, '%d/%m/%Y %H:%m') AS f_fechaReg, (r.perdidaAreaWBCrust+r.perdidaAreaCrustTeseo) AS totalDifArea,
-        GROUP_CONCAT(pv.nombre) AS proveedores
+        GROUP_CONCAT(DISTINCT pv.nombre) AS proveedores
 
         FROM rendimientos r
 

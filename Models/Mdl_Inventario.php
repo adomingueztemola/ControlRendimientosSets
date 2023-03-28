@@ -362,7 +362,7 @@ class Inventario extends ConexionBD
         r.pzasSetsRechazadas, r.porcSetsRechazoInicial, 
         r.piezasRecuperadas, r.estado,
         vw.totalRech, IFNULL(vwd.totalUnidades,0) AS pzasVentas,
-        GROUP_CONCAT(pv.nombre) AS proveedores
+        GROUP_CONCAT(DISTINCT pv.nombre) AS proveedores
 
         FROM rendimientos r 
         INNER JOIN catprogramas cp ON r.idCatPrograma=cp.id
