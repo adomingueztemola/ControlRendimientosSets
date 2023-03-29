@@ -25,12 +25,13 @@
             </form>
         </div>
 
-        <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">
+        <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7" id="content-partidas">
 
         </div>
     </div>
     <script src="../assets/scripts/selectFiltros.js"></script>
     <script>
+        update("templates/FraccionLote/historialParticiones.php", "content-partidas", 1)
         $("#formParticion").submit(function(e) {
             e.preventDefault();
             formData = $(this).serialize();
@@ -45,6 +46,7 @@
                     } else if (resp[0] == 0) {
                         bloqueoBtn("bloqueo-btn-1", 2);
                         notificaBad(resp[1]);
+                        update("templates/FraccionLote/historialPartidas.php", "content-partidas", 1)
                     }
                 },
                 beforeSend: function() {
