@@ -697,8 +697,8 @@ class Rendimiento extends ConexionBD
         INNER JOIN catprogramas cp ON cp.id=r.idCatPrograma
         INNER JOIN catprocesos pr ON pr.id=r.idCatProceso
         INNER JOIN catmateriasprimas mp ON mp.id=r.idCatMateriaPrima
-        INNER JOIN segusuarios u ON u.id= r.idUserRend
-        WHERE r.estado='4' AND $filtradoProceso AND $filtradoPrograma AND $filtradoMateria AND $filtradoEstado
+        LEFT JOIN segusuarios u ON u.id= r.idUserRend
+        WHERE r.estado<>'0' AND $filtradoProceso AND $filtradoPrograma AND $filtradoMateria AND $filtradoEstado
         ORDER BY r.fechaEngrase DESC";
         return  $this->consultarQuery($sql, "consultar Lotes Capturados para Reasignación");
     }
