@@ -62,6 +62,13 @@ $DataRendimiento = $obj_rendimiento->getRendimientos(
                 <th>Programa</th>
                 <th>Proceso</th>
                 <th>Materia Prima</th>
+                <th>1s</th>
+                <th>2s</th>
+                <th>3s</th>
+                <th>4s</th>
+                <th>20</th>
+                <th>Total</th>
+
                 <th>Área Proveedor</th>
 
                 <th>Área WB en Recibo (pie<sup>2</sup>)</th>
@@ -189,6 +196,14 @@ $DataRendimiento = $obj_rendimiento->getRendimientos(
                 $porcDifAreaWB = $DataRendimiento[$key]['estado'] == '2' ? '<i class="fas fa-spinner fa-pulse"></i>' : formatoMil($DataRendimiento[$key]['porcDifAreaWB']);
                 $costoWBUnit = $DataRendimiento[$key]['estado'] == '2' ? '<i class="fas fa-spinner fa-pulse"></i>' : formatoMil($DataRendimiento[$key]['costoWBUnit']);
                 $perdidaAreaWBCrust = ($DataRendimiento[$key]['estado'] == '2' and $DataRendimiento[$key]['tipoMateriaPrima'] == '2') ? '<i class="fas fa-spinner"></i>' : formatoMil($DataRendimiento[$key]['perdidaAreaWBCrust']);
+                //Lados
+                $_1s = formatoMil($DataRendimiento[$key]['1s']*2, 0);
+                $_2s = formatoMil($DataRendimiento[$key]['2s']*2, 0);
+                $_3s = formatoMil($DataRendimiento[$key]['3s']*2, 0);
+                $_4s = formatoMil($DataRendimiento[$key]['4s']*2, 0);
+                $_20 = formatoMil($DataRendimiento[$key]['_20']*2, 0);
+                $total_s = formatoMil($DataRendimiento[$key]['total_s']*2, 0);
+
 
                 //Mensaje de Piezas 
                 $fto = formatoMil($DataRendimiento[$key]['piezasRechazadas']);
@@ -211,6 +226,13 @@ $DataRendimiento = $obj_rendimiento->getRendimientos(
                     <td><small><?= $DataRendimiento[$key]['n_programa'] ?></small></td>
                     <td><small><?= $DataRendimiento[$key]['n_proceso'] ?></small></td>
                     <td><small><?= $DataRendimiento[$key]['n_materia'] ?></small></td>
+                    <td><?= $_1s ?></td>
+                    <td><?= $_2s ?></td>
+                    <td><?= $_3s ?></td>
+                    <td><?= $_4s ?></td>
+                    <td><?= $_20 ?></td>
+                    <td><?= $total_s ?></td>
+
                     <td><?= formatoMil($DataRendimiento[$key]['areaProveedorLote']) ?></td>
                     <td><?= formatoMil($DataRendimiento[$key]['areaWB']) ?></td>
                     <td><?= $diferenciaArea ?></td>
@@ -266,7 +288,12 @@ $DataRendimiento = $obj_rendimiento->getRendimientos(
                 <td></td>
                 <td></td>
                 <td></td>
-
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -372,7 +399,7 @@ $DataRendimiento = $obj_rendimiento->getRendimientos(
             dom: 'Bfrltip',
             autoWidth: false,
             responsive: true,
-            "aaSorting": [],//Agregar o Quitar segun se necesite desactivar orden
+            "aaSorting": [], //Agregar o Quitar segun se necesite desactivar orden
 
             columnDefs: [{
                 targets: "0",

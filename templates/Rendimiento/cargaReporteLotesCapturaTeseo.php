@@ -56,6 +56,7 @@ $Data = Excepciones::validaConsulta($Data);
                 <th>R.P.</th>
                 <th>Fecha de Engrase</th>
                 <th>Lote</th>
+                <th class="table-info">Total de Hides</th>
                 <th>Programa</th>
                 <th>Área de Teseo®</th>
                 <th>Yield</th>
@@ -133,12 +134,13 @@ $Data = Excepciones::validaConsulta($Data);
                     : "<b>" . formatoMil($value['hideRechTeseo'], 2) . "</b>";
 
                 $iconReprog = $value["reprogramado"] == '1' ? '<i class="fas fa-recycle text-success"></i>' : '';
-
+                $totalHides= formatoMil($value["total_s"]*2,0);
                 echo "<tr>
                     <td>{$count}</td>
                     <td>{$iconReprog}</td>
                     <td>{$value['fFechaEngrase']}</td>
                     <td>{$value['loteTemola']}</td>
+                    <td class='table-info'>{$totalHides}</td>
                     <td>{$value['nPrograma']}</td>
                     <td>$inptAreaTeseo</td>
                     <td>$inptYieldTeseo</td>
