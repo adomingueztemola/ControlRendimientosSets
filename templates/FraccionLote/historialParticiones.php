@@ -11,16 +11,23 @@
                         <th>3s</th>
                         <th>4s</th>
                         <th>Total</th>
+                        <th>Lote Inicial</th>
 
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                 </tbody>
             </table>
         </div>
     </div>
 </div>
 <script>
-    $("#table-particiones").DataTable({})
+    $("#table-particiones").DataTable({
+     
+        ajax: {
+            "url": "../Controller/particionLotes.php?op=getparticionesregistradas",
+            "type": "POST"
+        },
+    })
 </script>

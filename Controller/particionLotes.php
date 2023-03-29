@@ -3,6 +3,7 @@ session_start();
 define('INCLUDE_CHECK', 1);
 require_once "../include/connect_mvc.php";
 include('../Models/Mdl_Static.php');
+include('../assets/scripts/cadenas.php');
 
 $debug = 0;
 $idUser = $_SESSION['CREident'];
@@ -18,6 +19,27 @@ if ($debug == 1) {
 }
 
 switch ($_GET["op"]) {
+    case "getparticionesregistradas":
+        $Data = $obj_particion->getParticiones();
+        $Data = Excepciones::validaConsulta($Data);
+        $response = array();
+        $count = 1;
+
+        foreach ($Data as $value) {
+            array_push($response, [
+                $count,  $value['loteTemola'], 
+                formatoMil($value['1s'], 2), formatoMil($value['2s'], 2),
+                formatoMil($value['3s'], 2),   formatoMil($value['4s'], 2), formatoMil($value['_20'], 2),
+                formatoMil($value['total_s'], 2), $value['lotePadre']
+            ]);
+
+            $count++;
+        }
+        //Creamos el JSON
+        $response = array("data" => $response);
+        $json_string = json_encode($response);
+        echo $json_string;
+        break;
     case "agregarparticion":
         $lote = (isset($_POST['lote'])) ? trim($_POST['lote']) : '';
         $programa = (isset($_POST['programa'])) ? trim($_POST['programa']) : '';
@@ -184,6 +206,7 @@ switch ($_GET["op"]) {
         }
         //llenado de tabla de bd: particiones
         $datos =  $obj_particion->agregarParticion(
+            $idInsert,
             $lote,
             $programa,
             $numParticion,

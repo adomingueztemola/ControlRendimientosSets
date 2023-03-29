@@ -69,6 +69,7 @@ class ParticionLote extends Rendimiento
 
     public function agregarParticion(
         $idLote,
+        $idLoteTransfer,
         $idPrograma,
         $numParticion,
         $total_s,
@@ -86,9 +87,9 @@ class ParticionLote extends Rendimiento
     ) {
         $idUserReg = $this->idUserReg;
 
-        $sql = "INSERT INTO particioneslotes (idLote, idPrograma, numParticion, total_s, 1s, 2s, 3s, 4s, _20,
+        $sql = "INSERT INTO particioneslotes (idLote,idLoteTransfer,idPrograma, numParticion, total_s, 1s, 2s, 3s, 4s, _20,
         total_sAnt, 1sAnt, 2sAnt,3sAnt, 4sAnt, _20Ant, fechaReg, idUserReg) 
-        VALUES('$idLote', '$idPrograma', '$numParticion', '$total_s', '$_1s', '$_2s', '$_3s',
+        VALUES('$idLote','$idLoteTransfer', '$idPrograma', '$numParticion', '$total_s', '$_1s', '$_2s', '$_3s',
         '$_4s', '$_20', '$total_sAnt', '$_1sAnt', '$_2sAnt', '$_3sAnt', '$_4sAnt', '$_20Ant', NOW(), '$idUserReg ' )";
         return $this->runQuery($sql, "agregar Partición");
     }
@@ -102,5 +103,16 @@ class ParticionLote extends Rendimiento
 
     }
 
-    
+
+    public function getParticiones(){
+        $sql = "SELECT p.*, cp.nombre AS nPrograma, r.loteTemola,
+        rt.loteTemola AS lotePadre
+        FROM particioneslotes p
+        INNER JOIN rendimientos r ON p.idLote=r.id
+        INNER JOIN rendimientos rt ON p.idLoteTransfer=rt.id
+        INNER JOIN catprogramas cp ON p.idPrograma=cp.id
+        ORDER BY CAST(r.loteTemola AS UNSIGNED) DESC";
+        return  $this->consultarQuery($sql, "consultar Transferencias de Lote");
+    }
+
 }
