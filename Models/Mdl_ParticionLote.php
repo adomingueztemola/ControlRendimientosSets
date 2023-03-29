@@ -1,5 +1,5 @@
 <?php
-class ParticionLote extends ConexionBD
+class ParticionLote extends Rendimiento
 {
     protected $debug;
     private $idUserReg;
@@ -17,7 +17,13 @@ class ParticionLote extends ConexionBD
         $this->close();
     }
 
+    public function getTransferenciaLotes($ident){
+        $sql = "SELECT * FROM rendimientos r WHERE r.idRendimientoTransfer='$ident'";
+        return  $this->consultarQuery($sql, "consultar Transferencias de Lote");
+    }
 
-
+    public function agregarParticion($idLote, $idPorgrama, $numParticion, $total_s, $_1s, $_2s, $_3s, $_4s, $_20){
+        
+    }
+  
 }
-?>
