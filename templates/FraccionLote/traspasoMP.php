@@ -47,16 +47,85 @@ $id = count($DataRend) > 0 ? $DataRend['id'] : '';
                 <?php include("../templates/namePage.php"); ?>
 
                 <div class="row">
-                    <div class="col-md-12 col-lg-12 col-xs-12 col-sm-12">
+                    <div class="col-md-6 col-lg-6 col-xs-6 col-sm-6">
                         <div class="card border">
                             <div class="card-body" id="">
-                                <ul class="nav nav-pills m-t-30 m-b-30">
-                                    <li class=" nav-item"> <a href="#areaTrabajo" onclick='verModulo(1)' class="nav-link active" data-toggle="tab" aria-expanded="false"><i class="fas fa-chart-pie"></i>Particiones de Lotes</a> </li>
-                                    <li class="nav-item"> <a href="#areaTrabajo" onclick='verModulo(2)' class="nav-link" data-toggle="tab" aria-expanded="false"><i class="fas fa-dolly-flatbed"></i>Traspasos de Materia Prima</a> </li>
-                                </ul>
-                                <div class="tab-content br-n pn">
-                                    <div id="areaTrabajo" class="tab-pane active">
+                                <div class="row">
+                                    <div class="col-md-11 col-lg-11 col-sm-11 col-xs-11">
+                                    </div>
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                                        <div id="bloqueo-btn-4" style="display:none">
+                                            <button class="btn btn-danger" type="button" disabled="">
+                                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                            </button>
+                                        </div>
+                                        <div id="desbloqueo-btn-4">
+                                            <button class="button btn btn-danger btn-xs" title="Cancelar Operación" onclick="cancelarTraspasoInit()">
+                                                <i class="fas fa-power-off"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <label for="lote">Lote</label>
+                                        <?php
+                                        $Data = $obj_rendimiento->getRendimientos("1=1", "1=1", "1=1", "1=1", "1=1", "r.estado>0");
+                                        $Data = Excepciones::validaConsulta($Data);
+                                        ?>
+                                        <select name="lote" class="form-control select2" onchange="updateTraspaso()" style="width:100%" id="lote">
+                                            <option value="">Seleccionar lote con reasignación</option>
+                                            <?php
+                                            foreach ($Data as $key => $value) {
+                                                $selected = $idRendimientoTransfer == $Data[$key]['id'] ? 'selected' : '';
+                                                echo "<option $selected data-totals='{$Data[$key]['total_s']}' value='{$Data[$key]['id']}'>Lote: {$Data[$key]['loteTemola']} (Proceso: {$Data[$key]['c_proceso']} Programa: {$Data[$key]['n_programa']})</option>";
+                                            }
 
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="cargaTotalCueros">
+
+                                    </div>
+                                </div>
+                                <form id="formAsignacion">
+                                    <div class="row" hidden id="areaCargaPzasTraspasar">
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                            <label for="pzasTraspasar" class="form-label required">Piezas a traspasar</label>
+                                            <input type="hidden" value="" id="idRendimiento" name="idRendimiento">
+                                            <div class="input-group mb-3">
+                                                <input type="number" class="form-control" value="<?= $pzasTraspaso ?>" required name="pzasTraspasar" id="pzasTraspasar" min="0" max="" step="1">
+                                                <div class="input-group-append">
+                                                    <div id="bloqueo-btn-1" style="display:none">
+                                                        <button class="btn btn-success" type="button" disabled="">
+                                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                        </button>
+                                                    </div>
+                                                    <div id="desbloqueo-btn-1">
+                                                        <button class="btn btn-success" id="btnPzasTraspasar" type="submit"><i class="fas fa-check"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="cargaCuerosEstimados">
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="cargaVentas">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="cargaPedidos">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="cargaDatosActuales">
                                     </div>
                                 </div>
                             </div>
@@ -64,7 +133,18 @@ $id = count($DataRend) > 0 ? $DataRend['id'] : '';
 
                     </div>
 
+                    <div class="col-md-6 col-lg-6 col-xs-6 col-sm-6">
+                        <div class="card border">
+                            <div class="card-body" id="carga-infoLoteNuevo">
+                                <div class="alert alert-info" role="alert">
+                                    Selecciona el lote origen, antes de configurar nuevo lote.
+                                </div>
 
+                            </div>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
@@ -78,7 +158,6 @@ $id = count($DataRend) > 0 ? $DataRend['id'] : '';
 <script src="../assets/scripts/calculaSemanaProduccion.js"></script>
 <script src="../assets/scripts/validaLotePiel.js"></script>
 <script src="../assets/extra-libs/datatables.net/js/jquery.dataTables.min-ESP.js"></script>
-<script src="../assets/scripts/clearData.js"></script>
 
 <script>
     <?php
@@ -94,54 +173,6 @@ $id = count($DataRend) > 0 ? $DataRend['id'] : '';
     }
 
     ?>
-
-    function verModulo(option) {
-        switch (option) {
-            case 1:
-                update("templates/FraccionLote/particionLote.php", "areaTrabajo", 1)
-                break;
-            case 2:
-                update("templates/FraccionLote/traspasoMP.php", "areaTrabajo", 1)
-                break;
-
-            default:
-                break;
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /* CARGA CONTENIDO DE CONFIGURACION */
     function updateTraspaso() {
         ident = $("#lote").val();
