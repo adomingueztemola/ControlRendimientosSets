@@ -26,6 +26,24 @@ class Rendimiento extends ConexionBD
         WHERE $filtradoID";
         return  $this->consultarQuery($sql, "consultar lotes");
     }
+    public function getLotesPadresSelect2($busqId = '')
+    {
+        $filtradoID = $busqId == '' ? '1=1' : "r.loteTemola LIKE '%$busqId%'";
+
+        $sql = "SELECT r.*, cp.nombre AS nPrograma
+        FROM rendimientos r
+        INNER JOIN catprogramas cp ON r.idCatPrograma=cp.id
+        WHERE $filtradoID AND 
+        (r.regEmpaque IS NULL OR r.regEmpaque <>'1') AND
+        (r.regTeseo IS NULL OR r.regTeseo <>'1') AND
+        (r.regDatos IS NULL OR r.regDatos <>'1') AND
+        (r.regOkNok IS NULL OR r.regOkNok <>'1')
+        AND (r.idRendimientoTransfer IS NULL OR r.idRendimientoTransfer='')
+        AND r.total_s>0 AND
+         r.estado BETWEEN 1 AND 2
+        ORDER BY cp.nombre, CAST(r.loteTemola AS UNSIGNED)";
+        return  $this->consultarQuery($sql, "consultar lotes");
+    }
     public function getLotesTeseoSelect2($busqId = '')
     {
         $filtradoID = $busqId == '' ? '1=1' : "r.loteTemola LIKE '%$busqId%'";

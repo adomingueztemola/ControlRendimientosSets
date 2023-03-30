@@ -115,4 +115,18 @@ class ParticionLote extends Rendimiento
         return  $this->consultarQuery($sql, "consultar Transferencias de Lote");
     }
 
+    public function actualizaLotePadre( $lote,
+    $total_s,
+    $_1s,
+    $_2s,
+    $_3s,
+    $_4s,
+    $_20,
+    $areaProveedorLote){
+        $sql = "UPDATE rendimientos SET 1s=' $_1s', 2s=' $_2s',
+        3s=' $_3s', 4s=' $_4s', _20=' $_20', total_s=' $total_s', 
+        areaProveedorLote='$areaProveedorLote' WHERE id='$lote'";
+        return $this->runQuery($sql, "actualizar datos del lote");
+    }
+
 }
