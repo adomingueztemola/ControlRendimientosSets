@@ -19,6 +19,27 @@ if ($debug == 1) {
 }
 
 switch ($_GET["op"]) {
+    case "getreprogregistradas":
+        $Data = $obj_particion->getReprogramacionLotes();
+        $Data = Excepciones::validaConsulta($Data);
+        $response = array();
+        $count = 1;
+
+        foreach ($Data as $value) {
+            array_push($response, [
+                $count,  $value['loteTemola'],
+                formatoMil($value['1s'], 2), formatoMil($value['2s'], 2),
+                formatoMil($value['3s'], 2),   formatoMil($value['4s'], 2), formatoMil($value['_20'], 2),
+                formatoMil($value['total_s'], 2), formatoMil($value['areaProveedorLote'], 2), $value['lotePadre']
+            ]);
+
+            $count++;
+        }
+        //Creamos el JSON
+        $response = array("data" => $response);
+        $json_string = json_encode($response);
+        echo $json_string;
+        break;
     case "getparticionesregistradas":
         $Data = $obj_particion->getParticiones();
         $Data = Excepciones::validaConsulta($Data);
@@ -153,12 +174,12 @@ switch ($_GET["op"]) {
         foreach ($DataMP as $key => $value) {
             $arraycalculonew_mp[$key] = $value;
             $arraycalculonew_mp[$key]['idRendimiento'] = $idInsert;
-            $arraycalculonew_mp[$key]['total_s'] = $redondLCalc($arraycalculonew_mp[$key]['total_s']*2, $porcent);
-            $arraycalculonew_mp[$key]['4s'] = $redondLCalc($arraycalculonew_mp[$key]['4s']*2, $porcent);
-            $arraycalculonew_mp[$key]['3s'] = $redondLCalc($arraycalculonew_mp[$key]['3s']*2, $porcent);
-            $arraycalculonew_mp[$key]['2s'] = $redondLCalc($arraycalculonew_mp[$key]['2s']*2, $porcent);
-            $arraycalculonew_mp[$key]['1s'] = $redondLCalc($arraycalculonew_mp[$key]['1s']*2, $porcent);
-            $arraycalculonew_mp[$key]['_20'] = $redondLCalc($arraycalculonew_mp[$key]['_20']*2, $porcent);
+            $arraycalculonew_mp[$key]['total_s'] = $redondLCalc($arraycalculonew_mp[$key]['total_s'] * 2, $porcent);
+            $arraycalculonew_mp[$key]['4s'] = $redondLCalc($arraycalculonew_mp[$key]['4s'] * 2, $porcent);
+            $arraycalculonew_mp[$key]['3s'] = $redondLCalc($arraycalculonew_mp[$key]['3s'] * 2, $porcent);
+            $arraycalculonew_mp[$key]['2s'] = $redondLCalc($arraycalculonew_mp[$key]['2s'] * 2, $porcent);
+            $arraycalculonew_mp[$key]['1s'] = $redondLCalc($arraycalculonew_mp[$key]['1s'] * 2, $porcent);
+            $arraycalculonew_mp[$key]['_20'] = $redondLCalc($arraycalculonew_mp[$key]['_20'] * 2, $porcent);
             $arraycalculonew_mp[$key]['areaProveedorLote'] = $arraycalculonew_mp[$key]['areaWBPromFact'] * $arraycalculonew_mp[$key]['total_s'];
             unset($arraycalculonew_mp[$key]['areaWBPromFact']);
         }

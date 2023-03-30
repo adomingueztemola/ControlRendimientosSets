@@ -1,4 +1,3 @@
-   <link rel="stylesheet" href="../assets/base.css">
    <div class="row">
        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5 card-header border">
            <form id="formParticion">
@@ -6,7 +5,7 @@
                <div class="row">
                    <div class="col-md-12">
                        <label for="lote" class="form-label required">LOTE PADRE</label>
-                       <select class="form-control LotePadresFilter" style="width:100%" required name="lote" id="lote"></select>
+                       <select class="form-control select2Form LotePadresFilter" style="width:100%" required name="lote" id="lote"></select>
                    </div>
                </div>
                <div class="row mt-2" id="c-detallado">
@@ -42,19 +41,23 @@
                <div class="row">
                    <div class="col-md-6">
                        <label for="programa" class="form-label required">PROGRAMA</label>
-                       <select class="form-control ProgramasFilter" required style="width:100%" name="programa" id="programa"></select>
+                       <select class="form-control select2Form ProgramasFilter" required style="width:100%" name="programa" id="programa"></select>
                    </div>
                    <div class="col-md-3">
                        <label for="hides" class="form-label required">HIDES</label>
-                       <input type="number" class="form-control" required name="hides" id="hides" aria-label="">
+                       <input type="number" class="form-control"  required name="hides" id="hides" aria-label="">
                    </div>
-                   <div class="col-md-3 mt-4">
-                       <button type="submit" class="button btn  btn-success mt-1">
-                           <i class="fas fa-upload"></i>
-                           <span id="boxLoading" hidden class="spinner spinner-border  spinner-border-sm" role="status">
-                               <span class="sr-only">Loading...</span>
-                           </span>
-                       </button>
+                   <div class="col-md-3 mt-4 pt-1">
+                       <div id='bloqueo-btn-1' style='display:none'>
+                           <button class='btn btn-success' type='button' disabled=''>
+                               <span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span>
+                           </button>
+                       </div>
+                       <div id='desbloqueo-btn-1'>
+                           <button type="submit" class="button btn  btn-success">
+                               <i class="fas fa-upload"></i>
+                           </button>
+                       </div>
                    </div>
                </div>
            </form>
@@ -81,7 +84,9 @@
                success: function(response) {
                    resp = response.split('|')
                    if (resp[0] == 1) {
+                       bloqueoBtn("bloqueo-btn-1", 2);
                        notificaSuc(resp[1]);
+                       clearForm("formParticion")
                        update("templates/FraccionLote/historialParticiones.php", "content-partidas", 1)
                    } else if (resp[0] == 0) {
                        bloqueoBtn("bloqueo-btn-1", 2);

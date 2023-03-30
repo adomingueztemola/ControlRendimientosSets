@@ -90,7 +90,7 @@ class ParticionLote extends Rendimiento
         $sql = "INSERT INTO particioneslotes (idLote,idLoteTransfer,idPrograma, numParticion, total_s, 1s, 2s, 3s, 4s, _20,
         total_sAnt, 1sAnt, 2sAnt,3sAnt, 4sAnt, _20Ant, fechaReg, idUserReg) 
         VALUES('$idLote','$idLoteTransfer', '$idPrograma', '$numParticion', '$total_s', '$_1s', '$_2s', '$_3s',
-        '$_4s', '$_20', '$total_sAnt', '$_1sAnt', '$_2sAnt', '$_3sAnt', '$_4sAnt', '$_20Ant', NOW(), '$idUserReg ' )";
+        '$_4s', '$_20', '$total_sAnt', '$_1sAnt', '$_2sAnt', '$_3sAnt', '$_4sAnt', '$_20Ant', NOW(), '$idUserReg' )";
         return $this->runQuery($sql, "agregar Partición");
     }
 
@@ -115,6 +115,10 @@ class ParticionLote extends Rendimiento
         return  $this->consultarQuery($sql, "consultar Transferencias de Lote");
     }
 
+    public function getReprogramacionLotes(){
+        $sql = "";
+        return  $this->consultarQuery($sql, "consultar Reprogramación de Lotes");
+    }
     public function actualizaLotePadre( $lote,
     $total_s,
     $_1s,
