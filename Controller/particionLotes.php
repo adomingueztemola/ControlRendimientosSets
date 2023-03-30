@@ -27,10 +27,10 @@ switch ($_GET["op"]) {
 
         foreach ($Data as $value) {
             array_push($response, [
-                $count,  $value['loteTemola'], 
+                $count,  $value['loteTemola'],
                 formatoMil($value['1s'], 2), formatoMil($value['2s'], 2),
                 formatoMil($value['3s'], 2),   formatoMil($value['4s'], 2), formatoMil($value['_20'], 2),
-                formatoMil($value['total_s'], 2), $value['lotePadre']
+                formatoMil($value['total_s'], 2), formatoMil($value['areaProveedorLote'], 2), $value['lotePadre']
             ]);
 
             $count++;
@@ -68,7 +68,10 @@ switch ($_GET["op"]) {
         $arraycueros["4s"] = $Data['4s'] == '' ? '0' : [$Data['4s'], $Data['4s'] * 2];
         $arraycueros["_20"] = $Data['_20'] == '' ? '0' : [$Data['_20'], $Data['_20'] * 2];
         $arraycueros["total_s"] = $Data['total_s'] == '' ? '0' : [$Data['total_s'], $Data['total_s'] * 2];
-
+        // echo "Cueros identificados:";
+        // echo "<br>";
+        // print_r($arraycueros);
+        // echo "<br>";
         //Valida que el total sea mayor a 0
         if ($arraycueros["total_s"][0] <= 0) {
             $obj_particion->errorBD("Revisa el total de lados incluidos en el lote, la cantidad es erronea", 0);
@@ -77,11 +80,12 @@ switch ($_GET["op"]) {
         $arraycalculonew = array();
         $arraycalculosobrante = array();
 
-        $porcent = $hides / $total_s;
+        $porcent = $hides / $arraycueros["total_s"][1];
         // echo "Porcentaje =>" . $porcent;
         // echo "<br>";
         $redondLCalc = function ($calculoReal, $porcent) {
             $calculoReal = $calculoReal * $porcent;
+
             $modCalculo = $calculoReal % 1;
             $intCalculo = $calculoReal - $modCalculo;
             if ($modCalculo > 0.5) {
@@ -89,6 +93,7 @@ switch ($_GET["op"]) {
             } else if ($modCalculo <= 0.5) {
                 $resp = $intCalculo;
             }
+            $resp = $resp / 2;
             return $resp;
         };
 
@@ -101,12 +106,12 @@ switch ($_GET["op"]) {
         // print_r($arraycalculonew);
         // echo "<br>";
 
-        $arraycalculosobrante["1s"] = $arraycueros["1s"][1] - $arraycalculonew['1s'];
-        $arraycalculosobrante["2s"] = $arraycueros["2s"][1] - $arraycalculonew['2s'];
-        $arraycalculosobrante["3s"] = $arraycueros["3s"][1] - $arraycalculonew['3s'];
-        $arraycalculosobrante["4s"] = $arraycueros["4s"][1] - $arraycalculonew['4s'];
-        $arraycalculosobrante["_20"] = $arraycueros["_20"][1] - $arraycalculonew['_20'];
-        $arraycalculosobrante["total_s"] = $arraycueros["total_s"][1] - $arraycalculonew['total_s'];
+        $arraycalculosobrante["1s"] = ($arraycueros["1s"][0] - $arraycalculonew['1s']);
+        $arraycalculosobrante["2s"] = ($arraycueros["2s"][0] - $arraycalculonew['2s']);
+        $arraycalculosobrante["3s"] = ($arraycueros["3s"][0] - $arraycalculonew['3s']);
+        $arraycalculosobrante["4s"] = ($arraycueros["4s"][0] - $arraycalculonew['4s']);
+        $arraycalculosobrante["_20"] = ($arraycueros["_20"][0] - $arraycalculonew['_20']);
+        $arraycalculosobrante["total_s"] = ($arraycueros["total_s"][0] - $arraycalculonew['total_s']);
         // print_r($arraycalculosobrante);
         // echo "<br>";
         $fconv = function ($value) {
@@ -148,12 +153,12 @@ switch ($_GET["op"]) {
         foreach ($DataMP as $key => $value) {
             $arraycalculonew_mp[$key] = $value;
             $arraycalculonew_mp[$key]['idRendimiento'] = $idInsert;
-            $arraycalculonew_mp[$key]['total_s'] = $redondLCalc($arraycalculonew_mp[$key]['total_s'], $porcent);
-            $arraycalculonew_mp[$key]['4s'] = $redondLCalc($arraycalculonew_mp[$key]['4s'], $porcent);
-            $arraycalculonew_mp[$key]['3s'] = $redondLCalc($arraycalculonew_mp[$key]['3s'], $porcent);
-            $arraycalculonew_mp[$key]['2s'] = $redondLCalc($arraycalculonew_mp[$key]['2s'], $porcent);
-            $arraycalculonew_mp[$key]['1s'] = $redondLCalc($arraycalculonew_mp[$key]['1s'], $porcent);
-            $arraycalculonew_mp[$key]['_20'] = $redondLCalc($arraycalculonew_mp[$key]['_20'], $porcent);
+            $arraycalculonew_mp[$key]['total_s'] = $redondLCalc($arraycalculonew_mp[$key]['total_s']*2, $porcent);
+            $arraycalculonew_mp[$key]['4s'] = $redondLCalc($arraycalculonew_mp[$key]['4s']*2, $porcent);
+            $arraycalculonew_mp[$key]['3s'] = $redondLCalc($arraycalculonew_mp[$key]['3s']*2, $porcent);
+            $arraycalculonew_mp[$key]['2s'] = $redondLCalc($arraycalculonew_mp[$key]['2s']*2, $porcent);
+            $arraycalculonew_mp[$key]['1s'] = $redondLCalc($arraycalculonew_mp[$key]['1s']*2, $porcent);
+            $arraycalculonew_mp[$key]['_20'] = $redondLCalc($arraycalculonew_mp[$key]['_20']*2, $porcent);
             $arraycalculonew_mp[$key]['areaProveedorLote'] = $arraycalculonew_mp[$key]['areaWBPromFact'] * $arraycalculonew_mp[$key]['total_s'];
             unset($arraycalculonew_mp[$key]['areaWBPromFact']);
         }
@@ -161,7 +166,7 @@ switch ($_GET["op"]) {
         // echo "<br>";
         // print_r($arraycalculonew_mp);
         // echo "<br>";
-
+        $areaProveedorLoteSobrante = 0;
         foreach ($DataMP as $key => $value) {
             $arraycalculosobrante_mp[$key] = $value;
             $arraycalculosobrante_mp[$key]['total_s'] = $value["total_s"] - $arraycalculonew_mp[$key]['total_s'];
@@ -171,6 +176,7 @@ switch ($_GET["op"]) {
             $arraycalculosobrante_mp[$key]['1s'] = $value["1s"] - $arraycalculonew_mp[$key]['1s'];
             $arraycalculosobrante_mp[$key]['_20'] = $value["_20"] - $arraycalculonew_mp[$key]['_20'];
             $arraycalculosobrante_mp[$key]['areaProveedorLote'] = $value["areaWBPromFact"] *   $arraycalculosobrante_mp[$key]['total_s'];
+            $areaProveedorLoteSobrante = $areaProveedorLoteSobrante + $arraycalculosobrante_mp[$key]['areaProveedorLote'];
             unset($arraycalculosobrante_mp[$key]['areaWBPromFact']);
         }
         // echo "Materia Prima Para el Padre";
@@ -204,6 +210,23 @@ switch ($_GET["op"]) {
                 $value['areaProveedorLote']
             );
         }
+        //actualizacion de lote
+        $datos =  $obj_particion->actualizaLotePadre(
+            $lote,
+            $arraycalculosobrante["total_s"],
+            $arraycalculosobrante["1s"],
+            $arraycalculosobrante["2s"],
+            $arraycalculosobrante["3s"],
+            $arraycalculosobrante["4s"],
+            $arraycalculosobrante["_20"],
+            $areaProveedorLoteSobrante
+        );
+        try {
+            Excepciones::validaMsjError($datos);
+        } catch (Exception $e) {
+            $obj_particion->errorBD($e->getMessage(), 1);
+        }
+
         //llenado de tabla de bd: particiones
         $datos =  $obj_particion->agregarParticion(
             $idInsert,

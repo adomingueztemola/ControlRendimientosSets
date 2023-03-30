@@ -10,7 +10,10 @@
                         <th>2s</th>
                         <th>3s</th>
                         <th>4s</th>
+                        <th>20</th>
+
                         <th>Total</th>
+                        <th>Área Proveedor</th>
                         <th>Lote Inicial</th>
 
                     </tr>

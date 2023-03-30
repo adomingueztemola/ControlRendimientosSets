@@ -21,6 +21,19 @@ if ($debug == 1) {
 }
 
 switch ($_GET["op"]) {
+    case "select2lotespadres":
+        if (!isset($_POST['palabraClave'])) {
+            $Data = $obj_rendimiento->getLotesPadresSelect2();
+            $Data = Excepciones::validaConsulta($Data);
+        } else {
+            $search = $_POST['palabraClave']; // Palabra a buscar
+            $Data = $obj_rendimiento->getLotesPadresSelect2($search);
+            $Data = Excepciones::validaConsulta($Data);
+        }
+        //Creamos el JSON
+        $json_string = json_encode($Data);
+        echo $json_string;
+        break;
     case "select2semanalotes":
         if (!isset($_POST['palabraClave'])) {
             $Data = $obj_rendimiento->getSemanaSelect2();
@@ -55,7 +68,7 @@ switch ($_GET["op"]) {
         $response = array();
 
         // // Leer la informacion
-       /* foreach ($Data as $area) {
+        /* foreach ($Data as $area) {
             $response[] = array(
                 "id" => $area['id'],
                 "text" => $area['loteTemola']
