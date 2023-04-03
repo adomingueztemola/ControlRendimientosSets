@@ -21,6 +21,9 @@ if ($debug == 1) {
 }
 
 switch ($_GET["op"]) {
+    case "gettraspasosregistrados":
+        
+        break;
     case "traspasar":
         $lotetransmisor = (isset($_POST['lotetransmisor'])) ? trim($_POST['lotetransmisor']) : '';
         $hides = (isset($_POST['hides'])) ? trim($_POST['hides']) : '';
@@ -215,19 +218,43 @@ switch ($_GET["op"]) {
         //actualizacion del lote receptor 
         $datos =  $obj_reasignacion->actualizaLote(
             $lotereceptor,
-            $arraycuerosreceptor['total_s'][0]+$arraycalculoaumento["total_s"],
-            $arraycuerosreceptor['1s'][0]+$arraycalculoaumento["1s"],
-            $arraycuerosreceptor['2s'][0]+$arraycalculoaumento["2s"],
-            $arraycuerosreceptor['3s'][0]+$arraycalculoaumento["3s"],
-            $arraycuerosreceptor['4s'][0]+$arraycalculoaumento["4s"],
-            $arraycuerosreceptor['_20'][0]+$arraycalculoaumento["_20"],
-            $arraycuerosreceptor['areaProveedorLote']+$areaProveedorLoteAum
+            $arraycuerosreceptor['total_s'][0] + $arraycalculoaumento["total_s"],
+            $arraycuerosreceptor['1s'][0] + $arraycalculoaumento["1s"],
+            $arraycuerosreceptor['2s'][0] + $arraycalculoaumento["2s"],
+            $arraycuerosreceptor['3s'][0] + $arraycalculoaumento["3s"],
+            $arraycuerosreceptor['4s'][0] + $arraycalculoaumento["4s"],
+            $arraycuerosreceptor['_20'][0] + $arraycalculoaumento["_20"],
+            $arraycuerosreceptor['areaProveedorLote'] + $areaProveedorLoteAum
         );
         try {
             Excepciones::validaMsjError($datos);
         } catch (Exception $e) {
             $obj_reasignacion->errorBD($e->getMessage(), 1);
         }
+        //registro de operacion
+        $datos =  $obj_reasignacion->registroTraspaso(
+            $lotetransmisor,
+            $arraycalculodism["total_s"],
+            $arraycalculodism["1s"],
+            $arraycalculodism["2s"],
+            $arraycalculodism["3s"],
+            $arraycalculodism["4s"],
+            $arraycalculodism["_20"],
+            $lotereceptor,
+            $arraycuerosreceptor['total_s'][0] + $arraycalculoaumento["total_s"],
+            $arraycuerosreceptor['1s'][0] + $arraycalculoaumento["1s"],
+            $arraycuerosreceptor['2s'][0] + $arraycalculoaumento["2s"],
+            $arraycuerosreceptor['3s'][0] + $arraycalculoaumento["3s"],
+            $arraycuerosreceptor['4s'][0] + $arraycalculoaumento["4s"],
+            $arraycuerosreceptor['_20'][0] + $arraycalculoaumento["_20"],
+            $arraycuerosreceptor['areaProveedorLote'] + $areaProveedorLoteAum
+        );
+        try {
+            Excepciones::validaMsjError($datos);
+        } catch (Exception $e) {
+            $obj_reasignacion->errorBD($e->getMessage(), 1);
+        }
+
         echo "1|Traspaso de Hides Realizado Satisfactoriamente.";
         break;
 }

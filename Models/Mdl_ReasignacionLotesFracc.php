@@ -49,17 +49,45 @@ class ReasignacionLotesFracc extends Rendimiento
         return $this->runQuery($sql, "agregar de Materia Prima");
     }
 
-    public function actualizaLote( $lote,
-    $total_s,
-    $_1s,
-    $_2s,
-    $_3s,
-    $_4s,
-    $_20,
-    $areaProveedorLote){
-        $sql = "UPDATE rendimientos SET 1s=' $_1s', 2s=' $_2s',
-        3s=' $_3s', 4s=' $_4s', _20=' $_20', total_s=' $total_s', 
+    public function actualizaLote(
+        $lote,
+        $total_s,
+        $_1s,
+        $_2s,
+        $_3s,
+        $_4s,
+        $_20,
+        $areaProveedorLote
+    ) {
+        $sql = "UPDATE rendimientos SET 1s='$_1s', 2s='$_2s',
+        3s='$_3s', 4s='$_4s', _20='$_20', total_s='$total_s', 
         areaProveedorLote='$areaProveedorLote' WHERE id='$lote'";
         return $this->runQuery($sql, "actualizar datos del lote");
+    }
+
+    public function registroTraspaso(
+        $idLoteTx,
+        $total_sTx,
+        $_1sTx,
+        $_2sTx,
+        $_3sTx,
+        $_4sTx,
+        $_20Tx,
+        $idLoteRx,
+        $total_sRx,
+        $_1sRx,
+        $_2sRx,
+        $_3sRx,
+        $_4sRx,
+        $_20Rx,
+        $areaProveedorRx
+    ) {
+        $idUserReg = $this->idUserReg;
+        $sql = "INSERT INTO reasignacionfracclotes (idLoteTx,total_sTx, 1sTx,2sTx,3sTx,4sTx,
+        _20Tx,  idLoteRx, total_sRx, 1sRx,2sRx,3sRx,4sRx,_20Rx, areaProveedorRx,fechaReg, idUserReg) 
+        VALUES('$idLoteTx', '$total_sTx','$_1sTx','$_2sTx', '$_3sTx', '$_4sTx', '$_20Tx',
+        '$idLoteRx', '$total_sRx','$_1sRx','$_2sRx', '$_3sRx', '$_4sRx', '$_20Rx',  '$areaProveedorRx', NOW(),
+        '$idUserReg')";
+        return $this->runQuery($sql, "registro de Traspaso");
     }
 }

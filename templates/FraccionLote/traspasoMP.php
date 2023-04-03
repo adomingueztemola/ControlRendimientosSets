@@ -131,7 +131,10 @@
                      bloqueoBtn("bloqueo-btn-1", 2);
                  }
              },
-             beforeSend: function() {}
+             beforeSend: function() {
+                bloqueoBtn("bloqueo-btn-1", 1);
+
+             }
 
          });
      });
