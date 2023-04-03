@@ -1,5 +1,5 @@
    <div class="row">
-       <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5 card-header border">
+       <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 card-header border">
            <form id="formReasignacion">
             <input type="hidden" name="option" value="1">
                <div class="row">
@@ -10,11 +10,11 @@
                </div>
                <hr>
                <div class="row">
-                   <div class="col-md-6">
+                   <div class="col-md-12">
                        <label for="programa" class="form-label required">PROGRAMA</label>
                        <select class="form-control select2Form ProgramasFilter" required style="width:100%" name="programa" id="programa"></select>
                    </div>
-                   <div class="col-md-6">
+                   <div class="col-md-12">
                        <label for="procesos" class="form-label">PROCESO</label>
                        <select class="form-control select2Form ProcesosFilter" style="width:100%" name="proceso" id="procesos"></select>
                    </div>
@@ -36,7 +36,7 @@
            </form>
        </div>
 
-       <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7" id="content-reasignacion">
+       <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8" id="content-reasignacion">
 
        </div>
    </div>

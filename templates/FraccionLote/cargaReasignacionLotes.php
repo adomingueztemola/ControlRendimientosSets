@@ -1,8 +1,9 @@
 <div class="table-responsive">
-    <table class="table table-sm" id="table-reprog">
+    <table class="table table-sm display nowrap table-bordered" id="table-reprog">
         <thead>
             <tr>
                 <th>#</th>
+                <th>Fecha</th>
                 <th>Lote</th>
                 <th>Programa Actual</th>
                 <th>Programa Anterior</th>

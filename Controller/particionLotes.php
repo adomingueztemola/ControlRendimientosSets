@@ -27,10 +27,10 @@ switch ($_GET["op"]) {
 
         foreach ($Data as $value) {
             array_push($response, [
-                $count,  $value['loteTemola'],
-                formatoMil($value['1s'], 2), formatoMil($value['2s'], 2),
-                formatoMil($value['3s'], 2),   formatoMil($value['4s'], 2), formatoMil($value['_20'], 2),
-                formatoMil($value['total_s'], 2), formatoMil($value['areaProveedorLote'], 2), $value['lotePadre']
+                $count,   $value['f_fechaReg'], $value['loteTemola'],
+                $value['programaAnt'], $value['programaAct'],
+                $value['procesoAnt'], $value['procesoAct'],
+                $value['s_tipo']
             ]);
 
             $count++;

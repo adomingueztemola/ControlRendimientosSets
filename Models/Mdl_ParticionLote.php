@@ -116,7 +116,24 @@ class ParticionLote extends Rendimiento
     }
 
     public function getReprogramacionLotes(){
-        $sql = "";
+        $sql = "SELECT rp.*, cpi.nombre AS programaAnt,
+        cpa.nombre AS programaAct,
+        CONCAT(cpri.codigo, '-', cpri.nombre) AS procesoAnt, 
+        CONCAT(cpra.codigo, '-',cpra.nombre) AS procesoAct, 
+        CASE 
+            WHEN rp.tipo='1' THEN
+                'PROGRAMACIÓN'
+            WHEN rp.tipo='2' THEN
+                'SETS'
+        END AS s_tipo,
+        r.loteTemola, DATE_FORMAT(rp.fechaReg, '%d/%m/%Y %H:%i') AS f_fechaReg
+        FROM reasignacionprograma rp 
+        INNER JOIN catprogramas cpi ON rp.idProgramaAnt = cpi.id
+        INNER JOIN catprogramas cpa ON rp.idProgramaAct = cpa.id
+        INNER JOIN catprocesos cpri ON rp.idProcesoAnt = cpri.id
+        INNER JOIN catprocesos cpra ON rp.idProcesoAct = cpra.id
+        INNER JOIN rendimientos r ON rp.idRendimiento=r.id
+        ORDER BY rp.fechaReg DESC";
         return  $this->consultarQuery($sql, "consultar Reprogramación de Lotes");
     }
     public function actualizaLotePadre( $lote,
