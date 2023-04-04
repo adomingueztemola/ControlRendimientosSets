@@ -33,7 +33,7 @@
             $(row).find('td:eq(2)').addClass("table-danger");
         },
         ajax: {
-            "url": "../Controller/pruebasHide.php?op=getpruebassemana",
+            "url": "../Controller/pruebasLados.php?op=getpruebassemana",
             "type": "POST"
         },
     })
