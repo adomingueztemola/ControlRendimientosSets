@@ -21,6 +21,32 @@ if ($debug == 1) {
 }
 
 switch ($_GET["op"]) {
+    case "select2lotespadres":
+        if (!isset($_POST['palabraClave'])) {
+            $Data = $obj_rendimiento->getLotesPadresSelect2();
+            $Data = Excepciones::validaConsulta($Data);
+        } else {
+            $search = $_POST['palabraClave']; // Palabra a buscar
+            $Data = $obj_rendimiento->getLotesPadresSelect2($search);
+            $Data = Excepciones::validaConsulta($Data);
+        }
+        //Creamos el JSON
+        $json_string = json_encode($Data);
+        echo $json_string;
+        break;
+    case "select2lotesopen":
+        if (!isset($_POST['palabraClave'])) {
+            $Data = $obj_rendimiento->getLotesOpen();
+            $Data = Excepciones::validaConsulta($Data);
+        } else {
+            $search = $_POST['palabraClave']; // Palabra a buscar
+            $Data = $obj_rendimiento->getLotesOpen($search);
+            $Data = Excepciones::validaConsulta($Data);
+        }
+        //Creamos el JSON
+        $json_string = json_encode($Data);
+        echo $json_string;
+        break;
     case "select2semanalotes":
         if (!isset($_POST['palabraClave'])) {
             $Data = $obj_rendimiento->getSemanaSelect2();
@@ -55,7 +81,7 @@ switch ($_GET["op"]) {
         $response = array();
 
         // // Leer la informacion
-       /* foreach ($Data as $area) {
+        /* foreach ($Data as $area) {
             $response[] = array(
                 "id" => $area['id'],
                 "text" => $area['loteTemola']
@@ -1087,18 +1113,16 @@ switch ($_GET["op"]) {
         echo '1|Sets Recuperados fueron Recalculados Correctamente.';
         break;
     case "reasignaprograma":
-        $idLote = (!empty($_POST['idLote'])) ? trim($_POST['idLote']) : '';
+        $idLote = (!empty($_POST['lote'])) ? trim($_POST['lote']) : '';
         $programa = (isset($_POST['programa'])) ? trim($_POST['programa']) : '';
         $proceso = (isset($_POST['proceso'])) ? trim($_POST['proceso']) : '';
-        $option = (isset($_POST['option'])) ? trim($_POST['option']) : '0';
+        $option = (isset($_POST['option'])) ? trim($_POST['option']) : '';
 
         Excepciones::validaLlenadoDatos(array(
             " Lote" => $idLote, " programa" => $programa,
-
+            " Nivel Modificación" => $option,
         ), $obj_rendimiento);
-        if ($option == '0') {
-            Excepciones::validaLlenadoDatos(array(" Proceso" => $proceso), $obj_rendimiento);
-        }
+       
         $obj_rendimiento->beginTransaction();
         $datos = $obj_rendimiento->registroHistReasignacionPrograma($idLote, $programa, $proceso, $option);
         try {

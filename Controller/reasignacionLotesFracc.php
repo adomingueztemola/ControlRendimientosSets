@@ -2,17 +2,13 @@
 session_start();
 define('INCLUDE_CHECK', 1);
 require_once "../include/connect_mvc.php";
-include('../Models/Mdl_ConexionBD.php');
-include('../Models/Mdl_ReasignacionLotesFracc.php');
-include('../Models/Mdl_Static.php');
-include('../Models/Mdl_Excepciones.php');
-include('../Models/Mdl_OperacionLotes.php');
+
+include('../assets/scripts/cadenas.php');
 
 $debug = 0;
 $idUser = $_SESSION['CREident'];
 
-$obj_rendimiento = new ReasignacionLotesFracc($debug, $idUser);
-
+$obj_reasignacion = new ReasignacionLotesFracc($debug, $idUser);
 $ErrorLog = 'No se recibió';
 if ($debug == 1) {
     print_r($_POST);
@@ -22,663 +18,259 @@ if ($debug == 1) {
 }
 
 switch ($_GET["op"]) {
-    case "inittraspasar":
-        $idRendimiento = (isset($_POST['idRendimiento'])) ? trim($_POST['idRendimiento']) : '';
-        $pzasTraspasar = (isset($_POST['pzasTraspasar'])) ? trim($_POST['pzasTraspasar']) : '';
+    case "gettraspasosregistrados":
+        $Data = $obj_reasignacion->getTraspasosRegistrados();
+        $Data = Excepciones::validaConsulta($Data);
+        $response = array();
+        $count = 1;
+
+        foreach ($Data as $value) {
+            array_push($response, [
+                $count,   $value['f_fechaReg'], $value['nLoteTx'],
+                $value['nLoteRx'], formatoMil($value['1sRx']*2, 0),
+                formatoMil($value['2sRx']*2, 0), formatoMil($value['3sRx']*2, 0),
+                formatoMil($value['4sRx']*2, 0), formatoMil($value['_20Rx']*2, 0),
+                formatoMil($value['total_sRx']*2, 0), formatoMil($value['areaProveedorRx']*2, 2)
+            ]);
+
+            $count++;
+        }
+        //Creamos el JSON
+        $response = array("data" => $response);
+        $json_string = json_encode($response);
+        echo $json_string;
+        break;
+    case "traspasar":
+        $lotetransmisor = (isset($_POST['lotetransmisor'])) ? trim($_POST['lotetransmisor']) : '';
+        $hides = (isset($_POST['hides'])) ? trim($_POST['hides']) : '';
+        $lotereceptor = (isset($_POST['lotereceptor'])) ? trim($_POST['lotereceptor']) : '';
+        //Valida
         Excepciones::validaLlenadoDatos(array(
-            " Rendimiento" => $idRendimiento, " Piezas" => $pzasTraspasar
-        ), $obj_rendimiento);
-        /***** Consulta Rendimiento******/
-        $Data = $obj_rendimiento->getDetRendimiento($idRendimiento);
+            " Lote Transmisor" => $lotetransmisor, " Hides" => $hides,
+            " Lote Receptor" => $lotereceptor,
+        ), $obj_reasignacion);
+        /************** Buscar lote transmisor *****************/
+        $Data = $obj_reasignacion->getDetRendimientos($lotetransmisor);
         $Data = Excepciones::validaConsulta($Data);
-        $Data = $Data == '' ? array() : $Data;
-        if (count($Data) <= 0) {
-            $obj_rendimiento->errorBD("No se encuentra Lote, notifica a Departamento de Sistemas.", 0);
+        $Data = $Data[0];
+        $total_stransmisor = $Data['total_s'] == '' ? '0' : $Data['total_s'] * 2;
+        $arraycuerostransmisor = array();
+        $arraycuerostransmisor["1s"] = $Data['1s'] == '' ? '0' : [$Data['1s'], $Data['1s'] * 2];
+        $arraycuerostransmisor["2s"] = $Data['2s'] == '' ? '0' : [$Data['2s'], $Data['2s'] * 2];
+        $arraycuerostransmisor["3s"] = $Data['3s'] == '' ? '0' : [$Data['3s'], $Data['3s'] * 2];
+        $arraycuerostransmisor["4s"] = $Data['4s'] == '' ? '0' : [$Data['4s'], $Data['4s'] * 2];
+        $arraycuerostransmisor["_20"] = $Data['_20'] == '' ? '0' : [$Data['_20'], $Data['_20'] * 2];
+        $arraycuerostransmisor["total_s"] = $Data['total_s'] == '' ? '0' : [$Data['total_s'], $Data['total_s'] * 2];
+        //Valida que el total transmisor sea mayor a 0
+        if ($arraycuerostransmisor["total_s"][0] <= 0) {
+            $obj_reasignacion->errorBD("Revisa el total de lados incluidos en el lote transmitor, la cantidad es erronea", 0);
         }
-        $porcentaje = 0;
-        /********************************/
-        /***** Aplicacion de Regla de 3******/
-        $total_s = $Data['total_s'];
-        $_1s = $Data['1s'];
-        $_2s = $Data['2s'];
-        $_3s = $Data['3s'];
-        $_4s = $Data['4s'];
-        $_20 = $Data['_20'];
+        // echo "Datos del Lote Transmisor. <br>";
+        // print_r($arraycuerostransmisor);
+        // echo "<br>";
+        /************** Buscar lote receptor *****************/
+        $Data = $obj_reasignacion->getDetRendimientos($lotereceptor);
+        $Data = Excepciones::validaConsulta($Data);
+        $Data = $Data[0];
+        $total_sreceptor = $Data['total_s'] == '' ? '0' : $Data['total_s'] * 2;
+        $arraycuerosreceptor = array();
+        $arraycuerosreceptor["1s"] = $Data['1s'] == '' ? '0' : [$Data['1s'], $Data['1s'] * 2];
+        $arraycuerosreceptor["2s"] = $Data['2s'] == '' ? '0' : [$Data['2s'], $Data['2s'] * 2];
+        $arraycuerosreceptor["3s"] = $Data['3s'] == '' ? '0' : [$Data['3s'], $Data['3s'] * 2];
+        $arraycuerosreceptor["4s"] = $Data['4s'] == '' ? '0' : [$Data['4s'], $Data['4s'] * 2];
+        $arraycuerosreceptor["_20"] = $Data['_20'] == '' ? '0' : [$Data['_20'], $Data['_20'] * 2];
+        $arraycuerosreceptor["total_s"] = $Data['total_s'] == '' ? '0' : [$Data['total_s'], $Data['total_s'] * 2];
+        $arraycuerosreceptor["areaProveedorLote"] = $Data['areaProveedorLote'];
 
-        $porcentaje = $pzasTraspasar / $total_s;
-        $_1sPorc = $_1s * $porcentaje;
-        $_1Rea = round($_1s - $_1sPorc);
-
-        $_2sPorc = (int)$_2s * $porcentaje;
-        $_2Rea = round($_2s - $_2sPorc);
-
-        $_3sPorc = (int)$_3s * $porcentaje;
-        $_3Rea = round($_3s - $_3sPorc);
-
-        $_4sPorc = (int)$_4s * $porcentaje;
-        $_4Rea = round($_4s - $_4sPorc);
-
-        $_20Porc = (int)$_20 * $porcentaje;
-        $_20Rea = round($_20 - $_20Porc);
-
-        $totalPzasFinales = $total_s - $pzasTraspasar;
-        if ($debug == '1') {
-            echo "<br>Total: ", $total_s, "<br>";
-            echo "Porcentaje: ", $porcentaje, "<br>";
+        //Valida que el total transmisor sea mayor a 0
+        if ($arraycuerosreceptor["total_s"][0] <= 0) {
+            $obj_reasignacion->errorBD("Revisa el total de lados incluidos en el lote receptor, la cantidad es erronea", 0);
         }
-        if ($debug == '1') {
-            echo "% 1s: ", $_1sPorc, "<br>";
-            echo "Cl. 1s: ", $_1Rea, "<br>";
+        /************** Porcentajes a cambiar *****************/
+        $porcentaument = $hides / $arraycuerosreceptor["total_s"][1];
+        $porcentdismin = $hides / $arraycuerostransmisor["total_s"][1];
+        /************** Redondeo a Calculo *****************/
+        $redondAumCalc = function ($calculoReal, $porcent) {
+            $calculoReal = $calculoReal * (1 + $porcent);
+            $modCalculo = $calculoReal % 1;
+            $intCalculo = $calculoReal - $modCalculo;
 
-            echo "% 2s: ", $_2sPorc, "<br>";
-            echo "Cl. 2s: ", $_2Rea, "<br>";
+            if ($modCalculo > 0.5) {
+                $resp = $intCalculo + 1;
+            } else if ($modCalculo <= 0.5) {
+                $resp = $intCalculo;
+            }
+            $resp = $resp / 2;
+            return $resp;
+        };
+        $redondDismCalc = function ($calculoReal, $porcent) {
+            $calculoReal = $calculoReal - ($calculoReal * ($porcent));
+            $modCalculo = $calculoReal % 1;
+            $intCalculo = $calculoReal - $modCalculo;
 
-            echo "% 3s: ", $_3sPorc, "<br>";
-            echo "Cl. 3s: ", $_3Rea, "<br>";
+            if ($modCalculo > 0.5) {
+                $resp = $intCalculo + 1;
+            } else if ($modCalculo <= 0.5) {
+                $resp = $intCalculo;
+            }
+            $resp = $resp / 2;
+            return $resp;
+        };
+        $arraycalculoaumento = array();
 
-            echo "% 4s: ", $_4sPorc, "<br>";
-            echo "Cl. 4s: ", $_4Rea, "<br>";
+        $arraycalculoaumento["1s"] = ($redondAumCalc($arraycuerosreceptor["1s"][1], $porcentaument));
+        $arraycalculoaumento["2s"] = ($redondAumCalc($arraycuerosreceptor["2s"][1],  $porcentaument));
+        $arraycalculoaumento["3s"] = ($redondAumCalc($arraycuerosreceptor["3s"][1],  $porcentaument));
+        $arraycalculoaumento["4s"] = ($redondAumCalc($arraycuerosreceptor["4s"][1],  $porcentaument));
+        $arraycalculoaumento["_20"] = ($redondAumCalc($arraycuerosreceptor["_20"][1],  $porcentaument));
+        $arraycalculoaumento["total_s"] = ($redondAumCalc($arraycuerosreceptor["total_s"][1],  $porcentaument));
+        // echo "Calculo de Aumento<br>";
+        // print_r($arraycalculoaumento);
+        // echo "<br>";
 
-            echo "% 20: ", $_20Porc, "<br>";
-            echo "Cl. 20: ", $_20Rea, "<br>";
+        $arraycalculodism = array();
 
-            echo "Pzas Totales: ", $totalPzasFinales, "<br>";
+        $arraycalculodism["1s"] = ($redondDismCalc($arraycuerostransmisor["1s"][1], $porcentdismin));
+        $arraycalculodism["2s"] = ($redondDismCalc($arraycuerostransmisor["2s"][1],  $porcentdismin));
+        $arraycalculodism["3s"] = ($redondDismCalc($arraycuerostransmisor["3s"][1],  $porcentdismin));
+        $arraycalculodism["4s"] = ($redondDismCalc($arraycuerostransmisor["4s"][1],  $porcentdismin));
+        $arraycalculodism["_20"] = ($redondDismCalc($arraycuerostransmisor["_20"][1],  $porcentdismin));
+        $arraycalculodism["total_s"] = ($redondDismCalc($arraycuerostransmisor["total_s"][1],  $porcentdismin));
+        // echo "Calculo de Disminucion<br>";
+        // print_r($arraycalculodism);
+        // echo "<br>";
+
+        /*->Disminucion de materia prima de lote transmisor*/
+        $DataMP = $obj_reasignacion->getMateriaPrimaXLote($lotetransmisor);
+        $DataMP = Excepciones::validaConsulta($DataMP);
+        /* ->Valida que Lote tenga informacion de su materia prima */
+        if (count($DataMP) <= 0) {
+            $obj_reasignacion->errorBD("Error, no se encuentra materia prima del lote, notifica a depto. de Sistemas", 1);
         }
+        // echo "Detalle de Pedido: <br>";
+        // print_r($DataMP);
+        $arraycalculosobrante_mp = array();
+        $arraycalculopase_mp = array();
+        $areaProveedorLoteAum = 0;
+        $areaProveedorLoteSobrante = 0;
+        foreach ($DataMP as $key => $value) {
 
-        /********************************/
-        $obj_rendimiento->beginTransaction();
-        /***** Iniciar Traspaso******/
-        $datos = $obj_rendimiento->initTraspasar($idRendimiento, $pzasTraspasar, $porcentaje * 100, $_1Rea, $_2Rea, $_3Rea, $_4Rea, $_20Rea, $totalPzasFinales);
+            /*->Nuevo Registro de MP para lote receptor*/
+            $arraycalculopase_mp[$key] = $value;
+            $arraycalculopase_mp[$key]['idRendimiento'] = $lotereceptor;
+            $arraycalculopase_mp[$key]['total_s'] = $redondDismCalc(($value["total_s"] * 2), $porcentdismin);
+            $arraycalculopase_mp[$key]['4s'] = $redondDismCalc(($value["4s"] * 2), $porcentdismin);
+            $arraycalculopase_mp[$key]['3s'] =  $redondDismCalc(($value["3s"] * 2), $porcentdismin);
+            $arraycalculopase_mp[$key]['2s'] = $redondDismCalc(($value["2s"] * 2), $porcentdismin);
+            $arraycalculopase_mp[$key]['1s'] =  $redondDismCalc(($value["1s"] * 2), $porcentdismin);
+            $arraycalculopase_mp[$key]['_20'] =  $redondDismCalc(($value["_20"] * 2), $porcentdismin);
+            $arraycalculopase_mp[$key]['areaProveedorLote'] = $value["areaWBPromFact"] *   $arraycalculopase_mp[$key]['total_s'];
+            $areaProveedorLoteAum = $areaProveedorLoteAum + $arraycalculopase_mp[$key]['areaProveedorLote'];
+            unset($arraycalculopase_mp[$key]['areaWBPromFact']);
+            unset($arraycalculopase_mp[$key]['id']);
+
+            $arraycalculosobrante_mp[$key] = $value;
+            $arraycalculosobrante_mp[$key]['total_s'] = $value["total_s"] -  $arraycalculopase_mp[$key]['total_s'];
+            $arraycalculosobrante_mp[$key]['4s'] = $value["4s"] -  $arraycalculopase_mp[$key]['4s'];
+            $arraycalculosobrante_mp[$key]['3s'] = $value["3s"] - $arraycalculopase_mp[$key]['3s'];
+            $arraycalculosobrante_mp[$key]['2s'] = $value["2s"] - $arraycalculopase_mp[$key]['2s'];
+            $arraycalculosobrante_mp[$key]['1s'] = $value["1s"] - $arraycalculopase_mp[$key]['1s'];
+            $arraycalculosobrante_mp[$key]['_20'] = $value["_20"] - $arraycalculopase_mp[$key]['_20'];
+            $arraycalculosobrante_mp[$key]['areaProveedorLote'] = $value["areaWBPromFact"] *   $arraycalculosobrante_mp[$key]['total_s'];
+            $areaProveedorLoteSobrante = $areaProveedorLoteSobrante + $arraycalculosobrante_mp[$key]['areaProveedorLote'];
+            unset($arraycalculosobrante_mp[$key]['areaWBPromFact']);
+        }
+        // echo "<br>";
+        // echo "Calculo de Materia Prima Sobrante<br>";
+        // print_r($arraycalculosobrante_mp);
+        // echo "<br>";
+        // echo "Calculo de Materia Prima Pase<br>";
+        // print_r($arraycalculopase_mp);
+        // echo "<br>";
+        $obj_reasignacion->beginTransaction();
+        //disminucion de pedido en bd del lote trasnsmisor, y en registro de rendimiento
+        foreach ($arraycalculosobrante_mp as $value) {
+            $obj_reasignacion->disminucionMateriaPrima(
+                $value['id'],
+                $value['total_s'],
+                $value['1s'],
+                $value['2s'],
+                $value['3s'],
+                $value['4s'],
+                $value['_20'],
+                $value['areaProveedorLote']
+            );
+        }
+        //aumento de pedido en bd del lote receptor, y en registro de rendimiento
+        $query = "";
+        foreach ($arraycalculopase_mp as $value) {
+            $query .= "('{$value['idRendimiento']}', '{$value['idPedido']}', '{$value['total_s']}',
+            '{$value['4s']}', '{$value['3s']}', '{$value['2s']}', '{$value['1s']}', '{$value['_20']}', '{$value['areaProveedorLote']}',
+            NOW(), '$idUser', '2','{$value['cantFinalPedido']}' ),";
+        }
+        $query = substr($query, 0, -1);
+        $datos =  $obj_reasignacion->agregarMateriaPrima($query);
         try {
             Excepciones::validaMsjError($datos);
         } catch (Exception $e) {
-            $obj_rendimiento->errorBD($e->getMessage(), 1);
+            $obj_reasignacion->errorBD($e->getMessage(), 1);
         }
-        $idReasignacion = $datos['2'];
-        /********************************/
-        /***** Alinear Ventas******/
-        $Data = $obj_rendimiento->getVentasXLote($idRendimiento);
-        $Data = Excepciones::validaConsulta($Data);
-        $Data = $Data == '' ? array() : $Data;
-        $str_query = "";
-        foreach ($Data as $key => $value) {
-            $idVenta = $Data[$key]['idVenta'];
-            /********* CALCULO DE CUEROS POR VENTA **********/
-            $_1sVentas = $Data[$key]['1s'] * $porcentaje;
-            $_1ReaV = round($Data[$key]['1s'] - $_1sVentas);
-
-            $_2sVentas = (int)$Data[$key]['2s'] * $porcentaje;
-            $_2ReaV = round($Data[$key]['2s'] - $_2sVentas);
-
-            $_3sVentas = (int)$Data[$key]['3s'] * $porcentaje;
-            $_3ReaV = round($Data[$key]['3s'] - $_3sVentas);
-
-            $_4sVentas = (int)$Data[$key]['4s'] * $porcentaje;
-            $_4ReaV = round($Data[$key]['4s'] - $_4sVentas);
-
-            $_20Ventas = (int)$Data[$key]['_20'] * $porcentaje;
-            $_20ReaV = round($Data[$key]['_20'] - $_20Ventas);
-            $totalPzasFinalesV = $Data[$key]['total_s'] - ($Data[$key]['total_s'] * $porcentaje);
-
-            if ($debug == '1') {
-                echo "<br>% 1s: ", $_1sVentas, "<br>";
-                echo "Cl. 1s: ", $_1ReaV, "<br>";
-
-                echo "% 2s: ", $_2sVentas, "<br>";
-                echo "Cl. 2s: ", $_2ReaV, "<br>";
-
-                echo "% 3s: ", $_3sVentas, "<br>";
-                echo "Cl. 3s: ", $_3ReaV, "<br>";
-
-                echo "% 4s: ", $_4sVentas, "<br>";
-                echo "Cl. 4s: ", $_4ReaV, "<br>";
-
-                echo "% 20: ", $_20Ventas, "<br>";
-                echo "Cl. 20: ", $_20ReaV, "<br>";
-
-                echo "Pzas Totales Vendidas: ", $totalPzasFinalesV, "<br>";
-            }
-            $str_query .= "('$idReasignacion','$idVenta','1','$porcentaje', '$_1ReaV', '$_2ReaV', '$_3ReaV', '$_4ReaV','$_20ReaV', '$totalPzasFinalesV',
-            '$idUser', NOW()),";
-        }
-        if ($str_query != '') {
-            $str_query = substr($str_query, 0, -1);
-            $datos = $obj_rendimiento->agregarCalculoVentas($str_query);
-            try {
-                Excepciones::validaMsjError($datos);
-            } catch (Exception $e) {
-                $obj_rendimiento->errorBD($e->getMessage(), 1);
-            }
-        }
-
-        /********************************/
-        /***** Alinear Pedidos******/
-        $Data = $obj_rendimiento->getPedidosXLote($idRendimiento);
-        $Data = Excepciones::validaConsulta($Data);
-        $Data = $Data == '' ? array() : $Data;
-        $str_query = "";
-        $contPedido = 0;
-        $sum_areaProvLote = 0;
-        $sum_precioUnitFactUsd = 0;
-        foreach ($Data as $key => $value) {
-            $contPedido++;
-            $idPedido = $Data[$key]['id'];
-            /********* CALCULO DE CUEROS POR PEDIDO **********/
-            $_1sPedido = $Data[$key]['1s'] * $porcentaje;
-            $_1ReaP = round($Data[$key]['1s'] - $_1sPedido);
-
-            $_2sPedido = (int)$Data[$key]['2s'] * $porcentaje;
-            $_2ReaP = round($Data[$key]['2s'] - $_2sPedido);
-
-            $_3sPedido = (int)$Data[$key]['3s'] * $porcentaje;
-            $_3ReaP = round($Data[$key]['3s'] - $_3sPedido);
-
-            $_4sPedido = (int)$Data[$key]['4s'] * $porcentaje;
-            $_4ReaP = round($Data[$key]['4s'] - $_4sPedido);
-
-            $_20Pedido = (int)$Data[$key]['_20'] * $porcentaje;
-            $_20ReaP = round($Data[$key]['_20'] - $_20Pedido);
-            $totalPzasFinalesP = $Data[$key]['total_s'] - ($Data[$key]['total_s'] * $porcentaje);
-
-            $areaProvLote = $totalPzasFinalesP * $Data[$key]['areaWBPromFact'];
-            $sum_areaProvLote += $areaProvLote;
-            $sum_precioUnitFactUsd += $Data[$key]['precioUnitFactUsd'];
-
-            if ($debug == '1') {
-                echo "<br>% 1s: ", $_1sPedido, "<br>";
-                echo "Cl. 1s: ", $_1ReaP, "<br>";
-
-                echo "% 2s: ", $_2sPedido, "<br>";
-                echo "Cl. 2s: ", $_2ReaP, "<br>";
-
-                echo "% 3s: ", $_3sPedido, "<br>";
-                echo "Cl. 3s: ", $_3ReaP, "<br>";
-
-                echo "% 4s: ", $_4sPedido, "<br>";
-                echo "Cl. 4s: ", $_4ReaP, "<br>";
-
-                echo "% 20: ", $_20Pedido, "<br>";
-                echo "Cl. 20: ", $_20ReaP, "<br>";
-
-                echo "Pzas Totales Pedidos: ", $totalPzasFinalesP, "<br>";
-                echo "Área de Prov Lote: ", $areaProvLote, "<br>";
-            }
-            $str_query .= "('$idReasignacion','$idPedido','1','$porcentaje', '$_1ReaP', '$_2ReaP', '$_3ReaP', '$_4ReaP','$_20ReaP', '$totalPzasFinalesP',
-            '$idUser', NOW(), '$areaProvLote'),";
-        }
-        $str_query = substr($str_query, 0, -1);
-        $datos = $obj_rendimiento->agregarCalculoPedidos($str_query);
-        try {
-            Excepciones::validaMsjError($datos);
-        } catch (Exception $e) {
-            $obj_rendimiento->errorBD($e->getMessage(), 1);
-        }
-        /********************************/
-        $promAreaLoteProveedor = $sum_areaProvLote / $contPedido;
-        $promPrecioUnitFactUsd = $sum_precioUnitFactUsd / $contPedido;
-
-        /********************************/
-        /***** INICIO DE LOTE DE TRANSFERENCIA******/
-        $Data = $obj_rendimiento->consultaNameRendimiento($idRendimiento);
-        $Data = Excepciones::validaConsulta($Data);
-        $Data = $Data == '' ? array() : $Data;
-        if (count($Data) <= 0) {
-            $obj_rendimiento->errorBD("No se encuentra Información del Nuevo Lote, notifica a Departamento de Sistemas.", 1);
-        }
-        $nLoteTemola = $Data['nLoteTemola'];
-        $_1sTransfer = round($_1s * $porcentaje);
-        $_2sTransfer = round($_2s * $porcentaje);
-        $_3sTransfer = round($_3s * $porcentaje);
-        $_4sTransfer = round($_4s * $porcentaje);
-        $_20Transfer = round($_20 * $porcentaje);
-        $totalPzasTransfer = round($total_s * $porcentaje);
-
-        if ($debug == '1') {
-            echo "<br>Nuevo Lote: ", $nLoteTemola, "<br>";
-
-            echo "Cl. 1s: ", $_1sTransfer, "<br>";
-            echo "Cl. 2s: ", $_2sTransfer, "<br>";
-            echo "Cl. 3s: ", $_3sTransfer, "<br>";
-            echo "Cl. 4s: ", $_4sTransfer, "<br>";
-            echo "Cl. 20: ", $_20Transfer, "<br>";
-            echo "Pzas Totales Transfer: ", $totalPzasTransfer, "<br>";
-            echo "Precio Unit Fact USD: ", $promPrecioUnitFactUsd, "<br>";
-        }
-        /********************************/
-        $datos = $obj_rendimiento->agregarInfoNuevoLote(
-            $idReasignacion,
-            $nLoteTemola,
-            $_1sTransfer,
-            $_2sTransfer,
-            $_3sTransfer,
-            $_4sTransfer,
-            $_20Transfer,
-            $totalPzasTransfer,
-            $promAreaLoteProveedor,
-            $promPrecioUnitFactUsd
+        //actualizacion del lote transmisor
+        $datos =  $obj_reasignacion->actualizaLote(
+            $lotetransmisor,
+            $arraycalculodism["total_s"],
+            $arraycalculodism["1s"],
+            $arraycalculodism["2s"],
+            $arraycalculodism["3s"],
+            $arraycalculodism["4s"],
+            $arraycalculodism["_20"],
+            $areaProveedorLoteSobrante
         );
         try {
             Excepciones::validaMsjError($datos);
         } catch (Exception $e) {
-            $obj_rendimiento->errorBD($e->getMessage(), 1);
+            $obj_reasignacion->errorBD($e->getMessage(), 1);
         }
-        $obj_rendimiento->insertarCommit();
-        echo "1|Traspaso de Cueros Incializado.|" . $idReasignacion;
-        break;
-    case "configlote":
-        $idTraspaso = (isset($_POST['idTraspaso'])) ? trim($_POST['idTraspaso']) : '';
-        $proceso = (isset($_POST['proceso'])) ? trim($_POST['proceso']) : '';
-        $programa = (isset($_POST['programa'])) ? trim($_POST['programa']) : '';
-
-        Excepciones::validaLlenadoDatos(array(
-            " Traspaso de Lote" => $idTraspaso, " Proceso" => $proceso,
-            " Programa" => $programa
-        ), $obj_rendimiento);
-        /*****CONSULTA DE PROCESO******/
-        $DataProceso = $obj_rendimiento->getDetProceso($proceso);
-        $DataProceso = Excepciones::validaConsulta($DataProceso);
-        $DataProceso = $DataProceso == '' ? array() : $DataProceso;
-        if (count($DataProceso) <= 0) {
-            $obj_rendimiento->errorBD("Error, no se encontró datos del proceso del lote", 0);
-        }
-        $tipoProceso = $DataProceso['tipo'];
-        /*****CONSULTA DE PROGRAMA******/
-        $DataPrograma = $obj_rendimiento->getDetPrograma($programa);
-        $DataPrograma = Excepciones::validaConsulta($DataPrograma);
-        $DataPrograma = $DataPrograma == '' ? array() : $DataPrograma;
-        if (count($DataPrograma) <= 0) {
-            $obj_rendimiento->errorBD("Error, no se encontró datos del programa del lote", 0);
-        }
-        $areaNeta = $DataPrograma['areaNeta'];
-        /*****CONSULTA DE TRASPASO******/
-        $Data = $obj_rendimiento->getTraspasoRendimiento($idTraspaso);
-        $Data = Excepciones::validaConsulta($Data);
-        $Data = $Data == '' ? array() : $Data;
-        if (count($Data) <= 0) {
-            $obj_rendimiento->errorBD("Error, no se encontró datos del traspaso del lote", 0);
-        }
-        $idRendimiento = $Data['idRendimiento'];
-        $porcentaje = $Data['porcentaje'] / 100;
-        $loteTransfer = $Data['loteTransfer'];
-        $idTraspaso = $Data['id'];
-
-        $_1s = $Data['1sTransfer'] == '' ? '0' : $Data['1sTransfer'];
-        $_2s = $Data['2sTransfer'] == '' ? '0' : $Data['2sTransfer'];
-        $_3s = $Data['3sTransfer'] == '' ? '0' : $Data['3sTransfer'];
-        $_4s = $Data['4sTransfer'] == '' ? '0' : $Data['4sTransfer'];
-        $_20 = $Data['_20Transfer'] == '' ? '0' : $Data['_20Transfer'];
-        $total_s = $Data['total_sTransfer'] == '' ? '0' : $Data['total_sTransfer'];
-        /********************************************/
-        /*****CONSULTA DE ESTADO DE RENDIMIENTO ORIGEN******/
-        /********************************************/
-        $DataRend = $obj_rendimiento->getDetRendimiento($idRendimiento);
-        $DataRend = Excepciones::validaConsulta($DataRend);
-        $DataRend = $Data == '' ? array() : $DataRend;
-        if (count($DataRend) <= 0) {
-            $obj_rendimiento->errorBD("Error, no se encontró datos del lote", 0);
-        }
-        $estado = $DataRend['estado'];
-        $idCatMateriaPrima = $DataRend['idCatMateriaPrima'];
-        $tipoMateriaPrima = $DataRend['tipoMateriaPrima'];
-        $multiMateria = $DataRend['multiMateria'];
-        $fechaEngrase = $DataRend['fechaEngrase'];
-
-        if ($estado == '4') {
-            $areaCrustPorc = $DataRend['areaCrust'] * $porcentaje;
-            $areaCrustDism = $DataRend['areaCrust'] - $areaCrustPorc;
-
-            $areaFinalPorc = $DataRend['areaFinal'] * $porcentaje;
-            $areaFinalDism = $DataRend['areaFinal'] - $areaFinalPorc;
-
-            $areaWBPorc = $DataRend['areaWB'] * $porcentaje;
-            $areaWBDism = $DataRend['areaWB'] - $areaFinalPorc;
-
-            $perdidaAreaWBaCrustPorc = OperacionesLotes::perdidaAreaWBaCrust($areaCrustPorc, $areaWBPorc) * 100;
-            $recorteAcabadoPorc = OperacionesLotes::calculaPorcValue($porcentaje, $DataRend['recorteAcabado']);
-
-
-            $humedad = $DataRend['humedad'];
-            $quiebre = $DataRend['quiebre'];
-            $suavidad = $DataRend['suavidad'];
-
-            $areaWBPorc = $DataRend['areaWB'] * $porcentaje;
-
-
-            if ($debug == 1) {
-                echo "<br>Porcentaje: ", $porcentaje;
-                echo "<br>Area Crust Normal: ", $DataRend['areaCrust'];
-                echo "<br>Area Crust Porc: ", $areaCrustPorc;
-                echo "<br>Area Crust Dism: ", $areaCrustDism;
-                echo "<br>*************************************";
-                echo "<br>Area Teseo: ", $DataRend['areaFinal'];
-                echo "<br>Area Final Porc: ", $areaFinalPorc;
-                echo "<br>Area Final Dism: ", $areaFinalDism;
-                echo "<br>*************************************";
-                echo "<br>Area WB: ", $DataRend['areaWB'];
-                echo "<br>Area WB Porc: ", $areaWBPorc;
-                echo "<br>Area WB Dism: ", $areaWBDism;
-                echo "<br>*************************************";
-                echo "<br>Humedad: ", $humedad;
-                echo "<br>Quiebre: ", $quiebre;
-                echo "<br>Suavidad: ", $suavidad;
-                echo "<br>*************************************";
-            }
-        } else {
-            $areaCrustPorc = 0;
-            $areaCrustDism = 0;
-
-            $areaFinalPorc = 0;
-            $areaFinalDism = 0;
-
-            $areaWBPorc = 0;
-            $areaWBDism = 0;
-
-            $perdidaAreaWBaCrustPorc = 0;
-            $recorteAcabadoPorc = 0;
-
-
-            $humedad = 0;
-            $quiebre = 0;
-            $suavidad = 0;
-
-            $areaWBPorc = 0;
-        }
-        $obj_rendimiento->beginTransaction();
-
-        /************ INGRESAR LOTE DE TEMOLA ***************/
-        $datos = $obj_rendimiento->agregarNuevoRendimiento(
-            $loteTransfer,
-            $idCatMateriaPrima,
-            $tipoMateriaPrima,
-            $fechaEngrase,
-            $proceso,
-            $tipoProceso,
-            $programa,
-            $areaNeta,
-            $areaWBPorc,
-            $areaCrustPorc,
-            $areaFinalPorc,
-            $humedad,
-            $quiebre,
-            $suavidad,
-            $_1s,
-            $_2s,
-            $_3s,
-            $_4s,
-            $_20,
-            $total_s,
-            $idRendimiento,
-            $perdidaAreaWBaCrustPorc,
-            $recorteAcabadoPorc,
-            $multiMateria,
+        //actualizacion del lote receptor 
+        $datos =  $obj_reasignacion->actualizaLote(
+            $lotereceptor,
+            $arraycuerosreceptor['total_s'][0] + $arraycalculoaumento["total_s"],
+            $arraycuerosreceptor['1s'][0] + $arraycalculoaumento["1s"],
+            $arraycuerosreceptor['2s'][0] + $arraycalculoaumento["2s"],
+            $arraycuerosreceptor['3s'][0] + $arraycalculoaumento["3s"],
+            $arraycuerosreceptor['4s'][0] + $arraycalculoaumento["4s"],
+            $arraycuerosreceptor['_20'][0] + $arraycalculoaumento["_20"],
+            $arraycuerosreceptor['areaProveedorLote'] + $areaProveedorLoteAum
         );
         try {
             Excepciones::validaMsjError($datos);
         } catch (Exception $e) {
-            $obj_rendimiento->errorBD($e->getMessage(), 1);
+            $obj_reasignacion->errorBD($e->getMessage(), 1);
         }
-        $idNuevoRendimiento = $datos['2'];
-        /************ ACTUALIZAR TRASPASOS ***************/
-        $datos = $obj_rendimiento->agregarRendimientoTraspaso($idNuevoRendimiento, $idTraspaso);
-        try {
-            Excepciones::validaMsjError($datos);
-        } catch (Exception $e) {
-            $obj_rendimiento->errorBD($e->getMessage(), 1);
-        }
-        /************ COPIA ESPEJO DE LOS PEDIDOS REALIZADOS ***************/
-        $datos = $obj_rendimiento->copiaPedidosRendimiento($idTraspaso);
-        try {
-            Excepciones::validaMsjError($datos);
-        } catch (Exception $e) {
-            $obj_rendimiento->errorBD($e->getMessage(), 1);
-        }
-        /************ ACTUALIZA DATOS DE PEDIDO EN NUEVO RENDIMIENTO ***************/
-        $datos = $obj_rendimiento->registraPedidoLoteo($idNuevoRendimiento);
-        try {
-            Excepciones::validaMsjError($datos);
-        } catch (Exception $e) {
-            $obj_rendimiento->errorBD($e->getMessage(), 1);
-        }
-        $obj_rendimiento->insertarCommit();
-        echo '1|Se agregó lote y datos iniciales.|' . $idNuevoRendimiento;
-
-        break;
-    case "finalizartraspaso":
-        $idTraspaso = (isset($_POST['idTraspaso'])) ? trim($_POST['idTraspaso']) : '';
-        $idRendimiento = (isset($_POST['idRendimiento'])) ? trim($_POST['idRendimiento']) : '';
-
-        Excepciones::validaLlenadoDatos(array(
-            " Traspaso de Lote" => $idTraspaso,
-            " Rendimiento" => $idRendimiento
-        ), $obj_rendimiento);
-
-        $obj_rendimiento->beginTransaction();
-        /************ ACTUALIZA VENTAS DE RENDIMIENTO ORIGEN ***************/
-        $datos = $obj_rendimiento->actualizacionCuerosVentas($idTraspaso);
-        try {
-            Excepciones::validaMsjError($datos);
-        } catch (Exception $e) {
-            $obj_rendimiento->errorBD($e->getMessage(), 1);
-        }
-        /************ ACTUALIZA PEDIDOS DE RENDIMIENTO ORIGEN ***************/
-        $datos = $obj_rendimiento->actualizacionCuerosPedidos($idTraspaso);
-        try {
-            Excepciones::validaMsjError($datos);
-        } catch (Exception $e) {
-            $obj_rendimiento->errorBD($e->getMessage(), 1);
-        }
-        /***** Consulta Traspaso******/
-        $DataTrasp = $obj_rendimiento->getTraspasoRendimiento($idTraspaso);
-        $DataTrasp = Excepciones::validaConsulta($DataTrasp);
-        $DataTrasp = $DataTrasp == '' ? array() : $DataTrasp;
-        if (count($DataTrasp) <= 0) {
-            $obj_rendimiento->errorBD("No se encuentra Traspaso, notifica a Departamento de Sistemas.", 0);
-        }
-        $idRendOrigen = $DataTrasp['idRendimiento'];
-        $_1sRend= $DataTrasp['1s'];
-        $_2sRend= $DataTrasp['2s'];
-        $_3sRend= $DataTrasp['3s'];
-        $_4sRend= $DataTrasp['4s'];
-        $_20Rend= $DataTrasp['_20'];
-        $total_sRend= $DataTrasp['total_s'];
-
-        /***** Consulta Rendimiento******/
-        $Data = $obj_rendimiento->getDetRendimiento($idRendOrigen);
-        $Data = Excepciones::validaConsulta($Data);
-        $Data = $Data == '' ? array() : $Data;
-        if (count($Data) <= 0) {
-            $obj_rendimiento->errorBD("No se encuentra Lote, notifica a Departamento de Sistemas.", 0);
-        }
-
-        $porcentaje = $DataTrasp['porcentaje'] / 100;
-        $totalPzasFinales = $DataTrasp['total_s'];
-        $precioUnitFactUsd = $DataTrasp['precioUnitFactUsd'];
-
-        $areaWBRea = OperacionesLotes::calculaRestPorcValue($porcentaje, $Data['areaWB']);
-        $areaCrustRea = OperacionesLotes::calculaRestPorcValue($porcentaje, $Data['areaCrust']);
-        $areaFinalRea = OperacionesLotes::calculaRestPorcValue($porcentaje, $Data['areaFinal']);
-        $diferenciaAreaRea = OperacionesLotes::diferenciaArea($areaFinalRea, $DataTrasp['areaProveedorLote']);
-        $promedioAreaRea = OperacionesLotes::promedioArea($areaFinalRea, $totalPzasFinales);
-        $porcDifAreaWB = OperacionesLotes::porcDifAreaWB($diferenciaAreaRea, $totalPzasFinales);
-        $recorteAcabadoRea = OperacionesLotes::calculaRestPorcValue($porcentaje, $Data['recorteAcabado']);
-        $porcRecorteAcabadoRea = OperacionesLotes::porcRecorteAcabado($areaCrustRea, $recorteAcabadoRea) * 100;
-        $perdidaAreaWBaCrustRea = OperacionesLotes::perdidaAreaWBaCrust($areaCrustRea, $areaWBRea) * 100;
-        $areaWBXSetRea = OperacionesLotes::areaXSet($areaWBRea, $Data['unidadesEmpacadas'], $Data['tipoProceso']);
-        $areaCrustXSetRea = OperacionesLotes::areaXSet($areaCrustRea, $Data['unidadesEmpacadas'], $Data['tipoProceso']);
-        $costoWBXUnidadRea = OperacionesLotes::costoWBXUnidad($areaWBXSetRea, $precioUnitFactUsd);
-        $perdidaAreaCrustTeseoRea = OperacionesLotes::perdidaAreaCrustTeseo($areaCrustRea, $areaFinalRea);
-        $yieldFinalRealRea = OperacionesLotes::yieldFinalReal($Data['areaNeta_Prg'], $areaWBXSetRea);
-        if ($debug == '1') {
-            echo "Set's Empacados: ", $Data['unidadesEmpacadas'];
-            echo "Porcentaje: ", $porcentaje, "<br>";
-            echo "Area Prov Lote: ", $DataTrasp['areaProveedorLote'], "<br>";
-
-            echo "Área WB Rend: ", $Data['areaWB'], "<br>";
-            echo "Área WB: ", $areaWBRea, "<br>";
-
-            echo "Área Crust Rend: ", $Data['areaCrust'], "<br>";
-            echo "Área Crust: ", $areaCrustRea, "<br>";
-
-            echo "Área Final Rend: ", $Data['areaFinal'], "<br>";
-            echo "Área Final: ", $areaFinalRea, "<br>";
-
-            echo "Diferencia de Área Rend: ", $Data['diferenciaArea'], "<br>";
-            echo "Diferencia de Área: ", $diferenciaAreaRea, "<br>";
-
-            echo "Promedio de Área Rend: ", $Data['promedioAreaWB'], "<br>";
-            echo "Promedio de Área: ", $promedioAreaRea, "<br>";
-
-            echo "Recorte Acabado gr. Rend: ", $Data['recorteAcabado'], "<br>";
-            echo "Recorte Acabado gr.: ", $recorteAcabadoRea, "<br>";
-
-            echo "Porc. Recorte de Acabado Rend: ", $Data['porcRecorteAcabado'], "<br>";
-            echo "Porc. Recorte de Acabado: ", $porcRecorteAcabadoRea, "<br>";
-
-            echo "Perdida AreaWB a Crust Rend: ", $Data['perdidaAreaWBCrust'], "<br>";
-            echo "Perdida AreaWB a Crust: ", $perdidaAreaWBaCrustRea, "<br>";
-
-            echo "Area WB x Set Rend: ", $Data['areaWBUnidad'], "<br>";
-            echo "Area WB x Set: ", $areaWBXSetRea, "<br>";
-
-            echo "Area Crust x Set Rend: ", $Data['areaCrustSet'], "<br>";
-            echo "Area Crust x Set: ", $areaCrustXSetRea, "<br>";
-
-            echo "Costo Unidad por Set Rend: ", $Data['costoWBUnit'], "<br>";
-            echo "Costo Unidad por Set: ", $costoWBXUnidadRea, "<br>";
-
-            echo "Perdida de Area Crust a Teseo Rend: ", $Data['perdidaAreaCrustTeseo'], "<br>";
-            echo "Perdida de Area Crust a Teseo: ", $perdidaAreaCrustTeseoRea, "<br>";
-
-            echo "Yield Final Real Rend: ", $Data['yieldFinalReal'], "<br>";
-            echo "Yield Final Real: ", $yieldFinalRealRea, "<br>";
-
-            echo "1s: ", $_1sRend;
-            echo "2s: ", $_2sRend;
-            echo "3s: ", $_3sRend;
-            echo "4s: ", $_4sRend;
-            echo "20: ", $_20Rend;
-            echo "Total s: ", $total_sRend;
-
-        }
-        /************ ACTUALIZA NUEVO RENDIMIENTO ***************/
-        $datos = Funciones::cambiarEstatus("reasignacionfracclotes", "2", "estado", $idTraspaso, $obj_rendimiento->getConexion(), $debug);
-        try {
-            Excepciones::validaMsjError($datos);
-        } catch (Exception $e) {
-            $obj_rendimiento->errorBD($e->getMessage(), 1);
-        }
-        /************ ACTUALIZA DATOS DE RENDIMIENTO ORIGEN ***************/
-        $datos = $obj_rendimiento->actualizaDatosRendOrigen(
-            $idRendOrigen,
-            $areaWBRea,
-            $areaCrustRea,
-            $areaFinalRea,
-            $diferenciaAreaRea,
-            $promedioAreaRea,
-            $recorteAcabadoRea,
-            $porcRecorteAcabadoRea,
-            $perdidaAreaWBaCrustRea,
-            $areaWBXSetRea,
-            $areaCrustXSetRea,
-            $costoWBXUnidadRea,
-            $perdidaAreaCrustTeseoRea,
-            $yieldFinalRealRea,
-            $_1sRend,
-            $_2sRend,
-            $_3sRend,
-            $_4sRend,
-            $_20Rend,
-            $total_sRend
+        //registro de operacion
+        $datos =  $obj_reasignacion->registroTraspaso(
+            $lotetransmisor,
+            $arraycalculodism["total_s"],
+            $arraycalculodism["1s"],
+            $arraycalculodism["2s"],
+            $arraycalculodism["3s"],
+            $arraycalculodism["4s"],
+            $arraycalculodism["_20"],
+            $lotereceptor,
+            $arraycuerosreceptor['total_s'][0] + $arraycalculoaumento["total_s"],
+            $arraycuerosreceptor['1s'][0] + $arraycalculoaumento["1s"],
+            $arraycuerosreceptor['2s'][0] + $arraycalculoaumento["2s"],
+            $arraycuerosreceptor['3s'][0] + $arraycalculoaumento["3s"],
+            $arraycuerosreceptor['4s'][0] + $arraycalculoaumento["4s"],
+            $arraycuerosreceptor['_20'][0] + $arraycalculoaumento["_20"],
+            $arraycuerosreceptor['areaProveedorLote'] + $areaProveedorLoteAum
         );
         try {
             Excepciones::validaMsjError($datos);
         } catch (Exception $e) {
-            $obj_rendimiento->errorBD($e->getMessage(), 1);
+            $obj_reasignacion->errorBD($e->getMessage(), 1);
         }
-
-        $obj_rendimiento->insertarCommit();
-        $_SESSION['CRESuccessReasigna'] = 'Finalización de traspaso de lote correctamente.';
-        echo '1|Finalización de traspaso de lote correctamente.';
-
-        break;
-
-    case "cancelartraspaso":
-        $idTraspaso = (isset($_POST['idTraspaso'])) ? trim($_POST['idTraspaso']) : '';
-        $idRendimiento = (isset($_POST['idRendimiento'])) ? trim($_POST['idRendimiento']) : '';
-
-        Excepciones::validaLlenadoDatos(array(
-            " Traspaso de Lote" => $idTraspaso,
-            " Rendimiento" => $idRendimiento
-        ), $obj_rendimiento);
-        $obj_rendimiento->beginTransaction();
-        /************ ELIMINA VENTAS DE RENDIMIENTO ORIGEN ***************/
-        $datos = $obj_rendimiento->eliminaCuerosVentas($idTraspaso);
-        try {
-            Excepciones::validaMsjError($datos);
-        } catch (Exception $e) {
-            $obj_rendimiento->errorBD($e->getMessage(), 1);
-        }
-        /************ ELIMINA PEDIDOS DE RENDIMIENTO ORIGEN ***************/
-        $datos = $obj_rendimiento->eliminarCuerosPedidos($idTraspaso);
-        try {
-            Excepciones::validaMsjError($datos);
-        } catch (Exception $e) {
-            $obj_rendimiento->errorBD($e->getMessage(), 1);
-        }
-        /************ ELIMINA NUEVO RENDIMIENTO ***************/
-        $datos = $obj_rendimiento->eliminarRendimiento($idRendimiento);
-        try {
-            Excepciones::validaMsjError($datos);
-        } catch (Exception $e) {
-            $obj_rendimiento->errorBD($e->getMessage(), 1);
-        }
-        /************ ELIMINA REASIGNACION  ***************/
-        $datos = $obj_rendimiento->eliminarReasignacion($idTraspaso);
-        try {
-            Excepciones::validaMsjError($datos);
-        } catch (Exception $e) {
-            $obj_rendimiento->errorBD($e->getMessage(), 1);
-        }
-        $obj_rendimiento->insertarCommit();
-        $_SESSION['CRESuccessReasigna'] = 'Cancelación de  traspaso de lote correctamente.';
-        echo '1|Cancelación de  traspaso de lote correctamente.';
-
-        break;
-    case "cancelartraspasoabierto":
-        $DataTraspaso = $obj_rendimiento->getTraspasoAbierto();
-        $DataTraspaso = Excepciones::validaConsulta($DataTraspaso);
-        $DataTraspaso = $DataTraspaso == '' ? array() : $DataTraspaso;
-        $idRendimiento = $DataTraspaso['idRendimiento'];
-        $idTraspaso = $DataTraspaso['id'];
-        Excepciones::validaLlenadoDatos(array(
-            " Traspaso de Lote" => $idTraspaso,
-            " Rendimiento" => $idRendimiento
-        ), $obj_rendimiento);
-        $obj_rendimiento->beginTransaction();
-        /************ ELIMINA VENTAS DE RENDIMIENTO ORIGEN ***************/
-        $datos = $obj_rendimiento->eliminaCuerosVentas($idTraspaso);
-        try {
-            Excepciones::validaMsjError($datos);
-        } catch (Exception $e) {
-            $obj_rendimiento->errorBD($e->getMessage(), 1);
-        }
-        /************ ELIMINA PEDIDOS DE RENDIMIENTO ORIGEN ***************/
-        $datos = $obj_rendimiento->eliminarCuerosPedidos($idTraspaso);
-        try {
-            Excepciones::validaMsjError($datos);
-        } catch (Exception $e) {
-            $obj_rendimiento->errorBD($e->getMessage(), 1);
-        }
-  
-        /************ ELIMINA REASIGNACION  ***************/
-        $datos = $obj_rendimiento->eliminarReasignacion($idTraspaso);
-        try {
-            Excepciones::validaMsjError($datos);
-        } catch (Exception $e) {
-            $obj_rendimiento->errorBD($e->getMessage(), 1);
-        }
-        $obj_rendimiento->insertarCommit();
-        $_SESSION['CRESuccessReasigna'] = 'Cancelación de  traspaso de lote correctamente.';
-        echo '1|Cancelación de  traspaso de lote correctamente.';
+        $obj_reasignacion->insertarCommit();
+        echo "1|Traspaso de Hides Realizado Satisfactoriamente.";
         break;
 }
