@@ -15,7 +15,7 @@
                         <th>20</th>
                         <th>Total</th>
 
-                        <th class="table-danger">(-) LADOS</th>
+                        <th class="table-danger">(-) HIDES</th>
                         <th>Porcentaje Descontado</th>
 
                     </tr>

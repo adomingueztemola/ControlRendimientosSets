@@ -5,8 +5,8 @@
                  <div class="card-header" id="">
                      <div class="row">
                          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                             <label for="lote">LOTE TRANSMISOR</label>
-                             <select class="form-control select2Form LotesAbiertosFilter" style="width:100%" required name="lotetransmisor" id="lotetransmisor"></select>
+                             <label for="lote" class="form-label required">LOTE TRANSMISOR</label>
+                             <select class="form-control select2Form LotesAbiertosFilter"style="width:100%" required name="lotetransmisor" id="lotetransmisor"></select>
                          </div>
                      </div>
                      <div class="row mt-2">
@@ -40,13 +40,13 @@
                      </div>
                      <div class="row">
                          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                             <label for="lote">LADOS A TRANSMITIR</label>
+                             <label for="lote" class="form-label required">HIDES A TRANSMITIR</label>
                              <input type="number" step="1" class="form-control focusCampo" min='1' name="hides" id="hides">
                          </div>
                      </div>
                      <div class="row">
                          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                             <label for="lote">LOTE RECEPTOR</label>
+                             <label for="lote" class="form-label required">LOTE RECEPTOR</label>
                              <select class="form-control select2Form LotesAbiertosFilter" style="width:100%" required name="lotereceptor" id="lotereceptor"></select>
                          </div>
                      </div>

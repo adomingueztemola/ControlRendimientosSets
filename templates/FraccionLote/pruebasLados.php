@@ -46,7 +46,7 @@
 
                     <div class="row">
                         <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
-                            <label class="form-label required text-danger" for="lote"> LADOS A DESCONTAR: </label>
+                            <label class="form-label required text-danger" for="lote"> HIDES A DESCONTAR: </label>
                             <input type="number" required step="1" min="1" class="form-control focusCampo" name="hides" id="hides">
                         </div>
                     </div>
