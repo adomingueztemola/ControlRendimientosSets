@@ -1,7 +1,7 @@
 <div class="table-responsive">
     <div class="row">
         <div class="col-md-12">
-            <table class="table table-sm" id="table-particiones">
+            <table class="table table-sm display nowrap" id="table-particiones">
                 <thead>
                     <tr>
                         <th>#</th>

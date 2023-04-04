@@ -25,12 +25,12 @@
                            </thead>
                            <tbody>
                                <tr>
-                                   <td id="_1s"></td>
-                                   <td id="_2s"></td>
-                                   <td id="_3s"></td>
-                                   <td id="_4s"></td>
-                                   <td id="_20"></td>
-                                   <td id="total_s"></td>
+                                   <td id="_1s">0</td>
+                                   <td id="_2s">0</td>
+                                   <td id="_3s">0</td>
+                                   <td id="_4s">0</td>
+                                   <td id="_20">0</td>
+                                   <td id="total_s">0</td>
 
                                </tr>
                            </tbody>
@@ -45,7 +45,7 @@
                    </div>
                    <div class="col-md-3">
                        <label for="hides" class="form-label required">HIDES</label>
-                       <input type="number" class="form-control"  required name="hides" id="hides" aria-label="">
+                       <input type="number" class="form-control focusCampo" required name="hides" id="hides" aria-label="">
                    </div>
                    <div class="col-md-3 mt-4 pt-1">
                        <div id='bloqueo-btn-1' style='display:none'>
@@ -57,6 +57,8 @@
                            <button type="submit" class="button btn  btn-success">
                                <i class="fas fa-upload"></i>
                            </button>
+                           <button type="reset" onclick="clearForm('formParticion')" class="button btn btn-danger"> <i class="fas fa-times"></i></button>
+
                        </div>
                    </div>
                </div>
@@ -69,6 +71,7 @@
    </div>
    <script src="../assets/scripts/selectFiltros.js"></script>
    <script src="../assets/scripts/basicFunctions.js"></script>
+   <script src="../assets/scripts/clearDataSinSelect.js"></script>
 
    <script>
        mostrar_info()

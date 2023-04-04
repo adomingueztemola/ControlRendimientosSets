@@ -90,4 +90,15 @@ class ReasignacionLotesFracc extends Rendimiento
         '$idUserReg')";
         return $this->runQuery($sql, "registro de Traspaso");
     }
+
+    public function getTraspasosRegistrados(){
+        $sql = "SELECT rf.*,tx.loteTemola AS nLoteTx,
+        rx.loteTemola AS nLoteRx,
+        DATE_FORMAT(rf.fechaReg,'%d/%m/%Y %H:%i') AS f_fechaReg
+        FROM reasignacionfracclotes rf
+        INNER JOIN rendimientos tx ON rf.idLoteTx=tx.id
+        INNER JOIN rendimientos rx ON rf.idLoteRx=rx.id
+        ORDER BY rf.fechaReg DESC";
+        return  $this->consultarQuery($sql, "consultar Traspasos de Lotes");
+    }
 }

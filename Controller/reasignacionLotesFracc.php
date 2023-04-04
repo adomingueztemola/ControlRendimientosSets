@@ -2,11 +2,8 @@
 session_start();
 define('INCLUDE_CHECK', 1);
 require_once "../include/connect_mvc.php";
-include('../Models/Mdl_ConexionBD.php');
-include('../Models/Mdl_ReasignacionLotesFracc.php');
-include('../Models/Mdl_Static.php');
-include('../Models/Mdl_Excepciones.php');
-include('../Models/Mdl_OperacionLotes.php');
+
+include('../assets/scripts/cadenas.php');
 
 $debug = 0;
 $idUser = $_SESSION['CREident'];
@@ -22,7 +19,26 @@ if ($debug == 1) {
 
 switch ($_GET["op"]) {
     case "gettraspasosregistrados":
-        
+        $Data = $obj_reasignacion->getTraspasosRegistrados();
+        $Data = Excepciones::validaConsulta($Data);
+        $response = array();
+        $count = 1;
+
+        foreach ($Data as $value) {
+            array_push($response, [
+                $count,   $value['f_fechaReg'], $value['nLoteTx'],
+                $value['nLoteRx'], formatoMil($value['1sRx']*2, 0),
+                formatoMil($value['2sRx']*2, 0), formatoMil($value['3sRx']*2, 0),
+                formatoMil($value['4sRx']*2, 0), formatoMil($value['_20Rx']*2, 0),
+                formatoMil($value['total_sRx']*2, 0), formatoMil($value['areaProveedorRx']*2, 2)
+            ]);
+
+            $count++;
+        }
+        //Creamos el JSON
+        $response = array("data" => $response);
+        $json_string = json_encode($response);
+        echo $json_string;
         break;
     case "traspasar":
         $lotetransmisor = (isset($_POST['lotetransmisor'])) ? trim($_POST['lotetransmisor']) : '';
@@ -213,7 +229,7 @@ switch ($_GET["op"]) {
         try {
             Excepciones::validaMsjError($datos);
         } catch (Exception $e) {
-            $obj_particion->errorBD($e->getMessage(), 1);
+            $obj_reasignacion->errorBD($e->getMessage(), 1);
         }
         //actualizacion del lote receptor 
         $datos =  $obj_reasignacion->actualizaLote(
@@ -254,7 +270,7 @@ switch ($_GET["op"]) {
         } catch (Exception $e) {
             $obj_reasignacion->errorBD($e->getMessage(), 1);
         }
-
+        $obj_reasignacion->insertarCommit();
         echo "1|Traspaso de Hides Realizado Satisfactoriamente.";
         break;
 }

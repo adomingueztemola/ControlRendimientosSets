@@ -129,7 +129,7 @@ $(".focusCampo").focus(function () {
 });
 
 $(".focusCampo").blur(function () {
-  $(this).css("background-color", "transparent");
+  $(this).css("background-color", "white");
   if ($(this).val() == "") {
     $(this).val("0");
   }

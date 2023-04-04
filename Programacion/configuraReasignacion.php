@@ -38,6 +38,7 @@ $space = 1;
                                     <li class=" nav-item"> <a href="#areaTrabajo" onclick='verModulo(1)' class="nav-link active" data-toggle="tab" aria-expanded="false"><i class="fas fa-chart-pie"></i>Particiones de Lotes</a> </li>
                                     <li class="nav-item"> <a href="#areaTrabajo" onclick='verModulo(2)' class="nav-link" data-toggle="tab" aria-expanded="false"><i class="fas fa-dolly-flatbed"></i>Traspasos de Materia Prima</a> </li>
                                     <li class="nav-item"> <a href="#areaTrabajo" onclick='verModulo(3)' class="nav-link" data-toggle="tab" aria-expanded="false"><i class="fas fa-history"></i>Cambios de Programa</a> </li>
+                                    <li class="nav-item"> <a href="#areaTrabajo" onclick='verModulo(4)' class="nav-link" data-toggle="tab" aria-expanded="false"><i class="fas fa-flask"></i>Disminución por Pruebas</a> </li>
 
                                 </ul>
                                 <div class="tab-content br-n pn">
@@ -79,6 +80,9 @@ $space = 1;
                 break;
             case 3:
                 update("templates/FraccionLote/cambiosPrograma.php", "areaTrabajo", 1)
+                break;
+            case 4:
+                update("templates/FraccionLote/pruebasHides.php", "areaTrabajo", 1)
                 break;
             default:
                 break;

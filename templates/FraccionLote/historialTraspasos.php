@@ -1,9 +1,10 @@
 <div class="row">
     <div class="col-md-12">
-        <table class="table table-sm" id="table-traspasos">
+        <table class="table table-sm display nowrap" id="table-traspasos">
             <thead>
                 <tr>
                     <th>#</th>
+                    <th>Fecha</th>
                     <th>Lote Transmisor</th>
                     <th>Lote Receptor</th>
                     <th>1s</th>

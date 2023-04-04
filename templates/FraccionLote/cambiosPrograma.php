@@ -30,6 +30,8 @@
                            <button type="submit" class="button btn  btn-success">
                                <i class="fas fa-upload"></i> Actualizar Cambios
                            </button>
+                           <button type="reset" onclick="clearForm('formReasignacion')" class="button btn btn-danger">Cancelar</button>
+
                        </div>
                    </div>
                </div>

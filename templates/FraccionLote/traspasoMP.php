@@ -1,8 +1,8 @@
  <div class="row">
-     <div class="col-md-4 col-lg-4 col-xs-4 col-sm-4">
+     <div class="col-md-4 col-lg-4 col-xs-4 col-sm-4 ">
          <form id="formAsignacion">
-             <div class="card border">
-                 <div class="card-body" id="">
+             <div class="card  border">
+                 <div class="card-header" id="">
                      <div class="row">
                          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                              <label for="lote">LOTE TRANSMISOR</label>
@@ -26,12 +26,12 @@
                                  </thead>
                                  <tbody>
                                      <tr>
-                                         <td id="_1s"></td>
-                                         <td id="_2s"></td>
-                                         <td id="_3s"></td>
-                                         <td id="_4s"></td>
-                                         <td id="_20"></td>
-                                         <td id="total_s"></td>
+                                         <td id="_1s">0</td>
+                                         <td id="_2s">0</td>
+                                         <td id="_3s">0</td>
+                                         <td id="_4s">0</td>
+                                         <td id="_20">0</td>
+                                         <td id="total_s">0</td>
 
                                      </tr>
                                  </tbody>
@@ -41,7 +41,7 @@
                      <div class="row">
                          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                              <label for="lote">HIDES A TRANSMITIR</label>
-                             <input type="number" step="1" class="form-control" name="hides" id="hides">
+                             <input type="number" step="1" class="form-control focusCampo" min='1' name="hides" id="hides">
                          </div>
                      </div>
                      <div class="row">
@@ -67,12 +67,12 @@
                                  </thead>
                                  <tbody>
                                      <tr>
-                                         <td id="_1s"></td>
-                                         <td id="_2s"></td>
-                                         <td id="_3s"></td>
-                                         <td id="_4s"></td>
-                                         <td id="_20"></td>
-                                         <td id="total_s"></td>
+                                         <td id="_1s">0</td>
+                                         <td id="_2s">0</td>
+                                         <td id="_3s">0</td>
+                                         <td id="_4s">0</td>
+                                         <td id="_20">0</td>
+                                         <td id="total_s">0</td>
 
                                      </tr>
                                  </tbody>
@@ -88,6 +88,8 @@
                              </div>
                              <div id='desbloqueo-btn-1'>
                                  <button type="submit" class="button btn  btn-success">Traspasar</button>
+                                 <button type="reset" onclick="clearForm('formAsignacion')" class="button btn btn-danger">Cancelar</button>
+
                              </div>
                          </div>
                      </div>
@@ -107,10 +109,13 @@
 
  </div>
 
+ <script src="../assets/scripts/clearDataSinSelect.js"></script>
 
  <script src="../assets/scripts/selectFiltros.js"></script>
  <script>
      mostrar_info()
+     update("templates/FraccionLote/historialTraspasos.php", "c-detalladotraspasos", 1)
+
      /*********************/
      $("#formAsignacion").submit(function(e) {
          e.preventDefault();
@@ -125,7 +130,7 @@
                      notificaSuc(resp[1])
                      bloqueoBtn("bloqueo-btn-1", 2);
                      clearForm("formAsignacion")
-                     update("templates/FraccionLote/traspasoMP.php", "areaTrabajo", 1)
+                     update("templates/FraccionLote/historialTraspasos.php", "c-detalladotraspasos", 1)
                  } else if (resp[0] == 0) {
                      notificaBad(resp[1])
                      bloqueoBtn("bloqueo-btn-1", 2);
@@ -212,7 +217,6 @@
                          $("#t-detallerecep #_4s").text(data["4s"] * 2)
                          $("#t-detallerecep #_20").text(data["_20"] * 2)
                          $("#t-detallerecep #total_s").text(data["total_s"] * 2)
-                         $("#hides").prop("max", data["total_s"] * 2)
                      } else {
                          $("#t-detallerecep #_1s").text("0")
                          $("#t-detallerecep #_2s").text("0")
