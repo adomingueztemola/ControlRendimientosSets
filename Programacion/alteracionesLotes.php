@@ -82,7 +82,7 @@ $space = 1;
                 update("templates/FraccionLote/cambiosPrograma.php", "areaTrabajo", 1)
                 break;
             case 4:
-                update("templates/FraccionLote/pruebasHides.php", "areaTrabajo", 1)
+                update("templates/FraccionLote/pruebasLados.php", "areaTrabajo", 1)
                 break;
             default:
                 break;

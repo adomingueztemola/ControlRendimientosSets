@@ -5,7 +5,7 @@
                 <div class="card-header">
                     <div class="row">
                         <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
-                            <label for="lote" class="form-label required"> Lote: </label>
+                            <label for="lote" class="form-label required"> LOTE: </label>
                             <select name="lote" style="width:100%" required class="form-control select2Form LotesProceso" id="lote"></select>
                         </div>
                     </div>
@@ -39,14 +39,14 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
-                            <label for="fecha" class="form-label required"> Fecha de Prueba: </label>
+                            <label for="fecha" class="form-label required"> FECHA DE PRUEBA: </label>
                             <input type="date" required class="form-control" name="fecha" id="fecha">
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
-                            <label class="form-label required text-danger" for="lote"> Hides a Descontar: </label>
+                            <label class="form-label required text-danger" for="lote"> LADOS A DESCONTAR: </label>
                             <input type="number" required step="1" min="1" class="form-control focusCampo" name="hides" id="hides">
                         </div>
                     </div>
@@ -86,14 +86,14 @@
 <script src="../assets/scripts/clearDataSinSelect.js"></script>
 
 <script>
-    update('templates/PruebasHides/cargaPruebasHides.php', 'content-pruebas', 1);
+    update('templates/PruebasLados/cargaPruebasLados.php', 'content-pruebas', 1);
     mostrar_info()
     /********** ALMACENAR PRUEBA ***********/
     $("#formPruebas").submit(function(e) {
         e.preventDefault();
         formData = $(this).serialize();
         $.ajax({
-            url: '../Controller/pruebasHide.php?op=agregarpruebas',
+            url: '../Controller/pruebasLados.php?op=agregarpruebas',
             data: formData,
             type: 'POST',
             success: function(json) {
@@ -102,7 +102,7 @@
                     notificaSuc(resp[1])
                     setTimeout(() => {
                         bloqueoBtn("bloqueo-btn-1", 2)
-                        update('templates/PruebasHides/cargaPruebasHides.php', 'content-pruebas', 1);
+                        update('templates/PruebasLados/cargaPruebasLados.php', 'content-pruebas', 1);
                         clearForm("formPruebas")
                     }, 1000);
 
@@ -129,7 +129,7 @@
                     },
                     type: "POST",
                     dataType: "json",
-                    url: "../Controller/pruebasHide.php?op=detalleslote",
+                    url: "../Controller/pruebasLados.php?op=detalleslote",
                     beforeSend: function() {
                         // setting a timeout
                         $("#_1s").text("")

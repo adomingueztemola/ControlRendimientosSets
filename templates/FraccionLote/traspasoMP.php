@@ -40,7 +40,7 @@
                      </div>
                      <div class="row">
                          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                             <label for="lote">HIDES A TRANSMITIR</label>
+                             <label for="lote">LADOS A TRANSMITIR</label>
                              <input type="number" step="1" class="form-control focusCampo" min='1' name="hides" id="hides">
                          </div>
                      </div>

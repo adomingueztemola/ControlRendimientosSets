@@ -44,7 +44,7 @@
                        <select class="form-control select2Form ProgramasFilter" required style="width:100%" name="programa" id="programa"></select>
                    </div>
                    <div class="col-md-3">
-                       <label for="hides" class="form-label required">HIDES</label>
+                       <label for="hides" class="form-label required">LADOS</label>
                        <input type="number" class="form-control focusCampo" required name="hides" id="hides" aria-label="">
                    </div>
                    <div class="col-md-3 mt-4 pt-1">
