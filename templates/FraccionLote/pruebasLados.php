@@ -6,7 +6,7 @@
                     <div class="row">
                         <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
                             <label for="lote" class="form-label required"> LOTE: </label>
-                            <select name="lote" style="width:100%" required class="form-control select2Form LotesProceso" id="lote"></select>
+                            <select name="lote" style="width:100%" required class="form-control select2Form LotesAbiertosFilter" id="lote"></select>
                         </div>
                     </div>
                     <div class="row mt-2">
