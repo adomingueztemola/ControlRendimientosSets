@@ -42,9 +42,10 @@ class ParticionLote extends Rendimiento
             INNER JOIN pedidos p ON dp.idPedido=p.id
             WHERE r.id='$idLote'
             GROUP BY dp.idRendimiento";
-        return $this->runQuery($sql, "agregar Lote Consecutivo",true);
+        return $this->runQuery($sql, "agregar Lote Consecutivo", true);
     }
-    public function agregarMateriaPrimaNuevLote($query){
+    public function agregarMateriaPrimaNuevLote($query)
+    {
         $sql = "INSERT INTO detpedidos (idRendimiento, idPedido, total_s, 1s, 2s, 3s,4s, _20, areaProveedorLote,
         fechaReg, idUserReg, estado,  cantFinalPedido) VALUES 
         $query";
@@ -57,7 +58,7 @@ class ParticionLote extends Rendimiento
         $_2s,
         $_3s,
         $_4s,
-        $_20, 
+        $_20,
         $areaProveedorLote
     ) {
         $sql = "UPDATE detpedidos SET 
@@ -94,17 +95,18 @@ class ParticionLote extends Rendimiento
         return $this->runQuery($sql, "agregar Partición");
     }
 
-    public function getMateriaPrimaXLote($ident){
-        $sql="SELECT dp.*, p.areaWBPromFact
+    public function getMateriaPrimaXLote($ident)
+    {
+        $sql = "SELECT dp.*, p.areaWBPromFact
         FROM detpedidos dp
         INNER JOIN pedidos p ON dp.idPedido=p.id
         WHERE dp.idRendimiento='$ident'";
         return  $this->consultarQuery($sql, "consultar Materia Prima de Lote");
-
     }
 
 
-    public function getParticiones(){
+    public function getParticiones()
+    {
         $sql = "SELECT p.*, cp.nombre AS nPrograma, r.loteTemola,
         rt.loteTemola AS lotePadre, r.areaProveedorLote
         FROM particioneslotes p
@@ -115,7 +117,8 @@ class ParticionLote extends Rendimiento
         return  $this->consultarQuery($sql, "consultar Transferencias de Lote");
     }
 
-    public function getReprogramacionLotes(){
+    public function getReprogramacionLotes()
+    {
         $sql = "SELECT rp.*, cpi.nombre AS programaAnt,
         cpa.nombre AS programaAct,
         CONCAT(cpri.codigo, '-', cpri.nombre) AS procesoAnt, 
@@ -136,18 +139,21 @@ class ParticionLote extends Rendimiento
         ORDER BY rp.fechaReg DESC";
         return  $this->consultarQuery($sql, "consultar Reprogramación de Lotes");
     }
-    public function actualizaLotePadre( $lote,
-    $total_s,
-    $_1s,
-    $_2s,
-    $_3s,
-    $_4s,
-    $_20,
-    $areaProveedorLote){
+    public function actualizaLotePadre(
+        $lote,
+        $total_s,
+        $_1s,
+        $_2s,
+        $_3s,
+        $_4s,
+        $_20,
+        $areaProveedorLote
+    ) {
         $sql = "UPDATE rendimientos SET 1s=' $_1s', 2s=' $_2s',
         3s=' $_3s', 4s=' $_4s', _20=' $_20', total_s=' $total_s', 
         areaProveedorLote='$areaProveedorLote' WHERE id='$lote'";
         return $this->runQuery($sql, "actualizar datos del lote");
     }
 
+ 
 }

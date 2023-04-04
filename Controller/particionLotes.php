@@ -220,7 +220,7 @@ switch ($_GET["op"]) {
         }
         //disminucion de pedido en bd del padre, y en registro de rendimiento
         foreach ($arraycalculosobrante_mp as $value) {
-            $obj_particion->disminucionMateriaPrima(
+            $datos=  $obj_particion->disminucionMateriaPrima(
                 $value['id'],
                 $value['total_s'],
                 $value['1s'],
@@ -230,6 +230,11 @@ switch ($_GET["op"]) {
                 $value['_20'],
                 $value['areaProveedorLote']
             );
+            try {
+                Excepciones::validaMsjError($datos);
+            } catch (Exception $e) {
+                $obj_particion->errorBD($e->getMessage(), 1);
+            }
         }
         //actualizacion de lote
         $datos =  $obj_particion->actualizaLotePadre(
