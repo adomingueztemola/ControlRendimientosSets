@@ -53,6 +53,7 @@ switch ($_GET["op"]) {
         $Data = $obj_reasignacion->getDetRendimientos($lotetransmisor);
         $Data = Excepciones::validaConsulta($Data);
         $Data = $Data[0];
+    
         $total_stransmisor = $Data['total_s'] == '' ? '0' : $Data['total_s'] * 2;
         $arraycuerostransmisor = array();
         $arraycuerostransmisor["1s"] = $Data['1s'] == '' ? '0' : [$Data['1s'], $Data['1s'] * 2];
@@ -63,7 +64,7 @@ switch ($_GET["op"]) {
         $arraycuerostransmisor["total_s"] = $Data['total_s'] == '' ? '0' : [$Data['total_s'], $Data['total_s'] * 2];
         //Valida que el total transmisor sea mayor a 0
         if ($arraycuerostransmisor["total_s"][0] <= 0) {
-            $obj_reasignacion->errorBD("Revisa el total de lados incluidos en el lote transmitor, la cantidad es erronea", 0);
+            $obj_reasignacion->errorBD("Revisa el total de lados incluidos en el lote transmitor ("+$arraycuerostransmisor["total_s"][0]+"), la cantidad es erronea", 0);
         }
         // echo "Datos del Lote Transmisor. <br>";
         // print_r($arraycuerostransmisor);
@@ -81,14 +82,13 @@ switch ($_GET["op"]) {
         $arraycuerosreceptor["_20"] = $Data['_20'] == '' ? '0' : [$Data['_20'], $Data['_20'] * 2];
         $arraycuerosreceptor["total_s"] = $Data['total_s'] == '' ? '0' : [$Data['total_s'], $Data['total_s'] * 2];
         $arraycuerosreceptor["areaProveedorLote"] = $Data['areaProveedorLote'];
-
-        //Valida que el total transmisor sea mayor a 0
-        if ($arraycuerosreceptor["total_s"][0] <= 0) {
-            $obj_reasignacion->errorBD("Revisa el total de lados incluidos en el lote receptor, la cantidad es erronea", 0);
-        }
+        // echo "Lote Receptor<br>";
+        // print_r($arraycuerosreceptor);
+        // echo "<br>";
+       
         /************** Porcentajes a cambiar *****************/
-        $porcentaument = $hides / $arraycuerosreceptor["total_s"][1];
         $porcentdismin = $hides / $arraycuerostransmisor["total_s"][1];
+        $porcentaument = $arraycuerosreceptor["total_s"][1]==0?$porcentdismin:$hides / $arraycuerosreceptor["total_s"][1];
         /************** Redondeo a Calculo *****************/
         $redondAumCalc = function ($calculoReal, $porcent) {
             $calculoReal = $calculoReal * (1 + $porcent);
@@ -124,6 +124,8 @@ switch ($_GET["op"]) {
         $arraycalculoaumento["4s"] = ($redondAumCalc($arraycuerosreceptor["4s"][1],  $porcentaument));
         $arraycalculoaumento["_20"] = ($redondAumCalc($arraycuerosreceptor["_20"][1],  $porcentaument));
         $arraycalculoaumento["total_s"] = ($redondAumCalc($arraycuerosreceptor["total_s"][1],  $porcentaument));
+        // echo "Porcentaje: ".$porcentaument;
+        // echo "<br>";
         // echo "Calculo de Aumento<br>";
         // print_r($arraycalculoaumento);
         // echo "<br>";
