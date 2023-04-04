@@ -154,7 +154,7 @@
                      },
                      type: "POST",
                      dataType: "json",
-                     url: "../Controller/pruebasHide.php?op=detalleslote",
+                     url: "../Controller/pruebasLados.php?op=detalleslote",
                      beforeSend: function() {
                          // setting a timeout
                          $("#t-detalletrans td#_1s").text("")

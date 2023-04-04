@@ -33,7 +33,7 @@ class ParticionLote extends Rendimiento
                     '1'
             WHEN cp.tipo='3' THEN
                     '2'
-            END AS tipoProceso, (5*AVG(p.areaWBPromFact)) AS areaProveedorLote,
+            END AS tipoProceso, ('$total_s'*AVG(p.areaWBPromFact)) AS areaProveedorLote,
             '$_1s' AS 1s, '$_2s' AS 2s, '$_3s' AS 3s,'$_4s' AS 4s, '$_20' AS _20, '$total_s' AS total_s 
 
             FROM rendimientos r
@@ -106,7 +106,7 @@ class ParticionLote extends Rendimiento
 
     public function getParticiones(){
         $sql = "SELECT p.*, cp.nombre AS nPrograma, r.loteTemola,
-        rt.loteTemola AS lotePadre
+        rt.loteTemola AS lotePadre, r.areaProveedorLote
         FROM particioneslotes p
         INNER JOIN rendimientos r ON p.idLote=r.id
         INNER JOIN rendimientos rt ON p.idLoteTransfer=rt.id
