@@ -15,7 +15,7 @@
                         <th>20</th>
                         <th>Total</th>
 
-                        <th class="table-danger">(-) Hides</th>
+                        <th class="table-danger">(-) LADOS</th>
                         <th>Porcentaje Descontado</th>
 
                     </tr>
@@ -32,7 +32,7 @@
             $(row).find('td:eq(10)').addClass("table-danger");
         },
         ajax: {
-            "url": "../Controller/pruebasHide.php?op=getpruebasregistradas",
+            "url": "../Controller/pruebasLados.php?op=getpruebasregistradas",
             "type": "POST"
         },
     })
