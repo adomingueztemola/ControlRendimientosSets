@@ -78,7 +78,6 @@ $DataRendimiento = $obj_rendimiento->getRendimientos(
                 <th>Perdida de Área de Crust a Terminado</th>
                 <th>M<sup>2</sup> Finales</th>
                 <th>Perdida de Área WB a Terminado</th>
-                <th>Costo de WB por Unidad</th>
                 <th>Usuario Registro</th>
                 <th>Fecha Registro</th>
 
@@ -122,6 +121,7 @@ $DataRendimiento = $obj_rendimiento->getRendimientos(
                 $suma_areaPzasRechazo += $DataRendimiento[$key]['areaPzasRechazo'];
                 $suma_setsEmpacados += $DataRendimiento[$key]['totalEmp'];
                 $suma_cuerosReasig += $DataRendimiento[$key]['cuerosReasig'];
+                $suma_perdidaAreaCrustTeseo += $DataRendimiento[$key]['perdidaAreaCrustTeseo'];
 
                 $suma_porcRecorteWB += $DataRendimiento[$key]['porcRecorteWB'];
                 $suma_porcRecorteCrust += $DataRendimiento[$key]['porcRecorteCrust'];
@@ -161,7 +161,6 @@ $DataRendimiento = $obj_rendimiento->getRendimientos(
                     <td><?= $DataRendimiento[$key]['f_fechaEngrase'] ?></td>
                     <td><?= $DataRendimiento[$key]['semanaProduccion'] ?></td>
                     <td><?= $DataRendimiento[$key]['f_fechaEmpaque'] ?></td>
-
                     <td><?= $DataRendimiento[$key]['loteTemola'] ?></td>
                     <td><small><?= $DataRendimiento[$key]['n_programa'] ?></small></td>
                     <td><small><?= $DataRendimiento[$key]['n_proceso'] ?></small></td>
@@ -172,7 +171,6 @@ $DataRendimiento = $obj_rendimiento->getRendimientos(
                     <td><?= $porcDifAreaWB ?></td>
                     <td><?= $comentarios_rechazo ?></td>
                     <td><?= formatoMil($DataRendimiento[$key]['cuerosReasig']) ?></td>
-
                     <td><?= formatoMil($DataRendimiento[$key]['areaPzasRechazo']) ?></td>
                     <td><?= formatoMil($DataRendimiento[$key]['porcRecorteWB']) ?></td>
                     <td><?= formatoMil($DataRendimiento[$key]['porcRecorteCrust']) ?></td>
@@ -187,12 +185,8 @@ $DataRendimiento = $obj_rendimiento->getRendimientos(
                     <td><?= formatoMil($DataRendimiento[$key]['suavidad']) ?></td>
                     <td><?= formatoMil($DataRendimiento[$key]['areaFinal']) ?></td>
                     <td><?= formatoMil($DataRendimiento[$key]['perdidaAreaCrustTeseo']) ?></td>
-                    <td><?= formatoMil($DataRendimiento[$key]['setsEmpacados']) ?></td>
+                    <td><?= formatoMil($DataRendimiento[$key]['totalEmp']) ?></td>
                     <td><?= formatoMil($DataRendimiento[$key]['areaWBTerminado']) ?></td>
-
-
-                    <td><?= $costoWBUnit ?></td>
-
                     <td><?= $DataRendimiento[$key]['str_usuario'] ?></td>
                     <td><?= $DataRendimiento[$key]['f_fechaReg'] ?></td>
 
@@ -238,10 +232,9 @@ $DataRendimiento = $obj_rendimiento->getRendimientos(
                 <td><?= formatoMil($suma_quiebre > 0 ? $suma_quiebre / $count : 0) ?></td>
                 <td><?= formatoMil($suma_suavidad > 0 ? $suma_suavidad / $count : 0) ?></td>
                 <td><?= formatoMil($suma_areaFinal) ?></td>
-                <td><?= formatoMil($suma_perdidaAreaCrustTeseo) ?></td>
+                <td><?= formatoMil($suma_perdidaAreaCrustTeseo != 0 ? $suma_perdidaAreaCrustTeseo / $count : 0) ?></td>
                 <td><?= formatoMil($suma_setsEmpacados) ?></td>
-                <td><?= formatoMil($suma_wbterminado > 0 ? $suma_wbterminado / $count : 0) ?></td>
-                <td><?= formatoMil($suma_costoUnidad > 0 ? $suma_costoUnidad / $count : 0) ?></td>
+                <td><?= formatoMil($suma_wbterminado != 0 ? $suma_wbterminado / $count : 0) ?></td>
 
                 <td></td>
                 <td></td>
