@@ -21,6 +21,29 @@ if ($debug == 1) {
 }
 
 switch ($_GET["op"]) {
+    case "select2materiaprima":
+        if (!isset($_POST['palabraClave'])) {
+            $Data = $obj_materias->getMateriasPrimasSelect2();
+            $Data = Excepciones::validaConsulta($Data);
+        } else {
+            $search = $_POST['palabraClave']; // Palabra a buscar
+            $Data = $obj_materias->getMateriasPrimasSelect2($search);
+            $Data = Excepciones::validaConsulta($Data);
+        }
+        $response = array();
+
+        // Leer la informacion
+        foreach ($Data as $area) {
+            $response[] = array(
+                "id" => $area['id'],
+                "text" => $area['nombre']
+            );
+        }
+
+        //Creamos el JSON
+        $json_string = json_encode($response);
+        echo $json_string;
+        break;
     case "agregarmateria":
         $materiaPrima = (isset($_POST['materiaPrima'])) ? trim($_POST['materiaPrima']) : '';
         $tipo = (isset($_POST['tipo'])) ? trim($_POST['tipo']) : '';

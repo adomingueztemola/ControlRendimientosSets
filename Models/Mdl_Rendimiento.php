@@ -435,7 +435,8 @@ class Rendimiento extends ConexionBD
         $filtradoMateria = "1=1",
         $filtradoLote = "1=1",
         $filtradoEstatus = "r.estado='2'",
-        $filtradoSemana='1=1'
+        $filtradoSemana='1=1', 
+        $filtradoProveedor="1=1"
     ) {
         $sql = "SELECT r.*, DATE_FORMAT(r.fechaEngrase,'%d/%m/%Y') AS f_fechaEngrase,
         DATE_FORMAT(r.fechaEmpaque,'%d/%m/%Y') f_fechaEmpaque,
@@ -456,9 +457,10 @@ class Rendimiento extends ConexionBD
         INNER JOIN catmateriasprimas mp ON r.idCatMateriaPrima=mp.id
         LEFT JOIN segusuarios u ON r.idUserRend=u.id
         WHERE $filtradoEstatus  AND $filtradoFecha AND $filtradoMateria AND $filtradoPrograma AND $filtradoProceso AND $filtradoLote
-        AND $filtradoSemana
+        AND $filtradoSemana 
   
         GROUP BY dp.idRendimiento
+        HAVING $filtradoProveedor
         ORDER BY r.yearWeek DESC, r.semanaProduccion DESC";
         return  $this->ejecutarQuery($sql, "consultar Rendimientos Almacenados", true);
     }

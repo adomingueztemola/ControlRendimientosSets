@@ -383,3 +383,56 @@ $(".LotesProceso").select2({
   },
 });
 
+
+/*******************************************************
+ * OPCIONES DE MATERIA PRIMA
+ *******************************************************/
+$(".MateriaPrimaFilter").select2({
+  placeholder: "Selecciona una materia prima",
+  allowClear: true,
+
+  ajax: {
+    url: "../Controller/materiasprimas.php?op=select2materiaprima",
+    type: "post",
+    dataType: "json",
+    delay: 250,
+    data: function (params) {
+      return {
+        palabraClave: params.term, // search term
+      };
+    },
+    processResults: function (response) {
+      return {
+        results: response,
+      };
+    },
+    cache: true,
+  },
+});
+
+/*******************************************************
+ * OPCIONES DE PROVEEDORES
+ *******************************************************/
+$(".ProveedorFilter").select2({
+  placeholder: "Selecciona un proveedor",
+  allowClear: true,
+
+  ajax: {
+    url: "../Controller/proveedores.php?op=select2proveedores",
+    type: "post",
+    dataType: "json",
+    delay: 250,
+    data: function (params) {
+      return {
+        palabraClave: params.term, // search term
+      };
+    },
+    processResults: function (response) {
+      return {
+        results: response,
+      };
+    },
+    cache: true,
+  },
+});
+
