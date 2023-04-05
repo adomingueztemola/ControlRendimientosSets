@@ -21,6 +21,7 @@ $proceso = !empty($_POST['proceso']) ? $_POST['proceso'] : '';
 $programa = !empty($_POST['programa']) ? $_POST['programa'] : '';
 $materia = !empty($_POST['materia']) ? $_POST['materia'] : '';
 $semana = !empty($_POST['semana']) ? $_POST['semana'] : '';
+$proveedor = !empty($_POST['proveedor']) ? $_POST['proveedor'] : '';
 
 /***************** CASTEO DE FECHAS ****************** */
 if ($semana == '') {
@@ -36,6 +37,7 @@ if ($semana == '') {
 $filtradoProceso = $proceso != '' ? "r.idCatProceso='$proceso'" : "1=1";
 $filtradoPrograma = $programa != '' ? "r.idCatPrograma='$programa'" : "1=1";
 $filtradoMateria = $materia != '' ? "r.idCatMateriaPrima='$materia'" : "1=1";
+$filtradoProveedor = $proveedor != '' ? "FIND_IN_SET('$proveedor', GROUP_CONCAT(DISTINCT pv.id))" : "1=1";
 
 $DataRendimiento = $obj_rendimiento->getRendimientos(
     $filtradoFecha,
@@ -44,7 +46,8 @@ $DataRendimiento = $obj_rendimiento->getRendimientos(
     $filtradoMateria,
     "r.tipoProceso='1'",
     "r.estado='4'",
-    $filtradoSemana
+    $filtradoSemana,
+    $filtradoProveedor
 );
 ?>
 
