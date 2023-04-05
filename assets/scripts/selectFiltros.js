@@ -1,4 +1,6 @@
-//Filtro de Programas para Sets
+/*************************************************
+ * OPCIONES DE PROGRAMA DE SETS
+/*************************************************/
 $(".ProgramaSetsFilter").select2({
   placeholder: "Selecciona un programa",
   allowClear: true,
@@ -22,7 +24,9 @@ $(".ProgramaSetsFilter").select2({
   },
 });
 
-//Filtro de Proceso
+/*************************************************
+ * OPCIONES DE PROCESOS DE SECADO
+/*************************************************/
 $(".ProcesosFilter").select2({
   placeholder: "Selecciona un proceso",
   allowClear: true,
@@ -46,7 +50,9 @@ $(".ProcesosFilter").select2({
   },
 });
 
-//Filtro de Programas para sets/metros
+/*************************************************
+ * OPCIONES DE PROGRAMAS GENERALES
+/*************************************************/
 $(".ProgramasFilter").select2({
   placeholder: "Selecciona un programa",
   allowClear: true,
@@ -62,54 +68,56 @@ $(".ProgramasFilter").select2({
       };
     },
     processResults: function (data) {
-       //Recorre JSON para generar option group de areas
-       textOpt = "";
-       jsonOpt = [];
-       childrenOpt = [];
-       data.forEach((element) => {
-         hijoOpt = {};
-         if (textOpt != element.nTipo) {
-           //Agrega a jsonOpt
-           if (textOpt != "" && childrenOpt.length > 0) {
-             jsonOpt.push({
-               text: textOpt,
-               children: childrenOpt,
-               element: HTMLOptGroupElement,
-             });
-           }
-           /*********************/
-           childrenOpt = [];
-           //Agrega su hijito
-           hijoOpt.id = element.id ;
-           hijoOpt.text = element.nombre;
-           hijoOpt.element = HTMLOptionElement;
-           childrenOpt.push(hijoOpt); //Agraga children OPT
-         } else {
-           //Agrega su hijito
-           hijoOpt.id = element.id ;
-           hijoOpt.text = element.nombre;
-           hijoOpt.element = HTMLOptionElement;
-           childrenOpt.push(hijoOpt); //Agraga children OPT
-         }
-         textOpt = element.nTipo;
-       });
-       //Agrega a jsonOpt
-       if (textOpt != "" && childrenOpt.length > 0) {
-         jsonOpt.push({
-           text: textOpt,
-           children: childrenOpt,
-           element: HTMLOptGroupElement,
-         });
-       }
-       return {
-         results: jsonOpt,
-       };
+      //Recorre JSON para generar option group de areas
+      textOpt = "";
+      jsonOpt = [];
+      childrenOpt = [];
+      data.forEach((element) => {
+        hijoOpt = {};
+        if (textOpt != element.nTipo) {
+          //Agrega a jsonOpt
+          if (textOpt != "" && childrenOpt.length > 0) {
+            jsonOpt.push({
+              text: textOpt,
+              children: childrenOpt,
+              element: HTMLOptGroupElement,
+            });
+          }
+          /*********************/
+          childrenOpt = [];
+          //Agrega su hijito
+          hijoOpt.id = element.id;
+          hijoOpt.text = element.nombre;
+          hijoOpt.element = HTMLOptionElement;
+          childrenOpt.push(hijoOpt); //Agraga children OPT
+        } else {
+          //Agrega su hijito
+          hijoOpt.id = element.id;
+          hijoOpt.text = element.nombre;
+          hijoOpt.element = HTMLOptionElement;
+          childrenOpt.push(hijoOpt); //Agraga children OPT
+        }
+        textOpt = element.nTipo;
+      });
+      //Agrega a jsonOpt
+      if (textOpt != "" && childrenOpt.length > 0) {
+        jsonOpt.push({
+          text: textOpt,
+          children: childrenOpt,
+          element: HTMLOptGroupElement,
+        });
+      }
+      return {
+        results: jsonOpt,
+      };
     },
     cache: true,
   },
 });
 
-//Filtro de Programas para sets/metros
+/*************************************************
+ * OPCIONES DE LOTES PADRES
+/*************************************************/
 $(".LotePadresFilter").select2({
   placeholder: "Selecciona un lote",
   allowClear: true,
@@ -125,54 +133,56 @@ $(".LotePadresFilter").select2({
       };
     },
     processResults: function (data) {
-     //Recorre JSON para generar option group de areas
-     textOpt = "";
-     jsonOpt = [];
-     childrenOpt = [];
-     data.forEach((element) => {
-       hijoOpt = {};
-       if (textOpt != element.nPrograma) {
-         //Agrega a jsonOpt
-         if (textOpt != "" && childrenOpt.length > 0) {
-           jsonOpt.push({
-             text: textOpt,
-             children: childrenOpt,
-             element: HTMLOptGroupElement,
-           });
-         }
-         /*********************/
-         childrenOpt = [];
-         //Agrega su hijito
-         hijoOpt.id = element.id ;
-         hijoOpt.text = element.loteTemola;
-         hijoOpt.element = HTMLOptionElement;
-         childrenOpt.push(hijoOpt); //Agraga children OPT
-       } else {
-         //Agrega su hijito
-         hijoOpt.id = element.id ;
-         hijoOpt.text = element.loteTemola;
-         hijoOpt.element = HTMLOptionElement;
-         childrenOpt.push(hijoOpt); //Agraga children OPT
-       }
-       textOpt = element.nPrograma;
-     });
-     //Agrega a jsonOpt
-     if (textOpt != "" && childrenOpt.length > 0) {
-       jsonOpt.push({
-         text: textOpt,
-         children: childrenOpt,
-         element: HTMLOptGroupElement,
-       });
-     }
-     return {
-       results: jsonOpt,
-     };
+      //Recorre JSON para generar option group de areas
+      textOpt = "";
+      jsonOpt = [];
+      childrenOpt = [];
+      data.forEach((element) => {
+        hijoOpt = {};
+        if (textOpt != element.nPrograma) {
+          //Agrega a jsonOpt
+          if (textOpt != "" && childrenOpt.length > 0) {
+            jsonOpt.push({
+              text: textOpt,
+              children: childrenOpt,
+              element: HTMLOptGroupElement,
+            });
+          }
+          /*********************/
+          childrenOpt = [];
+          //Agrega su hijito
+          hijoOpt.id = element.id;
+          hijoOpt.text = element.loteTemola;
+          hijoOpt.element = HTMLOptionElement;
+          childrenOpt.push(hijoOpt); //Agraga children OPT
+        } else {
+          //Agrega su hijito
+          hijoOpt.id = element.id;
+          hijoOpt.text = element.loteTemola;
+          hijoOpt.element = HTMLOptionElement;
+          childrenOpt.push(hijoOpt); //Agraga children OPT
+        }
+        textOpt = element.nPrograma;
+      });
+      //Agrega a jsonOpt
+      if (textOpt != "" && childrenOpt.length > 0) {
+        jsonOpt.push({
+          text: textOpt,
+          children: childrenOpt,
+          element: HTMLOptGroupElement,
+        });
+      }
+      return {
+        results: jsonOpt,
+      };
     },
     cache: true,
   },
 });
 
-//Filtro de Semana de Lotes
+/*************************************************
+ * OPCIONES DE SEMANAS DE PRODUCCION
+/*************************************************/
 $(".SemanaLotesFilter").select2({
   placeholder: "Selecciona una semana",
   allowClear: true,
@@ -196,7 +206,9 @@ $(".SemanaLotesFilter").select2({
   },
 });
 
-// Filtro de lotes de sets en teseo/sin empacar
+/*************************************************
+ * OPCIONES DE LOTES PARA TESEO
+/*************************************************/
 $(".LoteTeseoFilter").select2({
   placeholder: "Selecciona un lote",
   allowClear: true,
@@ -212,53 +224,55 @@ $(".LoteTeseoFilter").select2({
       };
     },
     processResults: function (data) {
-     //Recorre JSON para generar option group de areas
-     textOpt = "";
-     jsonOpt = [];
-     childrenOpt = [];
-     data.forEach((element) => {
-       hijoOpt = {};
-       if (textOpt != element.nPrograma) {
-         //Agrega a jsonOpt
-         if (textOpt != "" && childrenOpt.length > 0) {
-           jsonOpt.push({
-             text: textOpt,
-             children: childrenOpt,
-             element: HTMLOptGroupElement,
-           });
-         }
-         /*********************/
-         childrenOpt = [];
-         //Agrega su hijito
-         hijoOpt.id = element.id ;
-         hijoOpt.text = element.loteTemola;
-         hijoOpt.element = HTMLOptionElement;
-         childrenOpt.push(hijoOpt); //Agraga children OPT
-       } else {
-         //Agrega su hijito
-         hijoOpt.id = element.id ;
-         hijoOpt.text = element.loteTemola;
-         hijoOpt.element = HTMLOptionElement;
-         childrenOpt.push(hijoOpt); //Agraga children OPT
-       }
-       textOpt = element.nPrograma;
-     });
-     //Agrega a jsonOpt
-     if (textOpt != "" && childrenOpt.length > 0) {
-       jsonOpt.push({
-         text: textOpt,
-         children: childrenOpt,
-         element: HTMLOptGroupElement,
-       });
-     }
-     return {
-       results: jsonOpt,
-     };
+      //Recorre JSON para generar option group de areas
+      textOpt = "";
+      jsonOpt = [];
+      childrenOpt = [];
+      data.forEach((element) => {
+        hijoOpt = {};
+        if (textOpt != element.nPrograma) {
+          //Agrega a jsonOpt
+          if (textOpt != "" && childrenOpt.length > 0) {
+            jsonOpt.push({
+              text: textOpt,
+              children: childrenOpt,
+              element: HTMLOptGroupElement,
+            });
+          }
+          /*********************/
+          childrenOpt = [];
+          //Agrega su hijito
+          hijoOpt.id = element.id;
+          hijoOpt.text = element.loteTemola;
+          hijoOpt.element = HTMLOptionElement;
+          childrenOpt.push(hijoOpt); //Agraga children OPT
+        } else {
+          //Agrega su hijito
+          hijoOpt.id = element.id;
+          hijoOpt.text = element.loteTemola;
+          hijoOpt.element = HTMLOptionElement;
+          childrenOpt.push(hijoOpt); //Agraga children OPT
+        }
+        textOpt = element.nPrograma;
+      });
+      //Agrega a jsonOpt
+      if (textOpt != "" && childrenOpt.length > 0) {
+        jsonOpt.push({
+          text: textOpt,
+          children: childrenOpt,
+          element: HTMLOptGroupElement,
+        });
+      }
+      return {
+        results: jsonOpt,
+      };
     },
     cache: true,
   },
 });
-// Filtro de lotes Abierto
+/*************************************************
+ * OPCIONES DE LOTES ABIERTOS PARA PODER MODIFICAR
+/*************************************************/
 $(".LotesAbiertosFilter").select2({
   placeholder: "Selecciona un lote",
   allowClear: true,
@@ -274,54 +288,56 @@ $(".LotesAbiertosFilter").select2({
       };
     },
     processResults: function (data) {
-     //Recorre JSON para generar option group de areas
-     textOpt = "";
-     jsonOpt = [];
-     childrenOpt = [];
-     data.forEach((element) => {
-       hijoOpt = {};
-       if (textOpt != element.nPrograma) {
-         //Agrega a jsonOpt
-         if (textOpt != "" && childrenOpt.length > 0) {
-           jsonOpt.push({
-             text: textOpt,
-             children: childrenOpt,
-             element: HTMLOptGroupElement,
-           });
-         }
-         /*********************/
-         childrenOpt = [];
-         //Agrega su hijito
-         hijoOpt.id = element.id ;
-         hijoOpt.text = element.loteTemola;
-         hijoOpt.element = HTMLOptionElement;
-         childrenOpt.push(hijoOpt); //Agraga children OPT
-       } else {
-         //Agrega su hijito
-         hijoOpt.id = element.id ;
-         hijoOpt.text = element.loteTemola;
-         hijoOpt.element = HTMLOptionElement;
-         childrenOpt.push(hijoOpt); //Agraga children OPT
-       }
-       textOpt = element.nPrograma;
-     });
-     //Agrega a jsonOpt
-     if (textOpt != "" && childrenOpt.length > 0) {
-       jsonOpt.push({
-         text: textOpt,
-         children: childrenOpt,
-         element: HTMLOptGroupElement,
-       });
-     }
-     return {
-       results: jsonOpt,
-     };
+      //Recorre JSON para generar option group de areas
+      textOpt = "";
+      jsonOpt = [];
+      childrenOpt = [];
+      data.forEach((element) => {
+        hijoOpt = {};
+        if (textOpt != element.nPrograma) {
+          //Agrega a jsonOpt
+          if (textOpt != "" && childrenOpt.length > 0) {
+            jsonOpt.push({
+              text: textOpt,
+              children: childrenOpt,
+              element: HTMLOptGroupElement,
+            });
+          }
+          /*********************/
+          childrenOpt = [];
+          //Agrega su hijito
+          hijoOpt.id = element.id;
+          hijoOpt.text = element.loteTemola;
+          hijoOpt.element = HTMLOptionElement;
+          childrenOpt.push(hijoOpt); //Agraga children OPT
+        } else {
+          //Agrega su hijito
+          hijoOpt.id = element.id;
+          hijoOpt.text = element.loteTemola;
+          hijoOpt.element = HTMLOptionElement;
+          childrenOpt.push(hijoOpt); //Agraga children OPT
+        }
+        textOpt = element.nPrograma;
+      });
+      //Agrega a jsonOpt
+      if (textOpt != "" && childrenOpt.length > 0) {
+        jsonOpt.push({
+          text: textOpt,
+          children: childrenOpt,
+          element: HTMLOptGroupElement,
+        });
+      }
+      return {
+        results: jsonOpt,
+      };
     },
     cache: true,
   },
 });
 
-///CARGA EMPLEADOS
+/*************************************************
+ * OPCIONES DE LOTES EN PROCESO DE EMPAQUE
+/*************************************************/
 $(".LotesProceso").select2({
   placeholder: "Selecciona un lote",
   ajax: {
@@ -354,13 +370,13 @@ $(".LotesProceso").select2({
           /*********************/
           childrenOpt = [];
           //Agrega su hijito
-          hijoOpt.id = element.id ;
+          hijoOpt.id = element.id;
           hijoOpt.text = element.loteTemola;
           hijoOpt.element = HTMLOptionElement;
           childrenOpt.push(hijoOpt); //Agraga children OPT
         } else {
           //Agrega su hijito
-          hijoOpt.id = element.id ;
+          hijoOpt.id = element.id;
           hijoOpt.text = element.loteTemola;
           hijoOpt.element = HTMLOptionElement;
           childrenOpt.push(hijoOpt); //Agraga children OPT
@@ -383,3 +399,68 @@ $(".LotesProceso").select2({
   },
 });
 
+/*************************************************
+ * OPCIONES DE LOTES EN LISTOS PARA REGISTRAR DATOS FINALES
+/*************************************************/
+$(".LotesFinales").select2({
+  placeholder: "Selecciona un lote",
+  allowClear: true,
+
+  ajax: {
+    url: "../Controller/rendimiento.php?op=select2lotesfinales",
+    dataType: "json",
+    type: "post",
+
+    delay: 250,
+    data: function (params) {
+      return {
+        palabraClave: params.term, // search term
+      };
+    },
+    processResults: function (data) {
+      //Recorre JSON para generar option group de areas
+      textOpt = "";
+      jsonOpt = [];
+      childrenOpt = [];
+      data.forEach((element) => {
+        hijoOpt = {};
+        if (textOpt != element.nPrograma) {
+          //Agrega a jsonOpt
+          if (textOpt != "" && childrenOpt.length > 0) {
+            jsonOpt.push({
+              text: textOpt,
+              children: childrenOpt,
+              element: HTMLOptGroupElement,
+            });
+          }
+          /*********************/
+          childrenOpt = [];
+          //Agrega su hijito
+          hijoOpt.id = element.id;
+          hijoOpt.text = element.loteTemola;
+          hijoOpt.element = HTMLOptionElement;
+          childrenOpt.push(hijoOpt); //Agraga children OPT
+        } else {
+          //Agrega su hijito
+          hijoOpt.id = element.id;
+          hijoOpt.text = element.loteTemola;
+          hijoOpt.element = HTMLOptionElement;
+          childrenOpt.push(hijoOpt); //Agraga children OPT
+        }
+        textOpt = element.nPrograma;
+      });
+      //Agrega a jsonOpt
+      if (textOpt != "" && childrenOpt.length > 0) {
+        jsonOpt.push({
+          text: textOpt,
+          children: childrenOpt,
+          element: HTMLOptGroupElement,
+        });
+      }
+      return {
+        results: jsonOpt,
+      };
+    },
+    cache: true,
+  },
+});

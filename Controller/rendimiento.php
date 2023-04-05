@@ -21,6 +21,19 @@ if ($debug == 1) {
 }
 
 switch ($_GET["op"]) {
+    case "select2lotesfinales":
+        if (!isset($_POST['palabraClave'])) {
+            $Data = $obj_rendimiento->getLotesFinalesSelect2();
+            $Data = Excepciones::validaConsulta($Data);
+        } else {
+            $search = $_POST['palabraClave']; // Palabra a buscar
+            $Data = $obj_rendimiento->getLotesFinalesSelect2($search);
+            $Data = Excepciones::validaConsulta($Data);
+        }
+        //Creamos el JSON
+        $json_string = json_encode($Data);
+        echo $json_string;
+        break;
     case "select2lotespadres":
         if (!isset($_POST['palabraClave'])) {
             $Data = $obj_rendimiento->getLotesPadresSelect2();
@@ -1122,7 +1135,7 @@ switch ($_GET["op"]) {
             " Lote" => $idLote, " programa" => $programa,
             " Nivel Modificación" => $option,
         ), $obj_rendimiento);
-       
+
         $obj_rendimiento->beginTransaction();
         $datos = $obj_rendimiento->registroHistReasignacionPrograma($idLote, $programa, $proceso, $option);
         try {
