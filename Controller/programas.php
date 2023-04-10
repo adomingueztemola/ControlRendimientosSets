@@ -21,13 +21,36 @@ if ($debug == 1) {
 }
 
 switch ($_GET["op"]) {
+    case "select2programaspiel":
+        if (!isset($_POST['palabraClave'])) {
+            $Data = $obj_programa->getProgramasSetsSelect2("ca.tipo='3'");
+            $Data = Excepciones::validaConsulta($Data);
+        } else {
+            $search = $_POST['palabraClave']; // Palabra a buscar
+            $Data = $obj_programa->getProgramasSetsSelect2("ca.tipo='3'", $search);
+            $Data = Excepciones::validaConsulta($Data);
+        }
+        $response = array();
+
+        // Leer la informacion
+        foreach ($Data as $area) {
+            $response[] = array(
+                "id" => $area['id'],
+                "text" => $area['nombre']
+            );
+        }
+
+        //Creamos el JSON
+        $json_string = json_encode($response);
+        echo $json_string;
+        break;
     case "select2programassets":
         if (!isset($_POST['palabraClave'])) {
             $Data = $obj_programa->getProgramasSetsSelect2("ca.tipo='1'");
             $Data = Excepciones::validaConsulta($Data);
         } else {
             $search = $_POST['palabraClave']; // Palabra a buscar
-            $Data = $obj_programa->getProgramasSetsSelect2("ca.tipo='1'",$search);
+            $Data = $obj_programa->getProgramasSetsSelect2("ca.tipo='1'", $search);
             $Data = Excepciones::validaConsulta($Data);
         }
         $response = array();
@@ -50,11 +73,11 @@ switch ($_GET["op"]) {
             $Data = Excepciones::validaConsulta($Data);
         } else {
             $search = $_POST['palabraClave']; // Palabra a buscar
-            $Data = $obj_programa->getProgramasSetsSelect2("ca.tipo<>'2'",$search);
+            $Data = $obj_programa->getProgramasSetsSelect2("ca.tipo<>'2'", $search);
             $Data = Excepciones::validaConsulta($Data);
         }
 
-           //Creamos el JSON
+        //Creamos el JSON
         $json_string = json_encode($Data);
         echo $json_string;
         break;

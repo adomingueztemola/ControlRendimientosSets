@@ -21,6 +21,7 @@ $proceso = !empty($_POST['proceso']) ? $_POST['proceso'] : '';
 $programa = !empty($_POST['programa']) ? $_POST['programa'] : '';
 $materia = !empty($_POST['materia']) ? $_POST['materia'] : '';
 $estado = !empty($_POST['estado']) ? $_POST['estado'] : '';
+$proveedor = !empty($_POST['proveedor']) ? $_POST['proveedor'] : '';
 
 /***************** CASTEO DE FECHAS ****************** */
 
@@ -33,6 +34,7 @@ $filtradoPrograma = $programa != '' ? "r.idCatPrograma='$programa'" : "1=1";
 $filtradoMateria = $materia != '' ? "r.idCatMateriaPrima='$materia'" : "1=1";
 $filtradoEstado = $estado == '1' ? "r.estado='2'" : "r.estado>1";
 $filtradoEstado = $estado == '2' ? "r.estado>'2'" : $filtradoEstado;
+$filtradoProveedor = $proveedor != '' ? "FIND_IN_SET('$proveedor', GROUP_CONCAT(DISTINCT pv.id))" : "1=1";
 
 $DataRendimiento = $obj_rendimiento->getRendimientos(
     $filtradoFecha,
@@ -40,17 +42,21 @@ $DataRendimiento = $obj_rendimiento->getRendimientos(
     $filtradoPrograma,
     $filtradoMateria,
     "r.tipoProceso='2'",
-    $filtradoEstado
+    "r.estado='4'",
+    "1=1",
+    $filtradoProveedor
+
 );
 ?>
 <div class="table-responsive">
-    <table id="table-pedidos" class="table table-sm table-hover">
+    <table id="table-pedidos" class="table table-sm display nowrap table-hover">
         <thead>
             <tr class="">
                 <th>#</th>
                 <th>Fecha de Engrase</th>
                 <th>Semana</th>
                 <th>Fecha de Empaque</th>
+                <th>Proveedores</th>
 
                 <th>Lote</th>
                 <th>Programa</th>
@@ -161,6 +167,8 @@ $DataRendimiento = $obj_rendimiento->getRendimientos(
                     <td><?= $DataRendimiento[$key]['f_fechaEngrase'] ?></td>
                     <td><?= $DataRendimiento[$key]['semanaProduccion'] ?></td>
                     <td><?= $DataRendimiento[$key]['f_fechaEmpaque'] ?></td>
+                    <td><?= $DataRendimiento[$key]['proveedores'] ?></td>
+
                     <td><?= $DataRendimiento[$key]['loteTemola'] ?></td>
                     <td><small><?= $DataRendimiento[$key]['n_programa'] ?></small></td>
                     <td><small><?= $DataRendimiento[$key]['n_proceso'] ?></small></td>
@@ -208,6 +216,8 @@ $DataRendimiento = $obj_rendimiento->getRendimientos(
                 <td></td>
                 <td></td>
                 <td></td>
+                <td></td>
+
                 <td></td>
                 <td>Totales:</td>
 
