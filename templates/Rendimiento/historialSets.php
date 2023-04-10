@@ -22,6 +22,25 @@ $programa = !empty($_POST['programa']) ? $_POST['programa'] : '';
 $materia = !empty($_POST['materia']) ? $_POST['materia'] : '';
 $semana = !empty($_POST['semana']) ? $_POST['semana'] : '';
 $proveedor = !empty($_POST['proveedor']) ? $_POST['proveedor'] : '';
+$maximos = !empty($_POST['maximos']) ? $_POST['maximos'] : '';
+$array = ['1s', '2s', '3s', '4s', '_20'];
+$comparativa = "";
+if($maximos!=''){
+    foreach ($array as $key => $value) {
+        if ($value != $GLOBALS['maximos']) {
+            $comparativa .= "r.".$value . ',';
+        }
+    }
+    $comparativa = substr($comparativa, 0, -1);
+
+    $filtradoMaximos = "GREATEST($comparativa)<=r.$maximos";
+}else{
+    $filtradoMaximos = "1=1";
+
+}
+
+
+
 
 /***************** CASTEO DE FECHAS ****************** */
 if ($semana == '') {
@@ -47,7 +66,8 @@ $DataRendimiento = $obj_rendimiento->getRendimientos(
     "r.tipoProceso='1'",
     "r.estado='4'",
     $filtradoSemana,
-    $filtradoProveedor
+    $filtradoProveedor, 
+    $filtradoMaximos
 );
 ?>
 
@@ -200,12 +220,12 @@ $DataRendimiento = $obj_rendimiento->getRendimientos(
                 $costoWBUnit = $DataRendimiento[$key]['estado'] == '2' ? '<i class="fas fa-spinner fa-pulse"></i>' : formatoMil($DataRendimiento[$key]['costoWBUnit']);
                 $perdidaAreaWBCrust = ($DataRendimiento[$key]['estado'] == '2' and $DataRendimiento[$key]['tipoMateriaPrima'] == '2') ? '<i class="fas fa-spinner"></i>' : formatoMil($DataRendimiento[$key]['perdidaAreaWBCrust']);
                 //Lados
-                $_1s = formatoMil($DataRendimiento[$key]['1s']*2, 0);
-                $_2s = formatoMil($DataRendimiento[$key]['2s']*2, 0);
-                $_3s = formatoMil($DataRendimiento[$key]['3s']*2, 0);
-                $_4s = formatoMil($DataRendimiento[$key]['4s']*2, 0);
-                $_20 = formatoMil($DataRendimiento[$key]['_20']*2, 0);
-                $total_s = formatoMil($DataRendimiento[$key]['total_s']*2, 0);
+                $_1s = formatoMil($DataRendimiento[$key]['1s'] * 2, 0);
+                $_2s = formatoMil($DataRendimiento[$key]['2s'] * 2, 0);
+                $_3s = formatoMil($DataRendimiento[$key]['3s'] * 2, 0);
+                $_4s = formatoMil($DataRendimiento[$key]['4s'] * 2, 0);
+                $_20 = formatoMil($DataRendimiento[$key]['_20'] * 2, 0);
+                $total_s = formatoMil($DataRendimiento[$key]['total_s'] * 2, 0);
 
 
                 //Mensaje de Piezas 

@@ -72,7 +72,7 @@ $obj_materia = new MateriaPrima($debug, $idUser);
                                         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                                             <label for="materia">Materia Prima:</label>
                                             <select class="form-control MateriaPrimaFilter" style="width:100%" name="materia" id="materia">
-                                            
+
                                             </select>
 
                                         </div>
@@ -83,6 +83,30 @@ $obj_materia = new MateriaPrima($debug, $idUser);
                                         <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
                                             <label for="proveedor">Proveedores:</label>
                                             <select name="proveedor" id="proveedor" class="form-control ProveedorFilter" style="width:100%"></select>
+                                        </div>
+                                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                            <label for="maximos">Máximos:</label>
+                                            <br>
+                                            <div class="custom-control custom-radio custom-control-inline">
+                                                <input type="radio" id="_1s" value='1s' name="maximos" class="custom-control-input">
+                                                <label class="custom-control-label" for="_1s">1s</label>
+                                            </div>
+                                            <div class="custom-control custom-radio custom-control-inline">
+                                                <input type="radio" id="_2s" value='2s' name="maximos" class="custom-control-input">
+                                                <label class="custom-control-label" for="_2s">2s</label>
+                                            </div>
+                                            <div class="custom-control custom-radio custom-control-inline">
+                                                <input type="radio" id="_3s" value='3s' name="maximos" class="custom-control-input">
+                                                <label class="custom-control-label" for="_3s">3s</label>
+                                            </div>
+                                            <div class="custom-control custom-radio custom-control-inline">
+                                                <input type="radio" id="_4s" value='4s' name="maximos" class="custom-control-input">
+                                                <label class="custom-control-label" for="_4s">4s</label>
+                                            </div>
+                                            <div class="custom-control custom-radio custom-control-inline">
+                                                <input type="radio" id="_20" value='_20' name="maximos" class="custom-control-input">
+                                                <label class="custom-control-label" for="_20">20 (Merma)</label>
+                                            </div>
                                         </div>
                                         <div class="col-lg-1 col-md-1 col-sm-12 col-xs-12  pt-4 mt-1">
                                             <button class="btn button btn-TWM"> Filtrar</button>
