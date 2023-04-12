@@ -118,7 +118,7 @@ switch ($_GET["op"]) {
 
         //DESCUENTO DE PIEZAS RECHAZADAS EN TOTAL S
         $datos = $obj_rendimiento->decrementoTotal_S($id);
-         try {
+        try {
             Excepciones::validaMsjError($datos);
         } catch (Exception $e) {
             $obj_rendimiento->errorBD($e->getMessage(), 1);
@@ -130,7 +130,7 @@ switch ($_GET["op"]) {
         } catch (Exception $e) {
             $obj_rendimiento->errorBD($e->getMessage(), 1);
         }
-        
+
         $obj_rendimiento->insertarCommit();
         if ($edicion == '0') {
             $_SESSION['CRESuccessRendimiento'] = "El Registro de Rendimiento se almacenó Correctamente.";
@@ -378,5 +378,17 @@ switch ($_GET["op"]) {
         }
         echo '1| Registro de Observaciones  Correcto.';
 
+        break;
+    case "getcharcomparative":
+        $anio = (!empty($_POST['anio'])) ? trim($_POST['anio']) : '';
+        $response = [
+            ["x", "2015", "2014", "2013", "2012", "2011", "2010"],
+            ["Calzado", 250, 150, 400, 100, 200, 30],
+            ["Etiquetas", 350, 250, 500, 200, 340, 130]
+        ];
+
+        //Creamos el JSON
+        $json_string = json_encode($response);
+        echo $json_string;
         break;
 }
