@@ -1,5 +1,5 @@
 /*************************************************
- * OPCIONES DE PROGRAMA DE SETS
+ * 1. OPCIONES DE PROGRAMA DE SETS
 /*************************************************/
 $(".ProgramaSetsFilter").select2({
   placeholder: "Selecciona un programa",
@@ -25,7 +25,7 @@ $(".ProgramaSetsFilter").select2({
 });
 
 /*************************************************
- * OPCIONES DE PROCESOS DE SECADO
+ * 2. OPCIONES DE PROCESOS DE SECADO
 /*************************************************/
 $(".ProcesosFilter").select2({
   placeholder: "Selecciona un proceso",
@@ -51,7 +51,7 @@ $(".ProcesosFilter").select2({
 });
 
 /*************************************************
- * OPCIONES DE PROGRAMAS GENERALES
+ * 3. OPCIONES DE PROGRAMAS GENERALES
 /*************************************************/
 $(".ProgramasFilter").select2({
   placeholder: "Selecciona un programa",
@@ -116,7 +116,7 @@ $(".ProgramasFilter").select2({
 });
 
 /*************************************************
- * OPCIONES DE LOTES PADRES
+ * 4. OPCIONES DE LOTES PADRES
 /*************************************************/
 $(".LotePadresFilter").select2({
   placeholder: "Selecciona un lote",
@@ -181,7 +181,7 @@ $(".LotePadresFilter").select2({
 });
 
 /*************************************************
- * OPCIONES DE SEMANAS DE PRODUCCION
+ * 5. OPCIONES DE SEMANAS DE PRODUCCION
 /*************************************************/
 $(".SemanaLotesFilter").select2({
   placeholder: "Selecciona una semana",
@@ -207,7 +207,7 @@ $(".SemanaLotesFilter").select2({
 });
 
 /*************************************************
- * OPCIONES DE LOTES PARA TESEO
+ * 6. OPCIONES DE LOTES PARA TESEO
 /*************************************************/
 $(".LoteTeseoFilter").select2({
   placeholder: "Selecciona un lote",
@@ -271,7 +271,7 @@ $(".LoteTeseoFilter").select2({
   },
 });
 /*************************************************
- * OPCIONES DE LOTES ABIERTOS PARA PODER MODIFICAR
+ * 7. OPCIONES DE LOTES ABIERTOS PARA PODER MODIFICAR
 /*************************************************/
 $(".LotesAbiertosFilter").select2({
   placeholder: "Selecciona un lote",
@@ -336,7 +336,7 @@ $(".LotesAbiertosFilter").select2({
 });
 
 /*************************************************
- * OPCIONES DE LOTES EN PROCESO DE EMPAQUE
+ * 8. OPCIONES DE LOTES EN PROCESO DE EMPAQUE
 /*************************************************/
 $(".LotesProceso").select2({
   placeholder: "Selecciona un lote",
@@ -400,7 +400,7 @@ $(".LotesProceso").select2({
 });
 
 /*************************************************
- * OPCIONES DE LOTES EN LISTOS PARA REGISTRAR DATOS FINALES
+ * 9. OPCIONES DE LOTES EN LISTOS PARA REGISTRAR DATOS FINALES
 /*************************************************/
 $(".LotesFinales").select2({
   placeholder: "Selecciona un lote",
