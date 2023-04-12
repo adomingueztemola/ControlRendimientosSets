@@ -24,15 +24,15 @@ class Inventario extends ConexionBD
     public function getInventarioTeseo($filtradoSemana = '1=1', $filtradoProceso = '1=1', $filtradoPrograma = '1=1', $filtradoMateria = '1=1', $filtradoEstado = '1=1')
     {
         $sql = "SELECT
-        r.loteTemola,
-        r.semanaProduccion,
-        r.pzasCortadasTeseo,
-        r.setsCortadosTeseo,
+        CONCAT(IFNULL(rd.yearWeek, '0000'), '-SEM. ', LPAD(rd.semanaProduccion,2,'0')) AS semanaAnio,
+        rd.loteTemola,
+        rd.semanaProduccion,
+        rd.pzasCortadasTeseo,
+        rd.setsCortadosTeseo,
         pr.nombre AS n_proceso,
         pr.codigo AS c_proceso,
         pg.nombre AS n_programa,
         mp.nombre AS n_materia,
-        r.rzgoTeseo,
         rd._12Teseo, 
         rd._9Teseo,
         rd._3Teseo, 
@@ -40,13 +40,13 @@ class Inventario extends ConexionBD
         areaFinal,
         yieldInicialTeseo
     FROM
-    vw_lotestotales r
-        INNER JOIN rendimientos rd ON r.id=rd.id
-        INNER JOIN catprocesos pr ON r.idCatProceso = pr.id
-        INNER JOIN catprogramas pg ON r.idCatPrograma = pg.id
-        INNER JOIN catmateriasprimas mp ON r.idCatMateriaPrima = mp.id
-        WHERE  rd.regTeseo='1' AND $filtradoSemana AND $filtradoProceso AND $filtradoPrograma AND $filtradoMateria AND $filtradoEstado
-        ORDER BY r.fechaEmpaque DESC,r.semanaProduccion DESC, r.loteTemola";
+        rendimientos rd 
+        INNER JOIN catprocesos pr ON rd.idCatProceso = pr.id
+        INNER JOIN catprogramas pg ON rd.idCatPrograma = pg.id
+        INNER JOIN catmateriasprimas mp ON rd.idCatMateriaPrima = mp.id
+        WHERE  rd.regTeseo='1' AND $filtradoSemana AND $filtradoProceso AND 
+        $filtradoPrograma AND $filtradoMateria AND $filtradoEstado
+        ORDER BY rd.yearWeek DESC,rd.semanaProduccion DESC";
         return  $this->ejecutarQuery($sql, "consultar Inventario de Teseo", true);
     }
     /*****************************************

@@ -92,7 +92,7 @@ $DataRendimiento = $obj_inventario->getInventarioTeseo($filtradoSemana,$filtrado
                     echo "<tr>
                     <td>$count</td>
                     <td>{$DataRendimiento[$key]['loteTemola']}</td>
-                    <td>{$DataRendimiento[$key]['semanaProduccion']}</td>
+                    <td>{$DataRendimiento[$key]['semanaAnio']}</td>
                     <td><small>{$DataRendimiento[$key]['c_proceso']}</small></td>
                     <td><small>{$DataRendimiento[$key]['n_programa']}</small></td>
 
