@@ -104,7 +104,7 @@ $obj_materia = new MateriaPrima($debug, $idUser);
                                                 <label class="custom-control-label" for="_4s">4s</label>
                                             </div>
                                             <div class="custom-control custom-radio custom-control-inline">
-                                                <input type="radio" id="_20" value='_20' name="maximos" class="custom-control-input">
+                                                <input type="radio" id="_20" value='_ 20' name="maximos" class="custom-control-input">
                                                 <label class="custom-control-label" for="_20">20 (Merma)</label>
                                             </div>
                                         </div>

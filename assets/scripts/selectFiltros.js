@@ -265,7 +265,7 @@ $(".MateriaPrimaFilter").select2({
   allowClear: true,
 
   ajax: {
-    url: "../Controller/materiasprimas.php?op=select2materiaprima",
+    url: "../Controller/materiasPrimas.php?op=select2materiaprima",
     type: "post",
     dataType: "json",
     delay: 250,
@@ -319,6 +319,61 @@ $(".ProgramaPielFilter").select2({
 
   ajax: {
     url: "../Controller/programas.php?op=select2programaspiel",
+    type: "post",
+    dataType: "json",
+    delay: 250,
+    data: function (params) {
+      return {
+        palabraClave: params.term, // search term
+      };
+    },
+    processResults: function (response) {
+      return {
+        results: response,
+      };
+    },
+    cache: true,
+  },
+});
+
+
+/*******************************************************
+ * OPCIONES DE PROGRAMA SOLO PARA ETIQUETAS
+ *******************************************************/
+//Filtro de Programas para Sets
+$(".ProgramaEtiqFilter").select2({
+  placeholder: "Selecciona un programa",
+  allowClear: true,
+
+  ajax: {
+    url: "../Controller/programas.php?op=select2programasetiq",
+    type: "post",
+    dataType: "json",
+    delay: 250,
+    data: function (params) {
+      return {
+        palabraClave: params.term, // search term
+      };
+    },
+    processResults: function (response) {
+      return {
+        results: response,
+      };
+    },
+    cache: true,
+  },
+});
+
+/*******************************************************
+ * OPCIONES DE PROGRAMA SOLO PARA CALZADO
+ *******************************************************/
+//Filtro de Programas para Sets
+$(".ProgramaCalzadoFilter").select2({
+  placeholder: "Selecciona un programa",
+  allowClear: true,
+
+  ajax: {
+    url: "../Controller/programas.php?op=select2programascalz",
     type: "post",
     dataType: "json",
     delay: 250,
