@@ -47,11 +47,11 @@ CREATE PROCEDURE calcularRendimientoFase2 (
 		),*/
 	   /*@pzasSetsRechazadas := r.pzasCortadasTeseo -( r.unidadesEmpacadas),*/
 	   /*@setsRechazados := @pzasSetsRechazadas / conf.pzasEnSets,*/
-		@perdidaAreaCrustTeseo:=(r.areaFinal-r.areaCrust)/r.areaCrust, 
+		@perdidaAreaCrustTeseo:=((r.areaFinal-r.areaCrust)/r.areaCrust)*100, 
 		@yieldFinalReal:=(r.areaNeta_Prg/@areaWBUnidad)*100,
 		@porcRechazo:=((r.pzasCortadasTeseo-r.totalEmp)/r.pzasCortadasTeseo)*100,
        /* @porcRechazo:=(r.setsRechazados/r.setsCortadosTeseo)*100,*/
-		@perdidaAreaWBTerminado:=(r.areaFinal-r.areaWB)/r.areaWB
+		@perdidaAreaWBTerminado:=((r.areaFinal-r.areaWB)/r.areaWB)*100
 	FROM
 		rendimientos r
 		INNER JOIN config_inventarios conf ON conf.estado = '1'

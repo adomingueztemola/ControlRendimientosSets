@@ -39,7 +39,18 @@ $space = 1;
                                             <label class="form-label required" for="programa">Ingresa Programa:</label>
                                             <input type="text" class="form-control Mayusculas" autocomplete="off" required name="programa" id="programa">
                                         </div>
-                                      
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label class="form-label required" for="tipo">Tipo:</label>
+                                            <select name="tipo" class="form-control" id="tipo">
+                                                <option value="" selected disabled>Selecciona tipo de programa ...</option>
+                                                <option value="2">Etiquetas</option>
+                                                <option value="4">Calzado</option>
+
+                                            </select>
+                                        </div>
                                     </div>
                                     <hr>
                                     <div class="row">
@@ -193,8 +204,8 @@ $space = 1;
 
         });
     });
-      /********** EDICION DE UN PROGRAMA ***********/
-      $("#formEditPrograma").submit(function(e) {
+    /********** EDICION DE UN PROGRAMA ***********/
+    $("#formEditPrograma").submit(function(e) {
         e.preventDefault();
         formData = $(this).serialize();
         $.ajax({
@@ -250,8 +261,8 @@ $space = 1;
                 }
             });
     }
-     /*********************** FUNCION PARA CARGAR DATOS DE LA EDICION ******************************/
-     function cargarEdicion(id) {
+    /*********************** FUNCION PARA CARGAR DATOS DE LA EDICION ******************************/
+    function cargarEdicion(id) {
         $.ajax({
             type: 'POST',
             url: '../Controller/programas.php?op=detallado',
@@ -299,7 +310,7 @@ $space = 1;
 
         $.ajax({
             type: 'POST',
-            url: '../templates/Extras/programas.php',
+            url: '../templates/Extras/programasEtiquetas.php',
             data: {
                 id: idBusqueda
             },

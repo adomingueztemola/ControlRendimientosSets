@@ -239,7 +239,7 @@ $DataRendimiento = $obj_rendimiento->getRendimientos(
                 $btnSolicitud = ($DataRendimiento[$key]['envioSolicitud'] == '1') ? '<i class="fas fa-spinner fa-pulse"></i> <small>Espera</small>' : $btnSolicitud;
             ?>
                 <tr>
-                    <td><?= $btnSolicitud ?></td>
+                    <td><?= $count ?></td>
                     <td><?= $DataRendimiento[$key]['f_fechaEngrase'] ?></td>
                     <td><?= $DataRendimiento[$key]['semanaAnio'] ?></td>
                     <td><?= $DataRendimiento[$key]['f_fechaEmpaque'] ?></td>
