@@ -6,19 +6,15 @@ include("../Models/Mdl_ConexionBD.php");
 include("../Models/Mdl_Programa.php");
 include("../Models/Mdl_Proceso.php");
 include("../Models/Mdl_MateriaPrima.php");
-
 $info->Acceso();
 $idUser = $_SESSION['CREident'];
 $nameUser = $_SESSION['CREnombreUser'];
 setlocale(LC_TIME, 'es_ES.UTF-8');
-$debug = 0;
+$debug = 1;
 $space = 1;
-
 $obj_programa = new Programa($debug, $idUser);
 $obj_proceso = new ProcesoSecado($debug, $idUser);
 $obj_materia = new MateriaPrima($debug, $idUser);
-
-
 ?>
 <!DOCTYPE html>
 <html dir="ltr" lang="<?= $info->lng; ?>">
@@ -46,27 +42,57 @@ $obj_materia = new MateriaPrima($debug, $idUser);
                             <div class="card-body" id="">
                                 <form id="filtrado">
                                     <div class="row">
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                            <label for="date-range">Búsqueda de por Rangos de Fechas: </label>
-                                            <div class="input-daterange input-group" id="date-range">
-                                                <input type="text" class="form-control" name="date-start" value="<?= date("01/m/Y") ?>">
-                                                <div class="input-group-append">
-                                                    <span class="input-group-text bg-TWM b-0 text-white">AL</span>
-                                                </div>
-                                                <input type="text" class="form-control" name="date-end" value="<?= date("t/m/Y") ?>">
-                                            </div>
+                                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                        <label for="semana">Semana de Producción:</label>
+                                        <input type="week" name="semanaProduccion" id="semana" class="form-control">
+
                                         </div>
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
                                             <label for="programa">Programa:</label>
-                                            <select class="form-control select2Form ProgramaEtiqFilter" style="width:100%" name="programa" id="programa">
+                                            <select class="form-control select2" style="width:100%" name="programa" id="programa">
                                                 <option value="">Todos los Programas</option>
-                                              
+                                                <?php
+                                                $DataPrograma = $obj_programa->getPrograma("p.estado='1'","p.tipo='1'");
+                                                foreach ($DataPrograma as $key => $value) {
+                                                    echo "<option value='{$DataPrograma[$key]['id']}'>{$DataPrograma[$key]['nombre']}</option>";
+                                                }
+                                                ?>
                                             </select>
 
                                         </div>
-                                        <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+                                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                            <label for="estado">Estado:</label>
+                                            <select class="form-control select2" style="width:100%" name="estado" id="estado">
+                                                <option value="">Todos</option>
+                                                <option value="1">Con Piezas Sin Set</option>
+                                                <option value="2">Piezas con Set</option>
+
+                                            </select>
+                                        </div>
+
+                                        <div class="col-lg-1 col-md-1 col-sm-12 col-xs-12">
+                                            <label for="proceso">Proceso:</label>
+                                            <select class="form-control select2" style="width:100%" name="proceso" id="proceso">
+                                                <option value="">-</option>
+                                                <?php
+                                                $DataProceso = $obj_proceso->getProcesos("pr.estado='1'", "pr.tipo='1'");
+                                                foreach ($DataProceso as $key => $value) {
+                                                    echo "<option value='{$DataProceso[$key]['id']}'>{$DataProceso[$key]['codigo']}</option>";
+                                                }
+                                                ?>
+                                            </select>
+
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                                             <label for="materia">Materia Prima:</label>
-                                            <select class="form-control select2Form MateriaPrimaFilter" style="width:100%" name="materia" id="materia">
+                                            <select class="form-control select2" style="width:100%" name="materia" id="materia">
+                                                <option value="">Todos las Materias Primas</option>
+                                                <?php
+                                                $DataMateria = $obj_materia->getMaterias("mt.estado='1'");
+                                                foreach ($DataMateria as $key => $value) {
+                                                    echo "<option value='{$DataMateria[$key]['id']}'>{$DataMateria[$key]['nombre']}</option>";
+                                                }
+                                                ?>
                                             </select>
 
                                         </div>
@@ -98,7 +124,7 @@ $obj_materia = new MateriaPrima($debug, $idUser);
 
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div id="content-historial"></div>
+                                        <div id="content-inventario"></div>
 
                                     </div>
 
@@ -134,56 +160,14 @@ $obj_materia = new MateriaPrima($debug, $idUser);
 <script src="../assets/libs/moment/moment.js"></script>
 <script src="../assets/libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 <script src="../assets/libs/bootstrap-datepicker/dist/locales/bootstrap-datepicker.es.min.js"></script>
-<script src="../assets/scripts/selectFiltros.js"></script>
 
 <script>
     update()
-    <?php
-    if (isset($_SESSION['CRESuccessRendEdit']) and $_SESSION['CRESuccessRendEdit'] != '') { ?>
-        notificaSuc('<?= $_SESSION['CRESuccessRendEdit'] ?>');
-    <?php
-        unset($_SESSION['CRESuccessRendEdit']);
-    }
-    if (isset($_SESSION['CREErrorRendEdit']) and $_SESSION['CREErrorRendEdit'] != '') { ?>
-        notificaBad('<?= $_SESSION['CREErrorRendEdit'] ?>');
-    <?php
-        unset($_SESSION['CREErrorRendEdit']);
-    } ?>
-    jQuery('#date-range').datepicker({
-        toggleActive: true,
-        format: 'dd/mm/yyyy',
-        language: "es",
-        todayHighlight: true
-
-
-
-    });
 
     function update() {
-        $('#content-historial').html('<div class="loading text-center"><img src="../assets/images/loading.gif" alt="loading" /><br/>Un momento, por favor...</div>');
-        $('#content-historial').load('../templates/Etiquetas/historialEtiquetas.php');
+        $('#content-inventario').html('<div class="loading text-center"><img src="../assets/images/loading.gif" alt="loading" /><br/>Un momento, por favor...</div>');
+        $('#content-inventario').load('../templates/Almacen/inventarioTeseo.php');
         clearForm("filtrado");
-
-    }
-    /***************** ELIMINAR EL RENDIMIENTO*********************/
-    function eliminarRendimiento(id) {
-        $.post("../Controller/rendimientoEtiquetas.php?op=cancelarrendimiento", {
-                id: id
-            },
-            function(respuesta) {
-                var resp = respuesta.split('|');
-                if (resp[0] == 1) {
-
-                    setTimeout(() => {
-                        notificaSuc(resp[1]);
-                        update();
-
-                    }, 1000);
-                } else {
-                    notificaBad(resp[1]);
-
-                }
-            });
 
     }
 
@@ -192,15 +176,19 @@ $obj_materia = new MateriaPrima($debug, $idUser);
         e.preventDefault();
         formData = $(this).serialize();
         $.ajax({
-            url: '../templates/Etiquetas/historialEtiquetas.php',
+            url: '../templates/Almacen/inventarioTeseo.php',
             data: formData,
             type: 'POST',
             success: function(respuesta) {
-                $('#content-historial').html(respuesta);
+                $('#content-inventario').html(respuesta);
 
 
             },
-            beforeSend: function() {}
+            beforeSend: function() {
+                $('#content-inventario').html('<div class="loading text-center"><img src="../assets/images/loading.gif" alt="loading" /><br/>Un momento, por favor...</div>');
+
+
+            }
 
         });
     });

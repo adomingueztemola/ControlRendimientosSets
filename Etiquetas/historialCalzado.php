@@ -58,7 +58,7 @@ $obj_materia = new MateriaPrima($debug, $idUser);
                                         </div>
                                         <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                                             <label for="programa">Programa:</label>
-                                            <select class="form-control select2Form ProgramaEtiqFilter" style="width:100%" name="programa" id="programa">
+                                            <select class="form-control select2Form ProgramaCalzadoFilter" style="width:100%" name="programa" id="programa">
                                                 <option value="">Todos los Programas</option>
                                               
                                             </select>
@@ -161,7 +161,7 @@ $obj_materia = new MateriaPrima($debug, $idUser);
 
     function update() {
         $('#content-historial').html('<div class="loading text-center"><img src="../assets/images/loading.gif" alt="loading" /><br/>Un momento, por favor...</div>');
-        $('#content-historial').load('../templates/Etiquetas/historialEtiquetas.php');
+        $('#content-historial').load('../templates/Calzado/historialCalzado.php');
         clearForm("filtrado");
 
     }
@@ -192,7 +192,7 @@ $obj_materia = new MateriaPrima($debug, $idUser);
         e.preventDefault();
         formData = $(this).serialize();
         $.ajax({
-            url: '../templates/Etiquetas/historialEtiquetas.php',
+            url: '../templates/Calzado/historialCalzado.php',
             data: formData,
             type: 'POST',
             success: function(respuesta) {

@@ -21,6 +21,29 @@ if ($debug == 1) {
 }
 
 switch ($_GET["op"]) {
+    case "select2proveedores":
+        if (!isset($_POST['palabraClave'])) {
+            $Data = $obj_proveedor->getProveedoresSelect2();
+            $Data = Excepciones::validaConsulta($Data);
+        } else {
+            $search = $_POST['palabraClave']; // Palabra a buscar
+            $Data = $obj_proveedor->getProveedoresSelect2($search);
+            $Data = Excepciones::validaConsulta($Data);
+        }
+        $response = array();
+
+        // Leer la informacion
+        foreach ($Data as $area) {
+            $response[] = array(
+                "id" => $area['id'],
+                "text" => $area['nombre']
+            );
+        }
+
+        //Creamos el JSON
+        $json_string = json_encode($response);
+        echo $json_string;
+        break;
     case "agregarprov":
        $proveedor = (isset($_POST['proveedor'])) ? trim($_POST['proveedor']) : '';
         $log = '';
@@ -91,16 +114,3 @@ EOD;
         break;
   
 }
-
-
-
-
-
-
-
-
-
-
-
-
-?>

@@ -21,6 +21,7 @@ $proceso = !empty($_POST['proceso']) ? $_POST['proceso'] : '';
 $programa = !empty($_POST['programa']) ? $_POST['programa'] : '';
 $materia = !empty($_POST['materia']) ? $_POST['materia'] : '';
 $estado = !empty($_POST['estado']) ? $_POST['estado'] : '';
+$proveedor = !empty($_POST['proveedor']) ? $_POST['proveedor'] : '';
 
 /***************** CASTEO DE FECHAS ****************** */
 
@@ -33,6 +34,7 @@ $filtradoPrograma = $programa != '' ? "r.idCatPrograma='$programa'" : "1=1";
 $filtradoMateria = $materia != '' ? "r.idCatMateriaPrima='$materia'" : "1=1";
 $filtradoEstado = $estado == '1' ? "r.estado='2'" : "r.estado>1";
 $filtradoEstado = $estado == '2' ? "r.estado>'2'" : $filtradoEstado;
+$filtradoProveedor = $proveedor != '' ? "FIND_IN_SET('$proveedor', GROUP_CONCAT(DISTINCT pv.id))" : "1=1";
 
 $DataRendimiento = $obj_rendimiento->getRendimientos(
     $filtradoFecha,
@@ -40,17 +42,21 @@ $DataRendimiento = $obj_rendimiento->getRendimientos(
     $filtradoPrograma,
     $filtradoMateria,
     "r.tipoProceso='2'",
-    $filtradoEstado
+    "r.estado='4'",
+    "1=1",
+    $filtradoProveedor
+
 );
 ?>
 <div class="table-responsive">
-    <table id="table-pedidos" class="table table-sm table-hover">
+    <table id="table-pedidos" class="table table-sm display nowrap table-hover">
         <thead>
             <tr class="">
                 <th>#</th>
                 <th>Fecha de Engrase</th>
                 <th>Semana</th>
                 <th>Fecha de Empaque</th>
+                <th>Proveedores</th>
 
                 <th>Lote</th>
                 <th>Programa</th>
@@ -78,7 +84,6 @@ $DataRendimiento = $obj_rendimiento->getRendimientos(
                 <th>Perdida de Área de Crust a Terminado</th>
                 <th>M<sup>2</sup> Finales</th>
                 <th>Perdida de Área WB a Terminado</th>
-                <th>Costo de WB por Unidad</th>
                 <th>Usuario Registro</th>
                 <th>Fecha Registro</th>
 
@@ -122,6 +127,7 @@ $DataRendimiento = $obj_rendimiento->getRendimientos(
                 $suma_areaPzasRechazo += $DataRendimiento[$key]['areaPzasRechazo'];
                 $suma_setsEmpacados += $DataRendimiento[$key]['totalEmp'];
                 $suma_cuerosReasig += $DataRendimiento[$key]['cuerosReasig'];
+                $suma_perdidaAreaCrustTeseo += $DataRendimiento[$key]['perdidaAreaCrustTeseo'];
 
                 $suma_porcRecorteWB += $DataRendimiento[$key]['porcRecorteWB'];
                 $suma_porcRecorteCrust += $DataRendimiento[$key]['porcRecorteCrust'];
@@ -161,6 +167,7 @@ $DataRendimiento = $obj_rendimiento->getRendimientos(
                     <td><?= $DataRendimiento[$key]['f_fechaEngrase'] ?></td>
                     <td><?= $DataRendimiento[$key]['semanaProduccion'] ?></td>
                     <td><?= $DataRendimiento[$key]['f_fechaEmpaque'] ?></td>
+                    <td><?= $DataRendimiento[$key]['proveedores'] ?></td>
 
                     <td><?= $DataRendimiento[$key]['loteTemola'] ?></td>
                     <td><small><?= $DataRendimiento[$key]['n_programa'] ?></small></td>
@@ -172,7 +179,6 @@ $DataRendimiento = $obj_rendimiento->getRendimientos(
                     <td><?= $porcDifAreaWB ?></td>
                     <td><?= $comentarios_rechazo ?></td>
                     <td><?= formatoMil($DataRendimiento[$key]['cuerosReasig']) ?></td>
-
                     <td><?= formatoMil($DataRendimiento[$key]['areaPzasRechazo']) ?></td>
                     <td><?= formatoMil($DataRendimiento[$key]['porcRecorteWB']) ?></td>
                     <td><?= formatoMil($DataRendimiento[$key]['porcRecorteCrust']) ?></td>
@@ -187,12 +193,8 @@ $DataRendimiento = $obj_rendimiento->getRendimientos(
                     <td><?= formatoMil($DataRendimiento[$key]['suavidad']) ?></td>
                     <td><?= formatoMil($DataRendimiento[$key]['areaFinal']) ?></td>
                     <td><?= formatoMil($DataRendimiento[$key]['perdidaAreaCrustTeseo']) ?></td>
-                    <td><?= formatoMil($DataRendimiento[$key]['setsEmpacados']) ?></td>
+                    <td><?= formatoMil($DataRendimiento[$key]['totalEmp']) ?></td>
                     <td><?= formatoMil($DataRendimiento[$key]['areaWBTerminado']) ?></td>
-
-
-                    <td><?= $costoWBUnit ?></td>
-
                     <td><?= $DataRendimiento[$key]['str_usuario'] ?></td>
                     <td><?= $DataRendimiento[$key]['f_fechaReg'] ?></td>
 
@@ -214,6 +216,8 @@ $DataRendimiento = $obj_rendimiento->getRendimientos(
                 <td></td>
                 <td></td>
                 <td></td>
+                <td></td>
+
                 <td></td>
                 <td>Totales:</td>
 
@@ -238,10 +242,9 @@ $DataRendimiento = $obj_rendimiento->getRendimientos(
                 <td><?= formatoMil($suma_quiebre > 0 ? $suma_quiebre / $count : 0) ?></td>
                 <td><?= formatoMil($suma_suavidad > 0 ? $suma_suavidad / $count : 0) ?></td>
                 <td><?= formatoMil($suma_areaFinal) ?></td>
-                <td><?= formatoMil($suma_perdidaAreaCrustTeseo) ?></td>
+                <td><?= formatoMil($suma_perdidaAreaCrustTeseo != 0 ? $suma_perdidaAreaCrustTeseo / $count : 0) ?></td>
                 <td><?= formatoMil($suma_setsEmpacados) ?></td>
-                <td><?= formatoMil($suma_wbterminado > 0 ? $suma_wbterminado / $count : 0) ?></td>
-                <td><?= formatoMil($suma_costoUnidad > 0 ? $suma_costoUnidad / $count : 0) ?></td>
+                <td><?= formatoMil($suma_wbterminado != 0 ? $suma_wbterminado / $count : 0) ?></td>
 
                 <td></td>
                 <td></td>

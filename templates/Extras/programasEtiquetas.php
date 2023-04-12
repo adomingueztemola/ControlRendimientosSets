@@ -18,7 +18,7 @@ if ($debug == 1) {
 $id=isset($_POST['id'])?$_POST['id']:'';
 $id=$id=='-1'?'':$id;
 $filtradoEstatus= $id!=''?'p.estado='.$id.'':'1=1';
-$filtradoTipo="p.tipo='2'";
+$filtradoTipo="(p.tipo='2' OR p.tipo='4')";
 $DataProgramas = $obj_programas->getPrograma($filtradoEstatus, $filtradoTipo);
 
 ?>
@@ -26,6 +26,7 @@ $DataProgramas = $obj_programas->getPrograma($filtradoEstatus, $filtradoTipo);
     <thead>
         <tr class="bg-TWM text-white">
             <th>#</th>
+            <th>Tipo</th>
             <th>Programa</th>
             <th>Usuario Registro</th>
             <th>Fecha Registro</th>
@@ -51,12 +52,15 @@ EOD
             class="btn btn-xs btn-outline-danger"><i class=' fas fa-power-off'></i></button>
 EOD;
 $btnAccion="<button class='btn btn-xs btn-primary' onclick='cargarEdicion({$DataProgramas[$key]['id']})' data-toggle='modal' data-target='#ModalEditPrograma'><i class=' fas fa-cogs' title='Edición'></i></button>";
+$lblTipo='';
+$lblTipo=$value['tipo']=='4'?'Calzado':$lblTipo;
+$lblTipo=$value['tipo']=='2'?'Etiquetas':$lblTipo;
 
         ?>
             <tr>
                 <td><?=$count?></td>
+                <td><?=$lblTipo?></td>
                 <td><?=$DataProgramas[$key]['nombre']?></td>
-
                 <td><?=$DataProgramas[$key]['str_usuario']?></td>
                 <td><?=$DataProgramas[$key]['f_fechaReg']?></td>
                 <td><div id="divEstatus-<?=$DataProgramas[$key]['id']?>"><?=$btnEstatus?></div></td>

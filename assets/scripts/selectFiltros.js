@@ -335,6 +335,7 @@ $(".LotesAbiertosFilter").select2({
   },
 });
 
+
 /*************************************************
  * 8. OPCIONES DE LOTES EN PROCESO DE EMPAQUE
 /*************************************************/
@@ -398,12 +399,10 @@ $(".LotesProceso").select2({
     cache: true,
   },
 });
-
-
-
 /*************************************************
  * 9. OPCIONES DE LOTES EN LISTOS PARA REGISTRAR DATOS FINALES
 /*************************************************/
+
 $(".LotesFinales").select2({
   placeholder: "Selecciona un lote",
   allowClear: true,
@@ -412,13 +411,6 @@ $(".LotesFinales").select2({
     url: "../Controller/rendimiento.php?op=select2lotesfinales",
     dataType: "json",
     type: "post",
-
-    delay: 250,
-    data: function (params) {
-      return {
-        palabraClave: params.term, // search term
-      };
-    },
     processResults: function (data) {
       //Recorre JSON para generar option group de areas
       textOpt = "";
@@ -467,60 +459,135 @@ $(".LotesFinales").select2({
   },
 });
 
+/*******************************************************
+ * 10. OPCIONES DE MATERIA PRIMA
+ *******************************************************/
+$(".MateriaPrimaFilter").select2({
+  placeholder: "Selecciona una materia prima",
+  allowClear: true,
+
+  ajax: {
+    url: "../Controller/materiasPrimas.php?op=select2materiaprima",
+    type: "post",
+    dataType: "json",
+    delay: 250,
+    data: function (params) {
+      return {
+        palabraClave: params.term, // search term
+      };
+    }, processResults: function (response) {
+      return {
+        results: response,
+      };
+    },
+    cache: true,}
+  
+});
 
 
+/*******************************************************
+ * 11. OPCIONES DE PROVEEDORES
+ *******************************************************/
+$(".ProveedorFilter").select2({
+  placeholder: "Selecciona un proveedor",
+  allowClear: true,
 
+  ajax: {
+    url: "../Controller/proveedores.php?op=select2proveedores",
+    type: "post",
+    dataType: "json",
+    delay: 250,
+    data: function (params) {
+      return {
+        palabraClave: params.term, // search term
+      };
+    },
+    processResults: function (response) {
+      return {
+        results: response,
+      };
+    },
+    cache: true,
+  },
+});
 
+/*******************************************************
+ * 12. OPCIONES DE PROGRAMA SOLO PARA PIEL AUTO
+ *******************************************************/
+//Filtro de Programas para Sets
+$(".ProgramaPielFilter").select2({
+  placeholder: "Selecciona un programa",
+  allowClear: true,
 
+  ajax: {
+    url: "../Controller/programas.php?op=select2programaspiel",
+    type: "post",
+    dataType: "json",
+    delay: 250,
+    data: function (params) {
+      return {
+        palabraClave: params.term, // search term
+      };
+    },
+    processResults: function (response) {
+      return {
+        results: response,
+      };
+    },
+    cache: true,
+  },
+});
 
+/*******************************************************
+ * 13. OPCIONES DE PROGRAMA SOLO PARA ETIQUETAS
+ *******************************************************/
+//Filtro de Programas para Sets
+$(".ProgramaEtiqFilter").select2({
+  placeholder: "Selecciona un programa",
+  allowClear: true,
 
+  ajax: {
+    url: "../Controller/programas.php?op=select2programasetiq",
+    type: "post",
+    dataType: "json",
+    delay: 250,
+    data: function (params) {
+      return {
+        palabraClave: params.term, // search term
+      };
+    },
+    processResults: function (response) {
+      return {
+        results: response,
+      };
+    },
+    cache: true,
+  },
+});
 
+/*******************************************************
+ * 14. OPCIONES DE PROGRAMA SOLO PARA CALZADO
+ *******************************************************/
+//Filtro de Programas para Sets
+$(".ProgramaCalzadoFilter").select2({
+  placeholder: "Selecciona un programa",
+  allowClear: true,
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  ajax: {
+    url: "../Controller/programas.php?op=select2programascalz",
+    type: "post",
+    dataType: "json",
+    delay: 250,
+    data: function (params) {
+      return {
+        palabraClave: params.term, // search term
+      };
+    },
+    processResults: function (response) {
+      return {
+        results: response,
+      };
+    },
+    cache: true,
+  },
+});

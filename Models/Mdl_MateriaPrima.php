@@ -16,6 +16,14 @@ class MateriaPrima extends ConexionBD
     {
         $this->close();
     }
+    public function getMateriasPrimasSelect2($busqId=''){
+        $filtradoID = $busqId == '' ? '1=1' : "ca.nombre LIKE '%$busqId%'";
+        $sql = "SELECT ca.*
+        FROM catmateriasprimas ca
+        WHERE $filtradoID AND 
+        ca.estado ='1'";
+        return  $this->consultarQuery($sql, "consultar Materias Primas");
+    }
     public function agregarMateria($name, $tipo, $mnd)
     {
 

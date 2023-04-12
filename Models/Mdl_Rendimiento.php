@@ -26,8 +26,7 @@ class Rendimiento extends ConexionBD
         WHERE $filtradoID";
         return  $this->consultarQuery($sql, "consultar lotes");
     }
-    public function getLotesOpen($busqId = '')
-    {
+    public function getLotesOpen($busqId = ''){
         $filtradoID = $busqId == '' ? '1=1' : "r.loteTemola LIKE '%$busqId%'";
 
         $sql = "SELECT r.*, cp.nombre AS nPrograma
@@ -72,32 +71,7 @@ class Rendimiento extends ConexionBD
         ORDER BY cp.nombre, CAST(r.loteTemola AS UNSIGNED)";
         return  $this->consultarQuery($sql, "consultar lotes");
     }
-    public function getLotesFinalesSelect2($busqId = '')
-    {
-        $filtradoID = $busqId == '' ? '1=1' : "r.loteTemola LIKE '%$busqId%'";
-        $sql = "SELECT
-        r.id,
-        r.loteTemola,
-        r.semanaProduccion,
-        pr.nombre AS nPrograma
-        FROM
-        rendimientos r
-        INNER JOIN catprogramas pr ON pr.id = r.idCatPrograma
-       
-        WHERE $filtradoID AND (r.estado = '2' OR r.estado='3') 
-        AND (r.regEmpaque='1' OR r.tipoProceso='2')
-        ORDER BY pr.nombre, r.loteTemola";
-        return  $this->consultarQuery($sql, "consultar Lote Registrado");
-    }
-
-
-
-
-
-
-
-
-
+    
     public function getLotesProceso($busqId = '')
     {
         $filtradoID = $busqId == '' ? '1=1' : "r.loteTemola LIKE '%$busqId%'";
@@ -461,7 +435,9 @@ class Rendimiento extends ConexionBD
         $filtradoMateria = "1=1",
         $filtradoLote = "1=1",
         $filtradoEstatus = "r.estado='2'",
-        $filtradoSemana = '1=1'
+        $filtradoSemana='1=1', 
+        $filtradoProveedor="1=1",
+        $filtradoMaximos="1=1"
     ) {
         $sql = "SELECT r.*, DATE_FORMAT(r.fechaEngrase,'%d/%m/%Y') AS f_fechaEngrase,
         DATE_FORMAT(r.fechaEmpaque,'%d/%m/%Y') f_fechaEmpaque,
@@ -482,9 +458,10 @@ class Rendimiento extends ConexionBD
         INNER JOIN catmateriasprimas mp ON r.idCatMateriaPrima=mp.id
         LEFT JOIN segusuarios u ON r.idUserRend=u.id
         WHERE $filtradoEstatus  AND $filtradoFecha AND $filtradoMateria AND $filtradoPrograma AND $filtradoProceso AND $filtradoLote
-        AND $filtradoSemana
+        AND $filtradoSemana AND $filtradoMaximos 
   
         GROUP BY dp.idRendimiento
+        HAVING $filtradoProveedor
         ORDER BY r.yearWeek DESC, r.semanaProduccion DESC";
         return  $this->ejecutarQuery($sql, "consultar Rendimientos Almacenados", true);
     }
@@ -496,7 +473,7 @@ class Rendimiento extends ConexionBD
         $filtradoEstatus = "r.estado='2'",
         $filtradoEstado = "1=1",
         $filtradoArea = "1=1",
-        $filtradoTV = "1=1"
+        $filtradoTV="1=1"
     ) {
         $sql = "SELECT r.*, DATE_FORMAT(r.fechaFinal,'%d/%m/%Y') AS f_fechaFinal,
         pg.nombre AS n_programa, mp.nombre AS n_materia,
@@ -522,22 +499,13 @@ class Rendimiento extends ConexionBD
                 DATE_FORMAT(r.fechaEmpaque,'%d/%m/%Y') f_fechaEmpaque,
                 pr.nombre AS n_proceso, pg.nombre AS n_programa, mp.nombre AS n_materia, pr.codigo  AS c_proceso,
                 CONCAT(u.noEmpleado, '-', u.nombre, ' ', u.apellidos) AS str_usuario,
-                GROUP_CONCAT(DISTINCT pv.nombre) AS proveedores,
-                DATE_FORMAT(r.fechaReg, '%d/%m/%Y %H:%m') AS f_fechaReg, (r.perdidaAreaWBCrust+r.perdidaAreaCrustTeseo) AS totalDifArea,
-                SUM(IFNULL(ph.hides,0)/2) AS total_pruebas
-
+                DATE_FORMAT(r.fechaReg, '%d/%m/%Y %H:%m') AS f_fechaReg, (r.perdidaAreaWBCrust+r.perdidaAreaCrustTeseo) AS totalDifArea
                 FROM rendimientos r
-                LEFT JOIN detpedidos dp ON r.id=dp.idRendimiento
-                LEFT JOIN pedidos p ON dp.idPedido=p.id
-                LEFT JOIN catproveedores pv ON p.idCatProveedor=pv.id
                 INNER JOIN catprocesos pr ON r.idCatProceso=pr.id
                 INNER JOIN catprogramas pg ON r.idCatPrograma=pg.id
                 INNER JOIN catmateriasprimas mp ON r.idCatMateriaPrima=mp.id
                 INNER JOIN segusuarios u ON r.idUserReg=u.id
-                LEFT JOIN pruebashides ph ON ph.idLote=r.id
-
-                WHERE r.id='$id'
-                GROUP BY dp.idRendimiento, ph.idLote";
+                WHERE r.id='$id'";
         return  $this->ejecutarQuery($sql, "consultar Detallado de Rendimiento", true);
     }
     //consulta detalle de lotes (etiquetas)
@@ -1219,7 +1187,7 @@ class Rendimiento extends ConexionBD
         return  $this->ejecutarQuery($sql, "consultar reporte de Wet Blue", true);
     }
     //REPORTE DE SETS 
-    public function getSets($filtradoAnio = '1=1')
+     public function getSets($filtradoAnio = '1=1')
     {
         $sql = "SELECT 
         p.years, r.semanaProduccion, 
@@ -1272,7 +1240,7 @@ class Rendimiento extends ConexionBD
     p.years,  r.semanaProduccion";
         return  $this->ejecutarQuery($sql, "consultar reporte de set's", true);
     }
-
+       
 
 
     /*************************************** 

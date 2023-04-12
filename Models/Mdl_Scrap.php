@@ -27,7 +27,7 @@ class Scrap extends ConexionBD
     public function getStockRechDisponibles(){
         $sql = "SELECT i.* FROM rendimientos r 
         INNER JOIN inventariorechazado i ON i.idRendimiento=r.id
-        WHERE r.estado='4' AND r.paseScrap='0'";
+        WHERE r.estado='4' AND (r.paseScrap='0' OR r.paseScrap IS NULL)";
         return  $this->consultarQuery($sql, "consultar Stock de Rechazos de Rendimientos Disponibles");
     }
     public function agregarTarima($fechaSalida, $totalPzas, $_12, $_6, $_3, $_9){

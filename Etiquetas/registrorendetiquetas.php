@@ -130,7 +130,7 @@ $idTipoVenta = $_abierto ? $DataRendimientoAbierto[0]['idTipoVenta'] : '0';
                                             <select class="form-control select2" name="programa" style="width:100%" id="programa" required>
                                                 <option value="">Selecciona Programa</option>
                                                 <?php
-                                                $DataPrograma = $obj_programa->getPrograma("p.estado='1'", "p.tipo='2'");
+                                                $DataPrograma = $obj_programa->getPrograma("p.estado='1'", "(p.tipo='2' OR p.tipo='4')");
                                                 foreach ($DataPrograma as $key => $value) {
                                                     $selected = $idCatPrograma == $DataPrograma[$key]['id'] ? 'selected' : '';
                                                     echo "<option $selected value='{$DataPrograma[$key]['id']}'>{$DataPrograma[$key]['nombre']}</option>";

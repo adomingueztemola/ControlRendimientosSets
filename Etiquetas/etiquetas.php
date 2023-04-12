@@ -20,6 +20,7 @@ $f_pzasRechazadas = formatoMil($DataLotes[0]['total']);;
 ?>
 <!DOCTYPE html>
 <html dir="ltr" lang="<?= $info->lng; ?>">
+<link rel="stylesheet" type="text/css" href="../assets/extra-libs/c3/c3.min.css">
 
 <?php include("../templates/header.php"); ?>
 

@@ -56,21 +56,59 @@ $obj_materia = new MateriaPrima($debug, $idUser);
                                                 <input type="text" class="form-control" name="date-end" value="<?= date("t/m/Y") ?>">
                                             </div>
                                         </div>
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
                                             <label for="programa">Programa:</label>
-                                            <select class="form-control select2Form ProgramaEtiqFilter" style="width:100%" name="programa" id="programa">
-                                                <option value="">Todos los Programas</option>
-                                              
+                                            <select class="form-control ProgramaSetsFilter" style="width:100%" name="programa" id="programa">
                                             </select>
 
                                         </div>
-                                        <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+
+                                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                            <label for="proceso">Proceso:</label>
+                                            <select class="form-control ProcesosFilter" style="width:100%" name="proceso" id="proceso">
+                                            </select>
+
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                                             <label for="materia">Materia Prima:</label>
-                                            <select class="form-control select2Form MateriaPrimaFilter" style="width:100%" name="materia" id="materia">
+                                            <select class="form-control MateriaPrimaFilter" style="width:100%" name="materia" id="materia">
+
                                             </select>
 
                                         </div>
-                                        <div class="col-lg-1 col-md-1 col-sm-12 col-xs-12 pt-4 mt-1">
+                                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                            <label for="semana">Semana:</label>
+                                            <select name="semana" id="semana" class="form-control SemanaLotesFilter" style="width:100%"></select>
+                                        </div>
+                                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                            <label for="proveedor">Proveedores:</label>
+                                            <select name="proveedor" id="proveedor" class="form-control ProveedorFilter" style="width:100%"></select>
+                                        </div>
+                                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                            <label for="maximos">Máximos:</label>
+                                            <br>
+                                            <div class="custom-control custom-radio custom-control-inline">
+                                                <input type="radio" id="_1s" value='1s' name="maximos" class="custom-control-input">
+                                                <label class="custom-control-label" for="_1s">1s</label>
+                                            </div>
+                                            <div class="custom-control custom-radio custom-control-inline">
+                                                <input type="radio" id="_2s" value='2s' name="maximos" class="custom-control-input">
+                                                <label class="custom-control-label" for="_2s">2s</label>
+                                            </div>
+                                            <div class="custom-control custom-radio custom-control-inline">
+                                                <input type="radio" id="_3s" value='3s' name="maximos" class="custom-control-input">
+                                                <label class="custom-control-label" for="_3s">3s</label>
+                                            </div>
+                                            <div class="custom-control custom-radio custom-control-inline">
+                                                <input type="radio" id="_4s" value='4s' name="maximos" class="custom-control-input">
+                                                <label class="custom-control-label" for="_4s">4s</label>
+                                            </div>
+                                            <div class="custom-control custom-radio custom-control-inline">
+                                                <input type="radio" id="_20" value='_ 20' name="maximos" class="custom-control-input">
+                                                <label class="custom-control-label" for="_20">20 (Merma)</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-1 col-md-1 col-sm-12 col-xs-12  pt-4 mt-1">
                                             <button class="btn button btn-TWM"> Filtrar</button>
                                         </div>
                                     </div>
@@ -135,20 +173,8 @@ $obj_materia = new MateriaPrima($debug, $idUser);
 <script src="../assets/libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 <script src="../assets/libs/bootstrap-datepicker/dist/locales/bootstrap-datepicker.es.min.js"></script>
 <script src="../assets/scripts/selectFiltros.js"></script>
-
 <script>
     update()
-    <?php
-    if (isset($_SESSION['CRESuccessRendEdit']) and $_SESSION['CRESuccessRendEdit'] != '') { ?>
-        notificaSuc('<?= $_SESSION['CRESuccessRendEdit'] ?>');
-    <?php
-        unset($_SESSION['CRESuccessRendEdit']);
-    }
-    if (isset($_SESSION['CREErrorRendEdit']) and $_SESSION['CREErrorRendEdit'] != '') { ?>
-        notificaBad('<?= $_SESSION['CREErrorRendEdit'] ?>');
-    <?php
-        unset($_SESSION['CREErrorRendEdit']);
-    } ?>
     jQuery('#date-range').datepicker({
         toggleActive: true,
         format: 'dd/mm/yyyy',
@@ -161,13 +187,13 @@ $obj_materia = new MateriaPrima($debug, $idUser);
 
     function update() {
         $('#content-historial').html('<div class="loading text-center"><img src="../assets/images/loading.gif" alt="loading" /><br/>Un momento, por favor...</div>');
-        $('#content-historial').load('../templates/Etiquetas/historialEtiquetas.php');
+        $('#content-historial').load('../templates/Rendimiento/historialSetsCalidad.php');
         clearForm("filtrado");
 
     }
     /***************** ELIMINAR EL RENDIMIENTO*********************/
     function eliminarRendimiento(id) {
-        $.post("../Controller/rendimientoEtiquetas.php?op=cancelarrendimiento", {
+        $.post("../Controller/rendimiento.php?op=cancelarrendimiento", {
                 id: id
             },
             function(respuesta) {
@@ -192,7 +218,7 @@ $obj_materia = new MateriaPrima($debug, $idUser);
         e.preventDefault();
         formData = $(this).serialize();
         $.ajax({
-            url: '../templates/Etiquetas/historialEtiquetas.php',
+            url: '../templates/Rendimiento/historialSetsCalidad.php',
             data: formData,
             type: 'POST',
             success: function(respuesta) {
@@ -200,7 +226,10 @@ $obj_materia = new MateriaPrima($debug, $idUser);
 
 
             },
-            beforeSend: function() {}
+            beforeSend: function() {
+                $('#content-historial').html('<div class="loading text-center"><img src="../assets/images/loading.gif" alt="loading" /><br/>Un momento, por favor...</div>');
+
+            }
 
         });
     });

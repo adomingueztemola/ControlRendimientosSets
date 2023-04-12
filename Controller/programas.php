@@ -21,13 +21,82 @@ if ($debug == 1) {
 }
 
 switch ($_GET["op"]) {
+    case "select2programaspiel":
+        if (!isset($_POST['palabraClave'])) {
+            $Data = $obj_programa->getProgramasSetsSelect2("ca.tipo='3'");
+            $Data = Excepciones::validaConsulta($Data);
+        } else {
+            $search = $_POST['palabraClave']; // Palabra a buscar
+            $Data = $obj_programa->getProgramasSetsSelect2("ca.tipo='3'", $search);
+            $Data = Excepciones::validaConsulta($Data);
+        }
+        $response = array();
+
+        // Leer la informacion
+        foreach ($Data as $area) {
+            $response[] = array(
+                "id" => $area['id'],
+                "text" => $area['nombre']
+            );
+        }
+
+        //Creamos el JSON
+        $json_string = json_encode($response);
+        echo $json_string;
+        break;
     case "select2programassets":
         if (!isset($_POST['palabraClave'])) {
             $Data = $obj_programa->getProgramasSetsSelect2("ca.tipo='1'");
             $Data = Excepciones::validaConsulta($Data);
         } else {
             $search = $_POST['palabraClave']; // Palabra a buscar
-            $Data = $obj_programa->getProgramasSetsSelect2("ca.tipo='1'",$search);
+            $Data = $obj_programa->getProgramasSetsSelect2("ca.tipo='1'", $search);
+            $Data = Excepciones::validaConsulta($Data);
+        }
+        $response = array();
+
+        // Leer la informacion
+        foreach ($Data as $area) {
+            $response[] = array(
+                "id" => $area['id'],
+                "text" => $area['nombre']
+            );
+        }
+
+        //Creamos el JSON
+        $json_string = json_encode($response);
+        echo $json_string;
+        break;
+    case "select2programasetiq":
+        if (!isset($_POST['palabraClave'])) {
+            $Data = $obj_programa->getProgramasSetsSelect2("ca.tipo='2'");
+            $Data = Excepciones::validaConsulta($Data);
+        } else {
+            $search = $_POST['palabraClave']; // Palabra a buscar
+            $Data = $obj_programa->getProgramasSetsSelect2("ca.tipo='2'", $search);
+            $Data = Excepciones::validaConsulta($Data);
+        }
+        $response = array();
+
+        // Leer la informacion
+        foreach ($Data as $area) {
+            $response[] = array(
+                "id" => $area['id'],
+                "text" => $area['nombre']
+            );
+        }
+
+        //Creamos el JSON
+        $json_string = json_encode($response);
+        echo $json_string;
+        break;
+    case "select2programascalz":
+        if (!isset($_POST['palabraClave'])) {
+            $Data = $obj_programa->getProgramasSetsSelect2("ca.tipo='4'");
+            $Data = Excepciones::validaConsulta($Data);
+        } else {
+            $search = $_POST['palabraClave']; // Palabra a buscar
+            $Data = $obj_programa->getProgramasSetsSelect2("ca.tipo='4'", $search);
             $Data = Excepciones::validaConsulta($Data);
         }
         $response = array();
@@ -50,11 +119,11 @@ switch ($_GET["op"]) {
             $Data = Excepciones::validaConsulta($Data);
         } else {
             $search = $_POST['palabraClave']; // Palabra a buscar
-            $Data = $obj_programa->getProgramasSetsSelect2("ca.tipo<>'2'",$search);
+            $Data = $obj_programa->getProgramasSetsSelect2("ca.tipo<>'2'", $search);
             $Data = Excepciones::validaConsulta($Data);
         }
 
-           //Creamos el JSON
+        //Creamos el JSON
         $json_string = json_encode($Data);
         echo $json_string;
         break;
@@ -95,23 +164,19 @@ switch ($_GET["op"]) {
         } catch (Exception $e) {
             $obj_programa->errorBD($e->getMessage(), 1);
         }
-        echo '1|Programa Almacenada Correctamente.';
+        echo '1|Programa Almacenado Correctamente.';
         break;
     case "agregarprogramaetq":
         $programa = (isset($_POST['programa'])) ? trim($_POST['programa']) : '';
+        $tipo = (isset($_POST['tipo'])) ? trim($_POST['tipo']) : '';
         $areaNeta = 0;
-        $tipo = '2';
-        $log = '';
-        if ($programa == '') {
-            $ErrorLog .= ' Programa,';
-            $log = '1';
-        }
-        if ($log == '1') {
-            $ErrorLog .= ' intentalo de nuevo.';
-            $obj_programa->errorBD($ErrorLog, 0);
-        }
+        Excepciones::validaLlenadoDatos(array(
+            " Programa Nuevo" => $programa,
+            " Tipo de Programa" => $tipo
+        ), $obj_programa);
+
         #Valida que Producto no exista en el Catalogo
-        $resultValidacion = Funciones::validarDatoTabla("catprogramas", "nombre", $materiaPrima, $debug, $obj_programa->getConexion());
+        $resultValidacion = Funciones::validarDatoTabla("catprogramas", "nombre", $programa, $debug, $obj_programa->getConexion());
         try {
             Excepciones::validaMsjError($resultValidacion);
         } catch (Exception $e) {
@@ -120,13 +185,14 @@ switch ($_GET["op"]) {
         if ($resultValidacion[1] >= 1) {
             $obj_programa->errorBD("Existe un programa con el mismo nombre, verifica tus datos.", 1);
         }
+
         $datos = $obj_programa->agregarPrograma($programa, $areaNeta, $tipo);
         try {
             Excepciones::validaMsjError($datos);
         } catch (Exception $e) {
             $obj_programa->errorBD($e->getMessage(), 1);
         }
-        echo '1|Programa Almacenada Correctamente.';
+        echo '1|Programa Almacenado Correctamente.';
         break;
     case "cambiaestatus":
         $id = (isset($_POST['id'])) ? $_POST['id'] : '0';

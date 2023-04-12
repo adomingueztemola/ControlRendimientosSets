@@ -16,6 +16,15 @@ class Proveedor extends ConexionBD
     {
         $this->close();
     }
+    public function getProveedoresSelect2($busqId=''){
+        $filtradoID = $busqId == '' ? '1=1' : "ca.nombre LIKE '%$busqId%'";
+        $sql = "SELECT ca.*
+        FROM catproveedores ca
+        WHERE $filtradoID AND 
+        ca.estado ='1'";
+        return  $this->consultarQuery($sql, "consultar Proveedores");
+    }
+
     public function agregarProveedor($name)
     {
         $debug = $this->debug;
