@@ -1,4 +1,6 @@
-//Filtro de Programas para Sets
+/*************************************************
+ * 1. OPCIONES DE PROGRAMA DE SETS
+/*************************************************/
 $(".ProgramaSetsFilter").select2({
   placeholder: "Selecciona un programa",
   allowClear: true,
@@ -22,7 +24,9 @@ $(".ProgramaSetsFilter").select2({
   },
 });
 
-//Filtro de Proceso
+/*************************************************
+ * 2. OPCIONES DE PROCESOS DE SECADO
+/*************************************************/
 $(".ProcesosFilter").select2({
   placeholder: "Selecciona un proceso",
   allowClear: true,
@@ -46,7 +50,9 @@ $(".ProcesosFilter").select2({
   },
 });
 
-//Filtro de Programas para sets/metros
+/*************************************************
+ * 3. OPCIONES DE PROGRAMAS GENERALES
+/*************************************************/
 $(".ProgramasFilter").select2({
   placeholder: "Selecciona un programa",
   allowClear: true,
@@ -109,7 +115,9 @@ $(".ProgramasFilter").select2({
   },
 });
 
-//Filtro de Programas para sets/metros
+/*************************************************
+ * 4. OPCIONES DE LOTES PADRES
+/*************************************************/
 $(".LotePadresFilter").select2({
   placeholder: "Selecciona un lote",
   allowClear: true,
@@ -172,7 +180,9 @@ $(".LotePadresFilter").select2({
   },
 });
 
-//Filtro de Semana de Lotes
+/*************************************************
+ * 5. OPCIONES DE SEMANAS DE PRODUCCION
+/*************************************************/
 $(".SemanaLotesFilter").select2({
   placeholder: "Selecciona una semana",
   allowClear: true,
@@ -196,243 +206,9 @@ $(".SemanaLotesFilter").select2({
   },
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Filtro de lotes de sets en teseo/sin empacar
+/*************************************************
+ * 6. OPCIONES DE LOTES PARA TESEO
+/*************************************************/
 $(".LoteTeseoFilter").select2({
   placeholder: "Selecciona un lote",
   allowClear: true,
@@ -494,7 +270,9 @@ $(".LoteTeseoFilter").select2({
     cache: true,
   },
 });
-// Filtro de lotes Abierto
+/*************************************************
+ * 7. OPCIONES DE LOTES ABIERTOS PARA PODER MODIFICAR
+/*************************************************/
 $(".LotesAbiertosFilter").select2({
   placeholder: "Selecciona un lote",
   allowClear: true,
@@ -557,7 +335,10 @@ $(".LotesAbiertosFilter").select2({
   },
 });
 
-///CARGA EMPLEADOS
+
+/*************************************************
+ * 8. OPCIONES DE LOTES EN PROCESO DE EMPAQUE
+/*************************************************/
 $(".LotesProceso").select2({
   placeholder: "Selecciona un lote",
   ajax: {
@@ -618,23 +399,9 @@ $(".LotesProceso").select2({
     cache: true,
   },
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/*************************************************
+ * 9. OPCIONES DE LOTES EN LISTOS PARA REGISTRAR DATOS FINALES
+/*************************************************/
 
 
 
@@ -713,7 +480,7 @@ $(".LotesProceso").select2({
 
 
 /*******************************************************
- * OPCIONES DE MATERIA PRIMA
+ * 10. OPCIONES DE MATERIA PRIMA
  *******************************************************/
 $(".MateriaPrimaFilter").select2({
   placeholder: "Selecciona una materia prima",
@@ -739,7 +506,7 @@ $(".MateriaPrimaFilter").select2({
 });
 
 /*******************************************************
- * OPCIONES DE PROVEEDORES
+ * 11. OPCIONES DE PROVEEDORES
  *******************************************************/
 $(".ProveedorFilter").select2({
   placeholder: "Selecciona un proveedor",
@@ -765,7 +532,7 @@ $(".ProveedorFilter").select2({
 });
 
 /*******************************************************
- * OPCIONES DE PROGRAMA SOLO PARA PIEL AUTO
+ * 12. OPCIONES DE PROGRAMA SOLO PARA PIEL AUTO
  *******************************************************/
 //Filtro de Programas para Sets
 $(".ProgramaPielFilter").select2({
@@ -791,9 +558,8 @@ $(".ProgramaPielFilter").select2({
   },
 });
 
-
 /*******************************************************
- * OPCIONES DE PROGRAMA SOLO PARA ETIQUETAS
+ * 13. OPCIONES DE PROGRAMA SOLO PARA ETIQUETAS
  *******************************************************/
 //Filtro de Programas para Sets
 $(".ProgramaEtiqFilter").select2({
@@ -820,7 +586,7 @@ $(".ProgramaEtiqFilter").select2({
 });
 
 /*******************************************************
- * OPCIONES DE PROGRAMA SOLO PARA CALZADO
+ * 14. OPCIONES DE PROGRAMA SOLO PARA CALZADO
  *******************************************************/
 //Filtro de Programas para Sets
 $(".ProgramaCalzadoFilter").select2({
