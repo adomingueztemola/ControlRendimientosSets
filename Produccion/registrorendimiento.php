@@ -67,7 +67,7 @@ $cambioPzas = count($DataValidaUsoDelLote) > 0 ? '1' : '0';
                                         <div class="col-md-12">
                                             <label for="lotePreRegistro" class="form-label required">Lotes listos para finalizar</label>
                                             <div class="input-group mb-3">
-                                                <select name="lotePreRegistro" required id="lotePreRegistro" style="width:50%" onchange="cargaInfoLote()" class="form-control LotesFinales">
+                                                <select name="lotePreRegistro" required id="lotePreRegistro" style="width:50%" class="form-control LotesFinales">
                                                 </select>
                                             </div>
                                         </div>
@@ -195,6 +195,8 @@ $cambioPzas = count($DataValidaUsoDelLote) > 0 ? '1' : '0';
 <script src="../assets/libs/sweetalert2/dist/sweetalert2.all.min.js"></script>
 
 <script>
+    mostrarInfo()
+
     update()
     <?php
     if (isset($_SESSION['CRESuccessRendimiento']) and $_SESSION['CRESuccessRendimiento'] != '') { ?>
@@ -212,15 +214,16 @@ $cambioPzas = count($DataValidaUsoDelLote) > 0 ? '1' : '0';
         echo "$('#formAddRendimiento').find('button').prop('hidden', true);";
         echo "$('#formAddRendimiento').find('input:checkbox, label.form-check-label').prop('hidden', true);";
         echo "$('#btns-finalizar').removeAttr('hidden');";
-        echo "$('select#lotePreRegistro').select2('trigger', 'select', {
+        echo "$('select#lotePreRegistro').select2('trigger','select', {
             data: {
-                id: String('".$id."'),
-                text: String('".$loteTemola."')
+                id: String('" . $id . "'),
+                text: String('" . $loteTemola . "')
             }
-        });  ";
+        });  
+        $('select#lotePreRegistro').trigger('change.select2'); // Notify only Select2 of changes
+";
     }
     ?>
-    mostrarInfo()
 
     function update() {
         $('#content-Yield').html('<div class="loading text-center"><img src="../assets/images/loading.gif" alt="loading" /><br/>Un momento, por favor...</div>');
@@ -250,7 +253,6 @@ $cambioPzas = count($DataValidaUsoDelLote) > 0 ? '1' : '0';
                     },
                 })
                 .done(function(data, textStatus, jqXHR) {
-                    console.log(data);
                     if (data != null) {
                         $("#c-lote").text(data["loteTemola"])
                         $("#c-programa").text(data["n_programa"])

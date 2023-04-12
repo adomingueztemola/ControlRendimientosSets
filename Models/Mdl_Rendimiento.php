@@ -26,7 +26,8 @@ class Rendimiento extends ConexionBD
         WHERE $filtradoID";
         return  $this->consultarQuery($sql, "consultar lotes");
     }
-    public function getLotesOpen($busqId = ''){
+    public function getLotesOpen($busqId = '')
+    {
         $filtradoID = $busqId == '' ? '1=1' : "r.loteTemola LIKE '%$busqId%'";
 
         $sql = "SELECT r.*, cp.nombre AS nPrograma
@@ -71,7 +72,7 @@ class Rendimiento extends ConexionBD
         ORDER BY cp.nombre, CAST(r.loteTemola AS UNSIGNED)";
         return  $this->consultarQuery($sql, "consultar lotes");
     }
-    
+
     public function getLotesProceso($busqId = '')
     {
         $filtradoID = $busqId == '' ? '1=1' : "r.loteTemola LIKE '%$busqId%'";
@@ -435,9 +436,9 @@ class Rendimiento extends ConexionBD
         $filtradoMateria = "1=1",
         $filtradoLote = "1=1",
         $filtradoEstatus = "r.estado='2'",
-        $filtradoSemana='1=1', 
-        $filtradoProveedor="1=1",
-        $filtradoMaximos="1=1"
+        $filtradoSemana = '1=1',
+        $filtradoProveedor = "1=1",
+        $filtradoMaximos = "1=1"
     ) {
         $sql = "SELECT r.*, DATE_FORMAT(r.fechaEngrase,'%d/%m/%Y') AS f_fechaEngrase,
         DATE_FORMAT(r.fechaEmpaque,'%d/%m/%Y') f_fechaEmpaque,
@@ -473,7 +474,7 @@ class Rendimiento extends ConexionBD
         $filtradoEstatus = "r.estado='2'",
         $filtradoEstado = "1=1",
         $filtradoArea = "1=1",
-        $filtradoTV="1=1"
+        $filtradoTV = "1=1"
     ) {
         $sql = "SELECT r.*, DATE_FORMAT(r.fechaFinal,'%d/%m/%Y') AS f_fechaFinal,
         pg.nombre AS n_programa, mp.nombre AS n_materia,
@@ -499,8 +500,16 @@ class Rendimiento extends ConexionBD
                 DATE_FORMAT(r.fechaEmpaque,'%d/%m/%Y') f_fechaEmpaque,
                 pr.nombre AS n_proceso, pg.nombre AS n_programa, mp.nombre AS n_materia, pr.codigo  AS c_proceso,
                 CONCAT(u.noEmpleado, '-', u.nombre, ' ', u.apellidos) AS str_usuario,
-                DATE_FORMAT(r.fechaReg, '%d/%m/%Y %H:%m') AS f_fechaReg, (r.perdidaAreaWBCrust+r.perdidaAreaCrustTeseo) AS totalDifArea
+                DATE_FORMAT(r.fechaReg, '%d/%m/%Y %H:%m') AS f_fechaReg, (r.perdidaAreaWBCrust+r.perdidaAreaCrustTeseo) AS totalDifArea,
+                GROUP_CONCAT(DISTINCT pv.nombre) AS proveedores
+
                 FROM rendimientos r
+
+                
+                LEFT JOIN detpedidos dp ON r.id=dp.idRendimiento
+                LEFT JOIN pedidos p ON dp.idPedido=p.id
+                LEFT JOIN catproveedores pv ON p.idCatProveedor=pv.id
+        
                 INNER JOIN catprocesos pr ON r.idCatProceso=pr.id
                 INNER JOIN catprogramas pg ON r.idCatPrograma=pg.id
                 INNER JOIN catmateriasprimas mp ON r.idCatMateriaPrima=mp.id
@@ -1187,7 +1196,7 @@ class Rendimiento extends ConexionBD
         return  $this->ejecutarQuery($sql, "consultar reporte de Wet Blue", true);
     }
     //REPORTE DE SETS 
-     public function getSets($filtradoAnio = '1=1')
+    public function getSets($filtradoAnio = '1=1')
     {
         $sql = "SELECT 
         p.years, r.semanaProduccion, 
@@ -1240,7 +1249,7 @@ class Rendimiento extends ConexionBD
     p.years,  r.semanaProduccion";
         return  $this->ejecutarQuery($sql, "consultar reporte de set's", true);
     }
-       
+
 
 
     /*************************************** 
