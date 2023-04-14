@@ -5,11 +5,14 @@ define('INCLUDE_CHECK', 1);
 require_once "../../include/connect_mvc.php";
 $idUser = $_SESSION['CREident'];
 $nameUser = $_SESSION['CREnombreUser'];
+include('../../assets/scripts/cadenas.php');
 
 $obj_empaque = new Empaque($debug, $idUser);
 $id = !empty($_POST['id']) ? $_POST['id'] : '';
 $Data = $obj_empaque->getDetalladoCaja($id);
 $Data = Excepciones::validaConsulta($Data);
+$DataLote = $obj_empaque->getDetRendimientos($id);
+$DataLote = Excepciones::validaConsulta($DataLote);
 if (count($Data) == '0') {
     echo '<div class="alert alert-danger" role="alert">
     ¡Sin cajas empacadas por el momento!
@@ -18,9 +21,29 @@ if (count($Data) == '0') {
 }
 ?>
 <div class="row mb-1">
-    <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
         <h3><span class="label label-info label-rounded mb-2">CAJAS TOTALES: <span id="lbl_contadorCajas">0</span></span></h3>
+        <h3><span class="label label-info label-rounded mb-2">PIEZAS TOTALES: <span id="lbl_contadorPzas">0</span></span></h3>
 
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td>Programa </td>
+                    <td><?= ($DataLote['n_programa']) ?></td>
+                </tr>
+                <tr>
+                    <td>Precio Unit Proveedor </td>
+                    <td><?= formatoMil($DataLote['precioUnitFactUsd'], 2) ?> USD.</td>
+                </tr>
+                <tr>
+                    <td>Piezas Cortadas en Teseo </td>
+                    <td><?= formatoMil($DataLote['pzasCortadasTeseo'], 0) ?></td>
+                </tr>
+            </tbody>
+
+        </table>
     </div>
 
 
@@ -83,12 +106,14 @@ if (count($Data) == '0') {
         $countCajas++;
         $count++;
     }
+    $pzas = $countCajas * 400;
     ?>
 
 
 </div>
 <script>
     $("#lbl_contadorCajas").text("<?= $countCajas ?>")
+    $("#lbl_contadorPzas").text("<?= formatoMil($pzas, 0) ?>")
 
     //Ver Detallado de Caja
     function cargaDetCaja(numCaja, idEmpaque, contador) {

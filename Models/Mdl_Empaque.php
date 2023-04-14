@@ -16,6 +16,30 @@ class Empaque extends ConexionBD
     {
         $this->close();
     }
+
+    public function getDetRendimientos($id)
+    {
+        $sql = "SELECT r.*, DATE_FORMAT(r.fechaEngrase,'%d/%m/%Y') AS f_fechaEngrase,
+                DATE_FORMAT(r.fechaEmpaque,'%d/%m/%Y') f_fechaEmpaque,
+                pr.nombre AS n_proceso, pg.nombre AS n_programa, mp.nombre AS n_materia, pr.codigo  AS c_proceso,
+                DATE_FORMAT(r.fechaReg, '%d/%m/%Y %H:%m') AS f_fechaReg, (r.perdidaAreaWBCrust+r.perdidaAreaCrustTeseo) AS totalDifArea, 
+                precioUnitFactUsd
+                FROM rendimientos r
+                INNER JOIN catprocesos pr ON r.idCatProceso=pr.id
+                INNER JOIN catprogramas pg ON r.idCatPrograma=pg.id
+                INNER JOIN catmateriasprimas mp ON r.idCatMateriaPrima=mp.id
+                INNER JOIN ( SELECT r.id, AVG(p.precioUnitFactUsd) precioUnitFactUsd, AVG(p.areaProvPie2) AS areaProvPie2,
+                                    AVG(p.totalCuerosFacturados) AS totalCuerosFacturados,  r.yearWeek  AS years 
+                        FROM detpedidos dp
+                        INNER JOIN pedidos p ON p.id= dp.idPedido
+                        INNER JOIN rendimientos r ON dp.idRendimiento = r.id  AND r.tipoProceso = '1'
+                        WHERE dp.estado='2'
+
+                        GROUP BY dp.idRendimiento
+) u ON r.id=u.id
+                WHERE r.id='$id'";
+        return  $this->consultarQuery($sql, "consultar Detallado de Rendimiento", false);
+    }
     /*********************************************
      * INICIO DE EMPAQUE: PROGRAMA/FECHA
      *********************************************/
