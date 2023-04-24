@@ -497,23 +497,25 @@ class Rendimiento extends ConexionBD
     public function getDetRendimientos($id)
     {
         $sql = "SELECT r.*, DATE_FORMAT(r.fechaEngrase,'%d/%m/%Y') AS f_fechaEngrase,
-                DATE_FORMAT(r.fechaEmpaque,'%d/%m/%Y') f_fechaEmpaque,
-                pr.nombre AS n_proceso, pg.nombre AS n_programa, mp.nombre AS n_materia, pr.codigo  AS c_proceso,
-                CONCAT(u.noEmpleado, '-', u.nombre, ' ', u.apellidos) AS str_usuario,
-                DATE_FORMAT(r.fechaReg, '%d/%m/%Y %H:%m') AS f_fechaReg, (r.perdidaAreaWBCrust+r.perdidaAreaCrustTeseo) AS totalDifArea,
-                GROUP_CONCAT(DISTINCT pv.nombre) AS proveedores
+        DATE_FORMAT(r.fechaEmpaque,'%d/%m/%Y') f_fechaEmpaque,
+        pr.nombre AS n_proceso, pg.nombre AS n_programa, mp.nombre AS n_materia, pr.codigo  AS c_proceso,
+        CONCAT(u.noEmpleado, '-', u.nombre, ' ', u.apellidos) AS str_usuario,
+        DATE_FORMAT(r.fechaReg, '%d/%m/%Y %H:%m') AS f_fechaReg, (r.perdidaAreaWBCrust+r.perdidaAreaCrustTeseo) AS totalDifArea,
+        GROUP_CONCAT(DISTINCT pv.nombre) AS proveedores, IFNULL(pr.sum_hides,0) AS total_pruebas
 
-                FROM rendimientos r
+        FROM rendimientos r
 
-                
-                LEFT JOIN detpedidos dp ON r.id=dp.idRendimiento
-                LEFT JOIN pedidos p ON dp.idPedido=p.id
-                LEFT JOIN catproveedores pv ON p.idCatProveedor=pv.id
         
-                INNER JOIN catprocesos pr ON r.idCatProceso=pr.id
-                INNER JOIN catprogramas pg ON r.idCatPrograma=pg.id
-                INNER JOIN catmateriasprimas mp ON r.idCatMateriaPrima=mp.id
-                INNER JOIN segusuarios u ON r.idUserReg=u.id
+        LEFT JOIN detpedidos dp ON r.id=dp.idRendimiento
+        LEFT JOIN pedidos p ON dp.idPedido=p.id
+        LEFT JOIN catproveedores pv ON p.idCatProveedor=pv.id
+        LEFT JOIN (SELECT p.idLote, SUM(p.hides) AS sum_hides 
+                                            FROM pruebashides p
+                                            GROUP BY p.idLote) pr ON pr.idLote=r.id
+        INNER JOIN catprocesos pr ON r.idCatProceso=pr.id
+        INNER JOIN catprogramas pg ON r.idCatPrograma=pg.id
+        INNER JOIN catmateriasprimas mp ON r.idCatMateriaPrima=mp.id
+        INNER JOIN segusuarios u ON r.idUserReg=u.id
                 WHERE r.id='$id'";
         return  $this->ejecutarQuery($sql, "consultar Detallado de Rendimiento", true);
     }
