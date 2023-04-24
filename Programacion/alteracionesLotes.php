@@ -65,7 +65,8 @@ $space = 1;
 <script src="../assets/scripts/calculaSemanaProduccion.js"></script>
 <script src="../assets/scripts/validaLotePiel.js"></script>
 <script src="../assets/extra-libs/datatables.net/js/jquery.dataTables.min-ESP.js"></script>
-<script src="../assets/scripts/clearData.js"></script>
+<script src="../assets/scripts/clearDataSinSelect.js"></script>
+<script src="../assets/scripts/selectFiltros.js"></script>
 
 <script>
     verModulo(1)

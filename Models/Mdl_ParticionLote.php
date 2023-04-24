@@ -24,10 +24,11 @@ class ParticionLote extends Rendimiento
     }
     public function agregarLoteConsecutivo($idLote, $idPrograma, $numParticion, $total_s, $_1s, $_2s, $_3s, $_4s, $_20)
     {
+        $idUserReg=$this->idUserReg;
         $sql = "INSERT INTO rendimientos (idRendimientoTransfer, fechaEngrase, idCatProceso, loteTemola, idCatPrograma, idCatMateriaPrima, tipoMateriaPrima, 
         estado, idUserReg, fechaReg, tipoProceso, areaProveedorLote, 1s, 2s, 3s, 4s, _20, total_s)
         SELECT r.id, r.fechaEngrase, r.idCatProceso, CONCAT(r.loteTemola, '.$numParticion') AS loteTemola, r.idCatPrograma, r.idCatMateriaPrima,
-            r.tipoMateriaPrima, '2' AS estado, '' AS idUserReg, NOW(),
+            r.tipoMateriaPrima, '2' AS estado, '$idUserReg' AS idUserReg, NOW(),
             CASE 
                 WHEN cp.tipo='1' THEN
                     '1'

@@ -69,9 +69,9 @@
 
        </div>
    </div>
+   <script src="../assets/scripts/clearDataSinSelect.js"></script>
    <script src="../assets/scripts/selectFiltros.js"></script>
    <script src="../assets/scripts/basicFunctions.js"></script>
-   <script src="../assets/scripts/clearDataSinSelect.js"></script>
 
    <script>
        mostrar_info()

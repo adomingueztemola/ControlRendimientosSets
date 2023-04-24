@@ -431,13 +431,18 @@ class Empaque extends ConexionBD
     /// ACTUALIZAR USO DE REMANENTE 
     public function actualizarUsoRemanante($id)
     {
-        $sql = "UPDATE detcajas d 
+       /* $sql = "UPDATE detcajas d 
           INNER JOIN (SELECT idLote, SUM(total) total FROM detcajas
                       WHERE tipo='2' GROUP BY idLote) r ON r.idLote=d.idLote
           INNER JOIN (SELECT idLote, total FROM detcajas
                       WHERE remanente='1') b ON r.idLote=b.idLote
           SET d.usoRemanente='1',  d.totalRem='0' WHERE 
-          d.id='$id' AND b.total=r.total";
+          d.id='$id' AND b.total=r.total";*/
+          $sql="UPDATE detcajas d 
+          INNER JOIN (SELECT idLote, SUM(total) total FROM detcajas
+                      WHERE tipo='2' GROUP BY idLote) r ON r.idLote=d.idLote
+           SET d.usoRemanente='1'
+           WHERE d.idLote='$id' AND  d.remanente='1' AND d.total = r.total";
         return $this->runQuery($sql, "actualizar uso de remanente");
     }
     ///ACTUALIZAR PIEZAS OK UTILIZADAS EN EL REMANENTE

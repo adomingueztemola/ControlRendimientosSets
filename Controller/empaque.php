@@ -482,7 +482,7 @@ switch ($_GET["op"]) {
         }
         //USA REMANENTE PARA QUE YA NO PUEDA SER USADOS
         if ($tipoLote == '2') {
-            $datos = $obj_empaque->actualizarUsoRemanante($idDetCaja);
+            $datos = $obj_empaque->actualizarUsoRemanante($lote);
             try {
                 Excepciones::validaMsjError($datos);
             } catch (Exception $e) {
