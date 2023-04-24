@@ -72,7 +72,7 @@ if (count($ArrayFechaEmpaque) > 0) {
 $labelSetsEmpacado = $tipoProceso == '1' ? "Piezas Totales Empacadas" : "M<sup>2</sup> Finales";
 $labelAreaFinal = $tipoProceso == '1' ? "Área Final de Teseo" : "Área Final";
 $labelPerdidaAreaCrust = $tipoProceso == '1' ? "Pérdida Área Crust a Teseo" : "Pérdida Área Crust a Terminado";
-$labelPzasRechazadas = $tipoProceso == '1' ? "Cueros Rechazados" : "Cueros Rechazados";
+$labelPzasRechazadas = $tipoProceso == '1' ? "Hides Rechazados" : "Hides Rechazados";
 $labelAreaXCantFinal = $tipoProceso == '1' ? "Área WB Real por Set" : "Área WB Real por M<sup>2</sup>";
 
 if (!$_abierto) {
@@ -157,7 +157,7 @@ if (count($DataValidaUsoDelLote) <= 0) {
                 <td>
                     <div class="row">
                         <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
-                            <input class="form-control" type="number" step="0.5" min="0" name="piezasRechazadas" value="<?= $piezasRechazadas ?>" onchange="guardarValor('pzasrechazadas', this)" id="piezasRechazadas"></input>
+                            <input class="form-control" type="number" step="1" min="0" name="piezasRechazadas" value="<?= $piezasRechazadas*2 ?>" onchange="guardarValor('pzasrechazadas', this)" id="piezasRechazadas"></input>
                         </div>
                         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" hidden id="success-pzasrechazadas">
                             <i class="fas fa-check text-success"></i>
@@ -182,12 +182,12 @@ if (count($DataValidaUsoDelLote) <= 0) {
             </tr>
             <tr>
                 <td class="bg-TWM text-white">
-                    <label for="piezasReasig">Cueros ReAsignados</label>
+                    <label for="piezasReasig">Hides ReAsignados</label>
                 </td>
                 <td>
                     <div class="row">
                         <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
-                            <input class="form-control" type="number" step="0.5" min="0" name="piezasReasig" value="<?= $piezasReasig ?>" onchange="guardarValor('pzasreasig', this)" id="piezasReasig"></input>
+                            <input class="form-control" type="number" step="1" min="0" name="piezasReasig" value="<?= $piezasReasig*2 ?>" onchange="guardarValor('pzasreasig', this)" id="piezasReasig"></input>
                         </div>
                         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" hidden id="success-pzasreasig">
                             <i class="fas fa-check text-success"></i>

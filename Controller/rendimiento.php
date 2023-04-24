@@ -430,6 +430,7 @@ switch ($_GET["op"]) {
             $ErrorLog .= ' intentalo de nuevo.';
             $obj_rendimiento->errorBD($ErrorLog, 0);
         }
+        $value=$value/2;
         $DatosAbiertos = $obj_rendimiento->getRendimientoAbierto();
         $datos = Funciones::edicionBasica("rendimientos", "piezasRechazadas", $value, "id", $DatosAbiertos[0]['id'], $obj_rendimiento->getConexion(), $debug);
         try {
@@ -448,6 +449,8 @@ switch ($_GET["op"]) {
             $ErrorLog .= ' intentalo de nuevo.';
             $obj_rendimiento->errorBD($ErrorLog, 0);
         }
+        $value=$value/2;
+
         $DatosAbiertos = $obj_rendimiento->getRendimientoAbierto();
         $datos = Funciones::edicionBasica("rendimientos", "cuerosReasig", $value, "id", $DatosAbiertos[0]['id'], $obj_rendimiento->getConexion(), $debug);
         try {

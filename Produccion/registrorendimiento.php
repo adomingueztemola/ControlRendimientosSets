@@ -116,8 +116,8 @@ $cambioPzas = count($DataValidaUsoDelLote) > 0 ? '1' : '0';
                                         <div class="col-md-2"></div>
 
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-8">
+                                    <div class="row mb-2">
+                                        <div class="col-md-10">
                                             <div class="form-check">
                                                 <input class="form-check-input" required type="checkbox" value="1" id="verificacion" name="verificacion">
                                                 <label class="form-check-label form-label required" for="verificacion">
@@ -125,16 +125,20 @@ $cambioPzas = count($DataValidaUsoDelLote) > 0 ? '1' : '0';
                                                 </label>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-2">
                                             <div class="input-group-append">
                                                 <div id="bloqueo-btn-1" style="display:none">
                                                     <button class="btn btn-success btn-sm" type="button" disabled="">
                                                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                                     </button>
-
+                                                    <button class="btn btn-success btn-sm" type="button" disabled="">
+                                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                        Cargando ...
+                                                    </button>
+                                                
                                                 </div>
                                                 <div id="desbloqueo-btn-1">
-                                                    <button type="submit" class="button btn btn-success btn-sm"><i class="fas fa-check"></i> Siguiente</button>
+                                                    <button type="submit" class="button btn btn-success btn-md"><i class="fas fa-check"></i> Siguiente</button>
                                                 </div>
 
                                             </div>
