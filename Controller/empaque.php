@@ -757,4 +757,7 @@ switch ($_GET["op"]) {
         echo "1|Reverse de recuperación disminuido correctamente.";
 
         break;
+    case "getcajasempacadas":
+        
+        break;
 }
