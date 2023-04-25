@@ -107,7 +107,7 @@ switch ($_GET["op"]) {
         $redondLCalc = function ($calculoReal, $porcent) {
             $calculoReal = $calculoReal * $porcent;
 
-            $modCalculo = $calculoReal % 1;
+            $modCalculo = fmod($calculoReal,1);
             $intCalculo = $calculoReal - $modCalculo;
             if ($modCalculo > 0.5) {
                 $resp = $intCalculo + 1;

@@ -906,7 +906,7 @@ class Rendimiento extends ConexionBD
         WHERE  
          $filtradoFecha AND $filtradoProceso AND $filtradoMateria AND $filtradoPrograma AND r.tipoProceso='1'
          AND r.estado!='0' AND r.tipoProceso='1'
-        ORDER BY r.fechaEngrase DESC";
+        ORDER BY r.regTeseo, r.fechaEngrase DESC";
         return  $this->consultarQuery($sql, "consultar Lotes");
     }
 
@@ -940,7 +940,7 @@ class Rendimiento extends ConexionBD
              IFNULL( p.areaProvPie2, 0 )/ IFNULL( p.totalCuerosFacturados, 0 )) * IFNULL( SUM( r.total_s ), 0 )))* 100 AS difAreaCompVsCrust,
      IFNULL( SUM( r.perdidaAreaCrustTeseo ), 0 ) */
         $sql = "SELECT
-     r.semanaProduccion,
+     r.semanaProduccion,IFNULL( SUM( r.total_s ), 0 ) AS total_s,
      IFNULL( SUM( r.areaFinal ), 0 ) AS areaComprada,
      (
          IFNULL( SUM( r.diferenciaArea ), 0 )/((
@@ -1013,7 +1013,7 @@ class Rendimiento extends ConexionBD
     {
         $sql = "SELECT
      r.semanaProduccion,
-     IFNULL( SUM( r.areaFinal ), 0 ) AS areaComprada,
+     IFNULL( SUM( r.areaFinal ), 0 ) AS areaComprada,IFNULL( SUM( r.total_s ), 0 ) AS total_s,
      (
          IFNULL( SUM( r.diferenciaArea ), 0 )/((
              IFNULL( p.areaProvPie2, 0 )/ IFNULL( p.totalCuerosFacturados, 0 ))* IFNULL( SUM( r.total_s ), 0 )))* 100 AS difAreaCompradaMedida,
@@ -1153,6 +1153,7 @@ class Rendimiento extends ConexionBD
     public function getM2Calzado($filtradoAnio = "1=1")
     {
         $sql = "SELECT r.semanaProduccion, IFNULL(AVG(r.areaFinal),0) AS totalProducido, 
+        IFNULL( SUM( r.total_s ), 0 ) AS total_s,
      ((IFNULL(AVG(r.areaFinal),0)-IFNULL(AVG(r.areaWB),0))
       /IFNULL(AVG(r.areaWB),0))*100 AS difAreaWBCrust, 
      ((IFNULL(AVG(r.areaFinal),0)-IFNULL(AVG(r.areaWB),0))
@@ -1168,6 +1169,7 @@ class Rendimiento extends ConexionBD
     public function getM2Etiquetas($filtradoAnio = "1=1")
     {
         $sql = "SELECT r.semanaProduccion, IFNULL(AVG(r.areaFinal),0) AS totalProducido, 
+          IFNULL( SUM( r.total_s ), 0 ) AS total_s,
      ((IFNULL(AVG(r.areaFinal),0)-IFNULL(AVG(r.areaWB),0))
       /IFNULL(AVG(r.areaWB),0))*100 AS difAreaWBCrust, 
      ((IFNULL(AVG(r.areaFinal),0)-IFNULL(AVG(r.areaWB),0))

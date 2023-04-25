@@ -17,6 +17,8 @@ if ($debug == 1) {
 }
 /************************** VARIABLES DE FILTRADO *******************************/
 $id = !empty($_POST['id']) ? $_POST['id'] : '';
+$row = !empty($_POST['row']) ? $_POST['row'] : '';
+
 $proceso = !empty($_POST['proceso']) ? $_POST['proceso'] : '';
 $programa = !empty($_POST['programa']) ? $_POST['programa'] : '';
 $materiaPrima = !empty($_POST['materia']) ? $_POST['materia'] : '';
@@ -33,9 +35,9 @@ $filtradoEstatus = $id == '-1' ? '1=1' : $filtradoEstatus;
 if ($date_start != '' and $date_end != '') {
     $date_start = date("Y-m-d", strtotime(str_replace("/", "-", $date_start)));
     $date_end = date("Y-m-d", strtotime(str_replace("/", "-", $date_end)));
-}else{
-    $date_start=date("Y-01-01");
-    $date_end=date("Y-12-t");
+} else {
+    $date_start = date("Y-01-01");
+    $date_end = date("Y-12-t");
 }
 
 $filtradoFecha = ($date_start != '' and $date_end != '') ?
@@ -74,7 +76,10 @@ $Data = Excepciones::validaConsulta($Data);
         <tbody>
             <?php
             $count = 1;
+            $dataedit="";
+            $rowData="";
             foreach ($Data as $key => $value) {
+                $remarkTable = ($row != '' and $value['id'] == $row) ? 'table-secondary' : '';
                 $input = '<div class="input-group mb-3">
                 <input type="number" class="form-control" step="0.01" id="inptDm' . $value['id'] . '" min="0" placeholder="" aria-label="" aria-describedby="basic-addon1">
                 <div class="input-group-append">
@@ -134,8 +139,10 @@ $Data = Excepciones::validaConsulta($Data);
                     : "<b>" . formatoMil($value['hideRechTeseo'], 2) . "</b>";
 
                 $iconReprog = $value["reprogramado"] == '1' ? '<i class="fas fa-recycle text-success"></i>' : '';
-                $totalHides= formatoMil($value["total_s"]*2,0);
-                echo "<tr>
+                $totalHides = formatoMil($value["total_s"] * 2, 0);
+              
+                if ($row != $value['id']) {
+                    $rowData.= "<tr class='$remarkTable'>
                     <td>{$count}</td>
                     <td>{$iconReprog}</td>
                     <td>{$value['fFechaEngrase']}</td>
@@ -153,13 +160,35 @@ $Data = Excepciones::validaConsulta($Data);
                     <td>$lblLiberacion</td>
 
                 </tr>";
+                } else {
+                    $dataedit="<tr class='$remarkTable'>
+                    <td>{$count}</td>
+                    <td>{$iconReprog}</td>
+                    <td>{$value['fFechaEngrase']}</td>
+                    <td>{$value['loteTemola']}</td>
+                    <td class='table-info'>{$totalHides}</td>
+                    <td>{$value['nPrograma']}</td>
+                    <td>$inptAreaTeseo</td>
+                    <td>$inptYieldTeseo</td>
+                    <td>$inpt12Teseo</td>
+                    <td>$inpt3Teseo</td>
+                    <td>$inpt6Teseo</td>
+                    <td>$inpt9Teseo</td>
+                    <td>$inptPzasCortadasTeseo</td>
+                    <td>$inptHideRechazo</td>
+                    <td>$lblLiberacion</td>
+
+                </tr>";
+                }
                 $count++;
             }
+            echo $dataedit.$rowData;
             ?>
         </tbody>
     </table>
 </div>
 <script>
+    
     $(function() {
         $('[data-toggle="popover"]').popover({
             trigger: 'focus',
@@ -167,6 +196,15 @@ $Data = Excepciones::validaConsulta($Data);
             sanitize: false
         })
     })
+
+    function updateRemark(id) {
+        $.post('../templates/Rendimiento/cargaReporteLotesCapturaTeseo.php', {
+            row: id
+        }, function(respuesta) {
+            $("#content-lotes").html(respuesta);
+        });
+
+    }
     $("#table-reportelote").DataTable({
         "fnDrawCallback": function(oSettings) {
             $('[data-toggle="popover"]').popover({
@@ -324,7 +362,7 @@ $Data = Excepciones::validaConsulta($Data);
                 if (resp[0] == 1) {
                     notificaSuc(resp[1])
                     bloqueoBtn("bloqueo-btn-" + id, 2);
-                    update()
+                    updateRemark(id)
 
                 } else if (resp[0] == 0) {
                     bloqueoBtn("bloqueo-btn-" + id, 2);

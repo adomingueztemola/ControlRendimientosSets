@@ -113,8 +113,4 @@ $obj_programas = new Programa($debug, $idUser);
         <textarea name="observaciones" id="observaciones" rows="5" class="form-control"></textarea>
     </div>
 </div>
-<script src="../assets/scripts/calculaTrabajosRecup.js"></script>
 <script src="../assets/scripts/clearData.js"></script>
-<script>
-
-</script>

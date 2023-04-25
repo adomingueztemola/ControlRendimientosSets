@@ -380,6 +380,7 @@ switch ($_GET["op"]) {
             " Piezas 09:00" => $pzas_09,
 
         ), $obj_empaque);
+      
         $obj_empaque->beginTransaction();
 
         //DESGLOSE DE INFORMACION DEL LOTE
@@ -389,6 +390,9 @@ switch ($_GET["op"]) {
         $idDetCaja = $ArrayLote[2];
         //Sumar Total Piezas por Detallado
         $total = $pzas_12 + $pzas_03 + $pzas_06 + $pzas_09;
+        if($total<=0 AND $remanente!='1'){
+            $obj_empaque->errorBD("Error, la caja registrada está vacía, válida tu información.",1);
+        }
         //PROCESO DE LOS DATOS
         $caja = $remanente == '1' ? '0' : $caja;
         //VALIDA QUE SEA EL CIERRE DEL LOTE POR CONTEO DE PZAS OK
@@ -407,69 +411,72 @@ switch ($_GET["op"]) {
             }
         }
         //VALIDA PIEZAS EN TIEMPO REAL
-        $_12Valida=0;
-        $_6Valida=0;
-        $_3Valida=0;
-        $_9Valida=0;
-        
+        $_12Valida = 0;
+        $_6Valida = 0;
+        $_3Valida = 0;
+        $_9Valida = 0;
+
         switch ($tipoLote) {
             case '1':
                 $Data = $obj_empaque->getRendimiento($lote);
                 $Data = Excepciones::validaConsulta($Data);
-                $_12Valida=$Data['_12OKAct']==''?'0':$Data['_12OKAct'];
-                $_6Valida=$Data['_6OKAct']==''?'0':$Data['_6OKAct'];
-                $_3Valida=$Data['_3OKAct']==''?'0':$Data['_3OKAct'];
-                $_9Valida=$Data['_9OKAct']==''?'0':$Data['_9OKAct'];
+                $_12Valida = $Data['_12OKAct'] == '' ? '0' : $Data['_12OKAct'];
+                $_6Valida = $Data['_6OKAct'] == '' ? '0' : $Data['_6OKAct'];
+                $_3Valida = $Data['_3OKAct'] == '' ? '0' : $Data['_3OKAct'];
+                $_9Valida = $Data['_9OKAct'] == '' ? '0' : $Data['_9OKAct'];
                 break;
             case '2':
                 $Data = $obj_empaque->getRemanenteXLote($lote);
                 $Data = Excepciones::validaConsulta($Data);
-                $_12Valida=$Data['_12Rem']==''?'0':$Data['_12Rem'];
-                $_6Valida=$Data['_6Rem']==''?'0':$Data['_6Rem'];
-                $_3Valida=$Data['_3Rem']==''?'0':$Data['_3Rem'];
-                $_9Valida=$Data['_9Rem']==''?'0':$Data['_9Rem'];
+                $_12Valida = $Data['_12Rem'] == '' ? '0' : $Data['_12Rem'];
+                $_6Valida = $Data['_6Rem'] == '' ? '0' : $Data['_6Rem'];
+                $_3Valida = $Data['_3Rem'] == '' ? '0' : $Data['_3Rem'];
+                $_9Valida = $Data['_9Rem'] == '' ? '0' : $Data['_9Rem'];
                 break;
             case '3':
                 $Data = $obj_empaque->getStockRecuperacionXLote($lote);
                 $Data = Excepciones::validaConsulta($Data);
-                $_12Valida=$Data['_12']==''?'0':$Data['_12'];
-                $_6Valida=$Data['_6']==''?'0':$Data['_6'];
-                $_3Valida=$Data['_3']==''?'0':$Data['_3'];
-                $_9Valida=$Data['_9']==''?'0':$Data['_9'];
+                $_12Valida = $Data['_12'] == '' ? '0' : $Data['_12'];
+                $_6Valida = $Data['_6'] == '' ? '0' : $Data['_6'];
+                $_3Valida = $Data['_3'] == '' ? '0' : $Data['_3'];
+                $_9Valida = $Data['_9'] == '' ? '0' : $Data['_9'];
                 break;
         }
-        $validaPzas=true;
-        if( ($_12Valida<$pzas_12) ||  ($_6Valida<$pzas_06) ||  ($_3Valida<$pzas_03) ||  ($_9Valida<$pzas_09)){
-            $validaPzas=false;
+        $validaPzas = true;
+        if (($_12Valida < $pzas_12) ||  ($_6Valida < $pzas_06) ||  ($_3Valida < $pzas_03) ||  ($_9Valida < $pzas_09)) {
+            $validaPzas = false;
         }
-        if(!$validaPzas){
+        if (!$validaPzas) {
             $obj_empaque->errorBD("Sin suficientes piezas para solventar su caja", 1);
-
         }
         //REGISTRAMOS EL DETALLADO DE LA CAJA
-        $datos = $obj_empaque->registraDetCaja(
-            $id,
-            $lote,
-            $caja,
-            $pzas_12,
-            $pzas_03,
-            $pzas_06,
-            $pzas_09,
-            $remanente,
-            $tipoLote,
-            $total,
-            $pzas_12_rem,
-            $pzas_03_rem,
-            $pzas_06_rem,
-            $pzas_09_rem
-        );
-        try {
-            Excepciones::validaMsjError($datos);
-        } catch (Exception $e) {
-            $obj_empaque->errorBD($e->getMessage(), 1);
+        //Validar que la caja no vaya en 0
+        if ($total > 0) {
+            $datos = $obj_empaque->registraDetCaja(
+                $id,
+                $lote,
+                $caja,
+                $pzas_12,
+                $pzas_03,
+                $pzas_06,
+                $pzas_09,
+                $remanente,
+                $tipoLote,
+                $total,
+                $pzas_12_rem,
+                $pzas_03_rem,
+                $pzas_06_rem,
+                $pzas_09_rem
+            );
+            try {
+                Excepciones::validaMsjError($datos);
+            } catch (Exception $e) {
+                $obj_empaque->errorBD($e->getMessage(), 1);
+            }
+            //OBTENEMOS EL REGISTRO DEL DETALLADO DE LA CAJA
+            $idNew = $datos['2'];
         }
-        //OBTENEMOS EL REGISTRO DEL DETALLADO DE LA CAJA
-        $idNew = $datos['2'];
+
         //SI ES EMPAQUE DE LOTE EN LINEA, QUITA PZAS OK DEL LOTE SOLO 
         //SI EL DETALLADO DE CAJA NO ES REMANENTE
         if ($tipoLote == '1' and  $remanente != '1') {

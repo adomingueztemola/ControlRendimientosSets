@@ -372,7 +372,7 @@ $DataWB = $obj_rendimiento->getWetBlue("p.years BETWEEN '{$anioStart}' AND '{$an
 
                 </tr>
                 <tr class="c_AutoCZA collapse">
-                    <td>Total Producido</td>
+                <td>Total Producido (FT.<sup>2</sup>)</td>
                     <?php
                     $totalResult = 0;
                     foreach ($DataSemana as $key => $value) {
@@ -384,6 +384,44 @@ $DataWB = $obj_rendimiento->getWetBlue("p.years BETWEEN '{$anioStart}' AND '{$an
                     }
                     ?>
                     <td><?= formatoMil($totalResult) ?></td>
+                </tr>
+                <tr class="c_AutoCZA collapse">
+                    <td>Crupones Totales</td>
+                    <?php
+                    $totalResult = 0;
+                    $dif_Comprada = 0;
+                    foreach ($DataSemana as $key => $value) {
+                        $result = getRecorrerData($DataSemana[$key]['semanaProduccion'], "total_s", $DataM2Cza);
+                        $result = $result == '' ? '0' : $result;
+                        $totalResult += $result;
+
+                        echo "<td>" . formatoMil($result, 0) . "</td>";
+                    }
+                    ?>
+                    <td><?= formatoMil($totalResult, 0) ?></td>
+
+
+                </tr>
+                <tr class="c_AutoCZA collapse">
+                    <td>FT<sup>2</sup>/Unid.</td>
+                    <?php
+                    $totalResult = 0;
+                    $dif_Comprada = 0;
+                    foreach ($DataSemana as $key => $value) {
+                        $total = getRecorrerData($DataSemana[$key]['semanaProduccion'], "total_s", $DataM2Cza);
+                        $total = $total == '' ? '0' : $total;
+                        $totalResult += $total;
+
+                        $areaComprada = getRecorrerData($DataSemana[$key]['semanaProduccion'], "areaComprada", $DataM2Cza);
+                        $areaComprada = $areaComprada == '' ? '0' : $areaComprada;
+                        $totalArea += $areaComprada;
+
+                        echo "<td>" . formatoMil(is_nan($areaComprada/$total)?'0':$areaComprada/$total, 2) . "</td>";
+                    }   ?>
+
+                    <td><?= formatoMil($totalArea/$totalResult, 2) ?></td>
+
+                 
                 </tr>
                 <tr class="c_AutoCZA collapse">
                     <td>Dif. Área comprada vs Medida</td>
@@ -477,7 +515,7 @@ $DataWB = $obj_rendimiento->getWetBlue("p.years BETWEEN '{$anioStart}' AND '{$an
                 </tr>
                 <tr class="c_AutoCZAPiel collapse">
 
-                    <td>Total Producido</td>
+                <td>Total Producido (FT.<sup>2</sup>)</td>
                     <?php
                     $totalResult = 0;
                     foreach ($DataSemana as $key => $value) {
@@ -490,7 +528,44 @@ $DataWB = $obj_rendimiento->getWetBlue("p.years BETWEEN '{$anioStart}' AND '{$an
                     ?>
                     <td><?= formatoMil($totalResult) ?></td>
                 </tr>
+                <tr class="c_AutoCZAPiel collapse">
+                    <td>Lados Totales</td>
+                    <?php
+                    $totalResult = 0;
+                    $dif_Comprada = 0;
+                    foreach ($DataSemana as $key => $value) {
+                        $result = getRecorrerData($DataSemana[$key]['semanaProduccion'], "total_s", $DataM2Piel);
+                        $result = $result == '' ? '0' : $result;
+                        $totalResult += $result;
 
+                        echo "<td>" . formatoMil($result * 2, 0) . "</td>";
+                    }
+                    ?>
+                    <td><?= formatoMil($totalResult * 2, 0) ?></td>
+
+
+                </tr>
+                <tr class="c_AutoCZAPiel collapse">
+                    <td>FT<sup>2</sup>/Unid.</td>
+                    <?php
+                    $totalResult = 0;
+                    $dif_Comprada = 0;
+                    foreach ($DataSemana as $key => $value) {
+                        $total = getRecorrerData($DataSemana[$key]['semanaProduccion'], "total_s", $DataM2Piel);
+                        $total = $total == '' ? '0' : $total*2;
+                        $totalResult += $total*2;
+
+                        $areaComprada = getRecorrerData($DataSemana[$key]['semanaProduccion'], "areaComprada", $DataM2Piel);
+                        $areaComprada = $areaComprada == '' ? '0' : $areaComprada;
+                        $totalArea += $areaComprada;
+
+                        echo "<td>" . formatoMil(is_nan($areaComprada/$total)?'0':$areaComprada/$total, 2) . "</td>";
+                    }   ?>
+
+                    <td><?= formatoMil($totalArea/$totalResult, 2) ?></td>
+
+                 
+                </tr>
                 <tr class="c_AutoCZAPiel collapse">
                     <td>Dif. Área comprada vs Medida</td>
                     <?php
@@ -581,7 +656,7 @@ $DataWB = $obj_rendimiento->getWetBlue("p.years BETWEEN '{$anioStart}' AND '{$an
 
                 </tr>
                 <tr class="c_Calzado collapse">
-                    <td>Total Producido</td>
+                <td>Total Producido (FT.<sup>2</sup>)</td>
                     <?php
                     $totalResult = 0;
                     foreach ($DataSemana as $key => $value) {
@@ -593,6 +668,44 @@ $DataWB = $obj_rendimiento->getWetBlue("p.years BETWEEN '{$anioStart}' AND '{$an
                     }
                     ?>
                     <td><?= formatoMil($totalResult) ?></td>
+                </tr>
+                <tr class="c_Calzado collapse">
+                    <td>Lados Totales</td>
+                    <?php
+                    $totalResult = 0;
+                    $dif_Comprada = 0;
+                    foreach ($DataSemana as $key => $value) {
+                        $result = getRecorrerData($DataSemana[$key]['semanaProduccion'], "total_s", $DataCalzado);
+                        $result = $result == '' ? '0' : $result;
+                        $totalResult += $result;
+
+                        echo "<td>" . formatoMil($result * 2, 0) . "</td>";
+                    }
+                    ?>
+                    <td><?= formatoMil($totalResult * 2, 0) ?></td>
+
+
+                </tr>
+                <tr class="c_Calzado collapse">
+                    <td>FT<sup>2</sup>/Unid.</td>
+                    <?php
+                    $totalResult = 0;
+                    $dif_Comprada = 0;
+                    foreach ($DataSemana as $key => $value) {
+                        $total = getRecorrerData($DataSemana[$key]['semanaProduccion'], "total_s", $DataCalzado);
+                        $total = $total == '' ? '0' : $total*2;
+                        $totalResult += $total*2;
+
+                        $areaComprada = getRecorrerData($DataSemana[$key]['semanaProduccion'], "totalProducido", $DataCalzado);
+                        $areaComprada = $areaComprada == '' ? '0' : $areaComprada;
+                        $totalArea += $areaComprada;
+
+                        echo "<td>" . formatoMil(is_nan($areaComprada/$total)?'0':$areaComprada/$total, 2) . "</td>";
+                    }   ?>
+
+                    <td><?= formatoMil($totalArea/$totalResult, 2) ?></td>
+
+                 
                 </tr>
                 <tr class="c_Calzado collapse">
                     <td>Dif. Área WB vs Crust</td>
@@ -652,7 +765,7 @@ $DataWB = $obj_rendimiento->getWetBlue("p.years BETWEEN '{$anioStart}' AND '{$an
 
                 </tr>
                 <tr class="c_Etiquetas collapse">
-                    <td>Total Producido</td>
+                <td>Total Producido (FT.<sup>2</sup>)</td>
                     <?php
                     $totalResult = 0;
                     foreach ($DataSemana as $key => $value) {
@@ -664,6 +777,44 @@ $DataWB = $obj_rendimiento->getWetBlue("p.years BETWEEN '{$anioStart}' AND '{$an
                     }
                     ?>
                     <td><?= formatoMil($totalResult) ?></td>
+                </tr>
+                <tr class="c_Etiquetas collapse">
+                    <td>Lados Totales</td>
+                    <?php
+                    $totalResult = 0;
+                    $dif_Comprada = 0;
+                    foreach ($DataSemana as $key => $value) {
+                        $result = getRecorrerData($DataSemana[$key]['semanaProduccion'], "total_s", $DataEtiquetas);
+                        $result = $result == '' ? '0' : $result;
+                        $totalResult += $result;
+
+                        echo "<td>" . formatoMil($result * 2, 0) . "</td>";
+                    }
+                    ?>
+                    <td><?= formatoMil($totalResult * 2, 0) ?></td>
+
+
+                </tr>
+                <tr class="c_Etiquetas collapse">
+                    <td>FT<sup>2</sup>/Unid.</td>
+                    <?php
+                    $totalResult = 0;
+                    $dif_Comprada = 0;
+                    foreach ($DataSemana as $key => $value) {
+                        $total = getRecorrerData($DataSemana[$key]['semanaProduccion'], "total_s", $DataEtiquetas);
+                        $total = $total == '' ? '0' : $total;
+                        $totalResult += $total;
+
+                        $areaComprada = getRecorrerData($DataSemana[$key]['semanaProduccion'], "totalProducido", $DataEtiquetas);
+                        $areaComprada = $areaComprada == '' ? '0' : $areaComprada;
+                        $totalArea += $areaComprada;
+
+                        echo "<td>" . formatoMil(is_nan($areaComprada/$total)?'0':$areaComprada/$total, 2) . "</td>";
+                    }   ?>
+
+                    <td><?= formatoMil($totalArea/$totalResult, 2) ?></td>
+
+                 
                 </tr>
                 <tr class="c_Etiquetas collapse">
                     <td>Dif. Área WB vs Crust</td>
