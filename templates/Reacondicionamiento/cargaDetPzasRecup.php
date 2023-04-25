@@ -59,22 +59,22 @@ $f_9Stk = $Data['_9Stk'] == '' ? '0' : formatoMil($Data['_9Stk'],0);
             <tbody>
                 <tr>
                     <td>12:00</td>
-                    <td><input class="form-control focusCampo sumatoria" type="number" value="<?= $_12 ?>" step="1" min="0" max="<?=$_12Stk?>" name="_12"></td>
+                    <td><input class="form-control focusCampo sumatoria" type="number" value="<?= $_12 ?>" step="1" required min="0" max="<?=$_12Stk?>" name="_12"></td>
                     <td><?=$f_12Stk?></td>
                 </tr>
                 <tr>
                     <td>03:00</td>
-                    <td><input class="form-control focusCampo sumatoria" type="number"  value="<?= $_3 ?>" step="1" min="0" max="<?=$_3Stk?>" name="_3"></td>
+                    <td><input class="form-control focusCampo sumatoria" type="number"  value="<?= $_3 ?>" step="1" required min="0" max="<?=$_3Stk?>" name="_3"></td>
                     <td><?=$f_3Stk?></td>
                 </tr>
                 <tr>
                     <td>06:00</td>
-                    <td><input class="form-control focusCampo sumatoria" type="number" value="<?= $_6 ?>" step="1" min="0" max="<?=$_6Stk?>" name="_6"></td>
+                    <td><input class="form-control focusCampo sumatoria" type="number" value="<?= $_6 ?>" step="1" required min="0" max="<?=$_6Stk?>" name="_6"></td>
                     <td><?=$f_6Stk?></td>
                 </tr>
                 <tr>
                     <td>09:00</td>
-                    <td><input class="form-control focusCampo sumatoria" type="number" value="<?= $_9 ?>" step="1" min="0" max="<?=$_9Stk?>" name="_9"></td>
+                    <td><input class="form-control focusCampo sumatoria" type="number" value="<?= $_9 ?>" step="1" required min="0" max="<?=$_9Stk?>" name="_9"></td>
                     <td><?=$f_9Stk?></td>
                 </tr>
             </tbody>

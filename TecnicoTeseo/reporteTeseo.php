@@ -122,7 +122,7 @@ $obj_materia = new MateriaPrima($debug, $idUser);
                                 <input type="hidden" name="option" value="2">
                                 <div class="col-md-12">
                                     <label class="form-label" for="lote">Lote</label>
-                                    <select name="idLote" id="lote" style="width:100%" class="control-form LoteTeseoFilter select2Form"></select>
+                                    <select name="lote" id="lote" style="width:100%" class="control-form LoteTeseoFilter select2Form"></select>
                                 </div>
                                 <div class="col-md-12">
                                     <label class="form-label" for="programa">Programa</label>

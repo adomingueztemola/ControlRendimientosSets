@@ -68,7 +68,7 @@ $space = 1;
                                 </div>
                                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12"></div>
                                 <div class="col-md-1 text-right">
-                                    <button class="btn button btn-rounded btn-sm btn-light" onclick="update()" title="Actualizar Historial"> <i class="fas fa-history"></i></button>
+                                    <button class="btn button btn-rounded btn-sm btn-light" onclick="updateData()" title="Actualizar Historial"> <i class="fas fa-history"></i></button>
                                 </div>
 
                             </div>
@@ -132,8 +132,10 @@ $space = 1;
 <script src="../assets/libs/bootstrap-datepicker/dist/locales/bootstrap-datepicker.es.min.js"></script>
 <script src="../assets/libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 <script src="../assets/libs/bootstrap-datepicker/dist/locales/bootstrap-datepicker.es.min.js"></script>
+<script src="../assets/scripts/clearData.js"></script>
+
 <script>
-    update()
+    updateData()
     jQuery('#date-range').datepicker({
         toggleActive: true,
         format: 'dd/mm/yyyy',
@@ -141,7 +143,7 @@ $space = 1;
         todayHighlight: true
     });
 
-    function update() {
+    function updateData() {
         $('#content-recuperacion').html('<div class="loading text-center"><img src="../assets/images/loading.gif" alt="loading" /><br/>Un momento, por favor...</div>');
         $('#content-recuperacion').load('../templates/Reacondicionamiento/trabajosRecuperacion.php');
         clearForm('filtrado');
@@ -160,10 +162,18 @@ $space = 1;
                 if (resp[0] == 1) {
                     notificaSuc(resp[1])
                     bloqueoModal(e, 'block-recuperacion', 2)
+                    cerrarModal("recuperaModal")
                     setTimeout(() => {
-                        cerrarModal("recuperaModal")
-                        update()
+                        updateData()
                     }, 1000);
+
+                    //update()
+                    /*bloqueoModal(e, 'block-recuperacion', 2)
+                    cerrarModal("recuperaModal")
+                    setTimeout(() => {
+                        update()
+                    }, 1000);*/
+            
 
 
                 } else if (resp[0] == 0) {

@@ -126,6 +126,11 @@ $obj_trabajos = new Reacondicionamiento($debug, $idUser);
 
 <script src="../assets/scripts/clearData.js"></script>
 <script>
+    function updateTabla() {
+        $('#content-recuperacion').html('<div class="loading text-center"><img src="../assets/images/loading.gif" alt="loading" /><br/>Un momento, por favor...</div>');
+        $('#content-recuperacion').load('../templates/Reacondicionamiento/trabajosRecuperacion.php');
+        clearForm('filtrado');
+    }
     $("#table-faltantes").DataTable({
         drawCallback: function(settings, json) {
             $('[data-toggle="tooltip"]').tooltip();
@@ -186,10 +191,8 @@ $obj_trabajos = new Reacondicionamiento($debug, $idUser);
                 if (resp[0] == 1) {
                     notificaSuc(resp[1])
                     bloqueoModal(e, 'block-detallado', 2)
-                    setTimeout(() => {
-                        cerrarModal("detPzasModal")
-
-                    }, 1000);
+                    cerrarModal("detPzasModal")
+                  
 
 
                 } else if (resp[0] == 0) {
@@ -235,6 +238,7 @@ $obj_trabajos = new Reacondicionamiento($debug, $idUser);
                     StatusLog = 1;
                 }
                 if (StatusLog == 1) {
+                    bloqueoBtn("bloqueo-btn-fin" + id, 2)
                     notificaBad(ErrorLog)
                     return 0;
                 } else {
@@ -257,7 +261,7 @@ $obj_trabajos = new Reacondicionamiento($debug, $idUser);
                 resp = json.split('|')
                 if (resp[0] == 1) {
                     notificaSuc(resp[1])
-                    update()
+                    updateTabla()
                 } else if (resp[0] == 0) {
                     bloqueoBtn("bloqueo-btn-fin" + id, 2)
                     notificaBad(resp[1])
@@ -274,13 +278,14 @@ $obj_trabajos = new Reacondicionamiento($debug, $idUser);
         $.ajax({
             url: '../Controller/reacondicionamiento.php?op=eliminarrecuperacion',
             data: {
-                id: id            },
+                id: id
+            },
             type: 'POST',
             success: function(json) {
                 resp = json.split('|')
                 if (resp[0] == 1) {
                     notificaSuc(resp[1])
-                    update()
+                    updateTabla()
                 } else if (resp[0] == 0) {
                     bloqueoBtn("bloqueo-btn-fin" + id, 2)
                     notificaBad(resp[1])
