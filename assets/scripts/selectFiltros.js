@@ -411,6 +411,11 @@ $(".LotesFinales").select2({
     url: "../Controller/rendimiento.php?op=select2lotesfinales",
     dataType: "json",
     type: "post",
+    data: function (params) {
+      return {
+        palabraClave: params.term, // search term
+      };
+    },
     processResults: function (data) {
       //Recorre JSON para generar option group de areas
       textOpt = "";
