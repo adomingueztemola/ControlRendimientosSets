@@ -139,7 +139,7 @@ $obj_materia = new MateriaPrima($debug, $idUser);
 
         </div>
 
-
+    </div>
 
 
 </body>
@@ -163,11 +163,11 @@ $obj_materia = new MateriaPrima($debug, $idUser);
 
 <script>
     update()
-  
+
 
     function update() {
         $('#content-historial').html('<div class="loading text-center"><img src="../assets/images/loading.gif" alt="loading" /><br/>Un momento, por favor...</div>');
-        $('#content-historial').load('../templates/Rendimiento/reporteSemanal.php');
+        $('#content-historial').load('../templates/Rendimiento/reporteSemanalIng.php');
         clearForm("filtrado");
 
     }
@@ -178,7 +178,7 @@ $obj_materia = new MateriaPrima($debug, $idUser);
         e.preventDefault();
         formData = $(this).serialize();
         $.ajax({
-            url: '../templates/Rendimiento/reporteSemanal.php',
+            url: '../templates/Rendimiento/reporteSemanalIng.php',
             data: formData,
             type: 'POST',
             success: function(respuesta) {
