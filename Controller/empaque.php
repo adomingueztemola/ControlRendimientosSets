@@ -2,6 +2,8 @@
 session_start();
 define('INCLUDE_CHECK', 1);
 require_once "../include/connect_mvc.php";
+include('../assets/scripts/cadenas.php');
+
 $debug = 0;
 $idUser = $_SESSION['CREident'];
 $obj_empaque = new Empaque($debug, $idUser);
@@ -765,6 +767,19 @@ switch ($_GET["op"]) {
 
         break;
     case "getcajasempacadas":
-        
+        $Data = $obj_empaque->getStockCajas();
+        $Data = Excepciones::validaConsulta($Data);
+        $response = array();
+        foreach ($Data as $value) {
+            array_push($response, [
+                $value['loteTemola'], $value['nPrograma'],
+                formatoMil($value['cantCaja'], 0)
+            ]);
+            $count++;
+        }
+        //Creamos el JSON
+        $response = array("data" => $response);
+        $json_string = json_encode($response);
+        echo $json_string;
         break;
 }
