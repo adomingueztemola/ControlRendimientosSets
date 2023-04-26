@@ -25,6 +25,7 @@ $obj_materia = new MateriaPrima($debug, $idUser);
 <?php include("../templates/header.php"); ?>
 <link href="../assets/extra-libs/datatables.net-bs4/css/dataTables.bootstrap4.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="../assets/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+
 <body>
     <div class="preloader">
         <div class="lds-ripple">
@@ -37,6 +38,12 @@ $obj_materia = new MateriaPrima($debug, $idUser);
         <div class="page-wrapper">
             <div class="container-fluid">
                 <?php include("../templates/namePage.php"); ?>
+                <div class="row mb-2">
+                    <div class="col-md-10"></div>
+                    <div class="col-md-2">
+                        <a class="btn button btn-large btn-TWM" target="_blank" href="../PDFReportes/Controller/bitacoraAlmacen.php?op=getbitacora"><i class="fas fa-print"></i> Bitácora de Almacén</a>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="card border">
@@ -47,6 +54,7 @@ $obj_materia = new MateriaPrima($debug, $idUser);
                                         <button class="btn button btn-rounded btn-sm btn-light" onclick="update()" title="Actualizar Historial"> <i class="fas fa-history"></i></button>
                                     </div>
                                 </div>
+
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div id="content-almacen"></div>
@@ -73,6 +81,7 @@ $obj_materia = new MateriaPrima($debug, $idUser);
 
 <script>
     update()
+
     function update() {
         $('#content-almacen').html('<div class="loading text-center"><img src="../assets/images/loading.gif" alt="loading" /><br/>Un momento, por favor...</div>');
         $('#content-almacen').load('../templates/Almacen/tablaAlmacen.php');

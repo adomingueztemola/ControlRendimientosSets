@@ -699,4 +699,24 @@ class Empaque extends ConexionBD
         WHERE dc.remanente='1' AND dc.total>0 AND dc.usoRemanente='0' AND dc.idLote='$idLote'";
         return $this->consultarQuery($sql, "consulta stock de recuperación", false);
     }
+
+    public function getStockCajas(){
+        $sql = "SELECT SUM(total) AS pzasDisponible,
+        COUNT(numCaja) AS cantCaja, lote,nPrograma,
+        r.loteTemola
+        FROM 
+        (SELECT SUM(d.total) AS total, d.numCaja, d.idEmpaque, GROUP_CONCAT(DISTINCT d.idLote) AS idslotes,  
+        GROUP_CONCAT(DISTINCT r.loteTemola) AS nameslotes,  cp.nombre AS nPrograma, COUNT(d.id) AS cantCaja,
+        IF(COUNT(d.id)>=2, d.idLoteLbl, d.idLote) AS lote
+        FROM detcajas d
+        INNER JOIN rendimientos r ON d.idLote=r.id
+        INNER JOIN catprogramas cp ON r.idCatPrograma=cp.id
+        WHERE (idVenta IS NULL OR idVenta='0') 
+        AND remanente<>'1' 
+        GROUP BY idEmpaque, numCaja) a
+        INNER JOIN rendimientos r ON a.lote=r.id
+        GROUP BY a.lote
+        ORDER BY a.nPrograma";
+        return $this->consultarQuery($sql, "consulta stock de cajas");
+    }
 }
