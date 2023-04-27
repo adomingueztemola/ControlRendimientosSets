@@ -473,19 +473,20 @@ $debug = '0';
                     <?php
                     $totalResult = 0;
                     $dif_Comprada = 0;
+                    $totalArea=0;
                     foreach ($DataSemana as $key => $value) {
                         $total = getRecorrerData($DataSemana[$key]['semanaProduccion'], "total_s", $DataM2Cza);
                         $total = $total == '' ? '0' : $total;
-                        $totalResult += $total;
+                      //  $totalResult += $total;
 
                         $areaComprada = getRecorrerData($DataSemana[$key]['semanaProduccion'], "areaComprada", $DataM2Cza);
                         $areaComprada = $areaComprada == '' ? '0' : $areaComprada;
-                        $totalArea += $areaComprada;
+                        $totalArea += is_nan($areaComprada/$total)?'0':$areaComprada/$total;
 
                         echo "<td>" . formatoMil(is_nan($areaComprada/$total)?'0':$areaComprada/$total, 2) . "</td>";
                     }   ?>
 
-                    <td><?= formatoMil($totalArea/$totalResult, 2) ?></td>
+                    <td><?= formatoMil($totalArea, 2) ?></td>
 
                  
                 </tr>
@@ -614,21 +615,21 @@ $debug = '0';
                 <tr class="c_AutoCZAPiel collapse">
                     <td>FT<sup>2</sup>/Unid.</td>
                     <?php
-                    $totalResult = 0;
+                    $totalArea = 0;
                     $dif_Comprada = 0;
                     foreach ($DataSemana as $key => $value) {
                         $total = getRecorrerData($DataSemana[$key]['semanaProduccion'], "total_s", $DataM2Piel);
                         $total = $total == '' ? '0' : $total*2;
-                        $totalResult += $total*2;
+                       // $totalResult += $total*2;
 
                         $areaComprada = getRecorrerData($DataSemana[$key]['semanaProduccion'], "areaComprada", $DataM2Piel);
                         $areaComprada = $areaComprada == '' ? '0' : $areaComprada;
-                        $totalArea += $areaComprada;
+                        $totalArea +=is_nan($areaComprada/$total)?'0':$areaComprada/$total;
 
                         echo "<td>" . formatoMil(is_nan($areaComprada/$total)?'0':$areaComprada/$total, 2) . "</td>";
                     }   ?>
 
-                    <td><?= formatoMil($totalArea/$totalResult, 2) ?></td>
+                    <td><?= formatoMil($totalArea, 2) ?></td>
 
                  
                 </tr>
@@ -757,19 +758,20 @@ $debug = '0';
                     <?php
                     $totalResult = 0;
                     $dif_Comprada = 0;
+                    $totalArea=0;
                     foreach ($DataSemana as $key => $value) {
                         $total = getRecorrerData($DataSemana[$key]['semanaProduccion'], "total_s", $DataCalzado);
                         $total = $total == '' ? '0' : $total*2;
-                        $totalResult += $total*2;
+                       // $totalResult += $total*2;
 
                         $areaComprada = getRecorrerData($DataSemana[$key]['semanaProduccion'], "totalProducido", $DataCalzado);
                         $areaComprada = $areaComprada == '' ? '0' : $areaComprada;
-                        $totalArea += $areaComprada;
+                        $totalArea += is_nan($areaComprada/$total)?'0':$areaComprada/$total;
 
                         echo "<td>" . formatoMil(is_nan($areaComprada/$total)?'0':$areaComprada/$total, 2) . "</td>";
                     }   ?>
 
-                    <td><?= formatoMil($totalArea/$totalResult, 2) ?></td>
+                    <td><?= formatoMil($totalArea, 2) ?></td>
 
                  
                 </tr>
@@ -864,21 +866,20 @@ $debug = '0';
                 <tr class="c_Etiquetas collapse">
                     <td>FT<sup>2</sup>/Unid.</td>
                     <?php
-                    $totalResult = 0;
+                    $totalArea = 0;
                     $dif_Comprada = 0;
                     foreach ($DataSemana as $key => $value) {
                         $total = getRecorrerData($DataSemana[$key]['semanaProduccion'], "total_s", $DataEtiquetas);
-                        $total = $total == '' ? '0' : $total;
-                        $totalResult += $total;
+                        $total = $total == '' ? '0' : $total*2;
 
                         $areaComprada = getRecorrerData($DataSemana[$key]['semanaProduccion'], "totalProducido", $DataEtiquetas);
                         $areaComprada = $areaComprada == '' ? '0' : $areaComprada;
-                        $totalArea += $areaComprada;
+                        $totalArea += is_nan($areaComprada/$total)?'0':$areaComprada/$total;
 
                         echo "<td>" . formatoMil(is_nan($areaComprada/$total)?'0':$areaComprada/$total, 2) . "</td>";
                     }   ?>
 
-                    <td><?= formatoMil($totalArea/$totalResult, 2) ?></td>
+                    <td><?= formatoMil($totalArea, 2) ?></td>
 
                  
                 </tr>
