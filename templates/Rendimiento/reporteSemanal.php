@@ -32,11 +32,10 @@ if ($date_start != '' and $date_end != '') {
     $fechaInicio = $obj_rendimiento->firstWeekDay(date('W', strtotime($dateComplete)), date('Y'));
     $fechaFin = $obj_rendimiento->endWeekDay(date('W', strtotime($dateComplete)), date('Y'));
 
-   // echo "Fecha Fin: " . $fechaFin;
-    if (strtotime($fechaInicio) < strtotime( $fechaFin)) {
+    // echo "Fecha Fin: " . $fechaFin;
+    if (strtotime($fechaInicio) < strtotime($fechaFin)) {
         $dateInit = date('Y-m', strtotime($fechaInicio));
         $dateFin = date('Y-m', strtotime($fechaFin));
-
     }
     $filtrado_semana = "DATE_FORMAT(r.fechaEmpaque,'%Y-%m') BETWEEN '{$dateInit}' AND '{$dateFin}'";
     $filtrado_semanaEtiq = "DATE_FORMAT(r.fechaFinal,'%Y-%m') BETWEEN '{$dateInit}' AND '{$dateFin}'";
@@ -54,7 +53,7 @@ $anioEnd = $ArrayEnd[0] == '' ? date('Y', strtotime($fechaFin)) : $ArrayEnd[0];
 /*echo "<br>p.years BETWEEN '{$anioStart}' AND '{$anioEnd}'";
 echo "<br>";*/
 $DataWB = $obj_rendimiento->getWetBlue("p.years BETWEEN '{$anioStart}' AND '{$anioEnd}'");
-$debug='0';
+$debug = '0';
 
 ?>
 <div class="table-responsive">
@@ -439,7 +438,7 @@ $debug='0';
 
                 </tr>
                 <tr class="c_AutoCZA collapse">
-                <td>Total Producido (FT.<sup>2</sup>)</td>
+                    <td>Total Producido (FT.<sup>2</sup>)</td>
                     <?php
                     $totalResult = 0;
                     foreach ($DataSemana as $key => $value) {
@@ -481,14 +480,14 @@ $debug='0';
 
                         $areaComprada = getRecorrerData($DataSemana[$key]['semanaProduccion'], "areaComprada", $DataM2Cza);
                         $areaComprada = $areaComprada == '' ? '0' : $areaComprada;
-                        $totalArea += $areaComprada;
+                        $totalArea += is_nan($areaComprada / $total) ? '0' : $areaComprada / $total;
 
-                        echo "<td>" . formatoMil(is_nan($areaComprada/$total)?'0':$areaComprada/$total, 2) . "</td>";
+                        echo "<td>" . formatoMil(is_nan($areaComprada / $total) ? '0' : $areaComprada / $total, 2) . "</td>";
                     }   ?>
 
-                    <td><?= formatoMil($totalArea/$totalResult, 2) ?></td>
+                    <td><?= formatoMil($totalArea, 2) ?></td>
 
-                 
+
                 </tr>
                 <tr class="c_AutoCZA collapse">
                     <td>Dif. Área comprada vs Medida</td>
@@ -582,7 +581,7 @@ $debug='0';
                 </tr>
                 <tr class="c_AutoCZAPiel collapse">
 
-                <td>Total Producido (FT.<sup>2</sup>)</td>
+                    <td>Total Producido (FT.<sup>2</sup>)</td>
                     <?php
                     $totalResult = 0;
                     foreach ($DataSemana as $key => $value) {
@@ -619,19 +618,19 @@ $debug='0';
                     $dif_Comprada = 0;
                     foreach ($DataSemana as $key => $value) {
                         $total = getRecorrerData($DataSemana[$key]['semanaProduccion'], "total_s", $DataM2Piel);
-                        $total = $total == '' ? '0' : $total*2;
-                        $totalResult += $total*2;
+                        $total = $total == '' ? '0' : $total * 2;
+                        $totalResult += $total * 2;
 
                         $areaComprada = getRecorrerData($DataSemana[$key]['semanaProduccion'], "areaComprada", $DataM2Piel);
                         $areaComprada = $areaComprada == '' ? '0' : $areaComprada;
-                        $totalArea += $areaComprada;
+                        $totalArea += is_nan($areaComprada / $total) ? '0' : $areaComprada / $total;
 
-                        echo "<td>" . formatoMil(is_nan($areaComprada/$total)?'0':$areaComprada/$total, 2) . "</td>";
+                        echo "<td>" . formatoMil(is_nan($areaComprada / $total) ? '0' : $areaComprada / $total, 2) . "</td>";
                     }   ?>
 
-                    <td><?= formatoMil($totalArea/$totalResult, 2) ?></td>
+                    <td><?= formatoMil($totalArea, 2) ?></td>
 
-                 
+
                 </tr>
                 <tr class="c_AutoCZAPiel collapse">
                     <td>Dif. Área comprada vs Medida</td>
@@ -723,7 +722,7 @@ $debug='0';
 
                 </tr>
                 <tr class="c_Calzado collapse">
-                <td>Total Producido (FT.<sup>2</sup>)</td>
+                    <td>Total Producido (FT.<sup>2</sup>)</td>
                     <?php
                     $totalResult = 0;
                     foreach ($DataSemana as $key => $value) {
@@ -760,19 +759,19 @@ $debug='0';
                     $dif_Comprada = 0;
                     foreach ($DataSemana as $key => $value) {
                         $total = getRecorrerData($DataSemana[$key]['semanaProduccion'], "total_s", $DataCalzado);
-                        $total = $total == '' ? '0' : $total*2;
-                        $totalResult += $total*2;
+                        $total = $total == '' ? '0' : $total * 2;
+                        $totalResult += $total * 2;
 
                         $areaComprada = getRecorrerData($DataSemana[$key]['semanaProduccion'], "totalProducido", $DataCalzado);
                         $areaComprada = $areaComprada == '' ? '0' : $areaComprada;
-                        $totalArea += $areaComprada;
+                        $totalArea += is_nan($areaComprada / $total) ? '0' : $areaComprada / $total;
 
-                        echo "<td>" . formatoMil(is_nan($areaComprada/$total)?'0':$areaComprada/$total, 2) . "</td>";
+                        echo "<td>" . formatoMil(is_nan($areaComprada / $total) ? '0' : $areaComprada / $total, 2) . "</td>";
                     }   ?>
 
-                    <td><?= formatoMil($totalArea/$totalResult, 2) ?></td>
+                    <td><?= formatoMil($totalArea, 2) ?></td>
 
-                 
+
                 </tr>
                 <tr class="c_Calzado collapse">
                     <td>Dif. Área WB vs Crust</td>
@@ -832,7 +831,7 @@ $debug='0';
 
                 </tr>
                 <tr class="c_Etiquetas collapse">
-                <td>Total Producido (FT.<sup>2</sup>)</td>
+                    <td>Total Producido (FT.<sup>2</sup>)</td>
                     <?php
                     $totalResult = 0;
                     foreach ($DataSemana as $key => $value) {
@@ -869,19 +868,19 @@ $debug='0';
                     $dif_Comprada = 0;
                     foreach ($DataSemana as $key => $value) {
                         $total = getRecorrerData($DataSemana[$key]['semanaProduccion'], "total_s", $DataEtiquetas);
-                        $total = $total == '' ? '0' : $total;
-                        $totalResult += $total;
+                        $total = $total == '' ? '0' : $total * 2;
+                        $totalResult += $total * 2;
 
                         $areaComprada = getRecorrerData($DataSemana[$key]['semanaProduccion'], "totalProducido", $DataEtiquetas);
                         $areaComprada = $areaComprada == '' ? '0' : $areaComprada;
-                        $totalArea += $areaComprada;
+                        $totalArea += is_nan($areaComprada / $total) ? '0' : $areaComprada / $total;
 
-                        echo "<td>" . formatoMil(is_nan($areaComprada/$total)?'0':$areaComprada/$total, 2) . "</td>";
+                        echo "<td>" . formatoMil(is_nan($areaComprada / $total) ? '0' : $areaComprada / $total, 2) . "</td>";
                     }   ?>
 
-                    <td><?= formatoMil($totalArea/$totalResult, 2) ?></td>
+                    <td><?= formatoMil($totalArea, 2) ?></td>
 
-                 
+
                 </tr>
                 <tr class="c_Etiquetas collapse">
                     <td>Dif. Área WB vs Crust</td>
@@ -942,9 +941,9 @@ function getRecorrerData($semana, $codigo, $Array_Rendimientos)
     $total = 0;
     if ($codigo == "diferenciaArea") {
     }
-   /*echo "<br>Semana".$semana."<br>";
-    echo "Codigo".$codigo."<br>";*/    
-   /* print_r($Array_Rendimientos);
+    /*echo "<br>Semana".$semana."<br>";
+    echo "Codigo".$codigo."<br>";*/
+    /* print_r($Array_Rendimientos);
     echo "<br>";*/
 
     foreach ($Array_Rendimientos as $key => $value) {
