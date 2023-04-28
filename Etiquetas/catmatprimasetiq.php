@@ -54,6 +54,17 @@ $space = 1;
 
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label class="form-label required" for="mnd">Moneda:</label>
+                                            <select id='mnd' required class="form-control" name="mnd">
+                                                <option value="">Selecciona Moneda</option>
+                                                <option value="1">MXN</option>
+                                                <option value="2">USD</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
                                     <hr>
                                     <div class="row">
                                         <div class="col-md-6"></div>
