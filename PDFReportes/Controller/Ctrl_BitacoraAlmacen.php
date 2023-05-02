@@ -20,7 +20,6 @@ function getBitacoraAlmacen()
     $Data= Excepciones::validaConsulta($Data);
 
     $obj_docto->contenidoCajas($Data);
-  
     $obj_docto->Output();
 }
 
