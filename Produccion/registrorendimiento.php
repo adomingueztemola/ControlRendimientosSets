@@ -102,11 +102,11 @@ $cambioPzas = count($DataValidaUsoDelLote) > 0 ? '1' : '0';
                                                             <td id="c-proveedores"></td>
                                                         </tr>
                                                         <tr class="table-danger">
-                                                            <td><i class="fas fa-minus"></i> HIDES TOMADOS PARA PRUEBAS</td>
+                                                            <td><i class="fas fa-minus"></i> <span class='unidadMP'>HIDES</span> TOMADOS PARA PRUEBAS</td>
                                                             <td id="c-pruebas"></td>
                                                         </tr>
                                                         <tr class="table-warning">
-                                                            <td>HIDES TOTALES</td>
+                                                            <td><span class='unidadMP'>HIDES</span> TOTALES</td>
                                                             <td id="c-hides"></td>
                                                         </tr>
                                                     </tbody>
@@ -135,7 +135,7 @@ $cambioPzas = count($DataValidaUsoDelLote) > 0 ? '1' : '0';
                                                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                                         Cargando ...
                                                     </button>
-                                                
+
                                                 </div>
                                                 <div id="desbloqueo-btn-1">
                                                     <button type="submit" class="button btn btn-success btn-md"><i class="fas fa-check"></i> Siguiente</button>
@@ -262,9 +262,16 @@ $cambioPzas = count($DataValidaUsoDelLote) > 0 ? '1' : '0';
                         $("#c-programa").text(data["n_programa"])
                         $("#c-proceso").text(data["n_proceso"] + " (" + data["c_proceso"] + ")")
                         $("#c-proveedores").text(data["proveedores"])
-                        $("#c-pruebas").text(data["total_pruebas"] * 2)
-                        $("#c-hides").text(data["total_s"] * 2)
+                        if (data["tipoProceso"] == '1') {
+                            $("#c-pruebas").text(data["total_pruebas"] * 2)
+                            $("#c-hides").text(data["total_s"] * 2)
+                        }
 
+                        if (data["tipoProceso"] == '2') {
+                            $("#c-pruebas").text(data["total_pruebas"])
+                            $("#c-hides").text(data["total_s"])
+                            $(".unidadMP").text("CRUPONES")
+                        }
 
 
                     } else {
