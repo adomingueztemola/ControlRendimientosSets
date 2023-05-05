@@ -1152,7 +1152,8 @@ class Rendimiento extends ConexionBD
     //REPORTE DE METROS CUADRADOS CALZADO
     public function getM2Calzado($filtradoAnio = "1=1")
     {
-        $sql = "SELECT r.semanaProduccion, IFNULL(AVG(r.areaFinal),0) AS totalProducido, 
+        $sql = "SELECT r.semanaProduccion, IFNULL(SUM(r.areaFinal),0) AS totalProducido, 
+        IFNULL(AVG(r.areaFinal),0) AS prom_totalProducido, 
         IFNULL( SUM( r.total_s ), 0 ) AS total_s,
      ((IFNULL(AVG(r.areaFinal),0)-IFNULL(AVG(r.areaWB),0))
       /IFNULL(AVG(r.areaWB),0))*100 AS difAreaWBCrust, 
@@ -1168,7 +1169,8 @@ class Rendimiento extends ConexionBD
     //REPORTE DE METROS CUADRADOS ETIQUETAS
     public function getM2Etiquetas($filtradoAnio = "1=1")
     {
-        $sql = "SELECT r.semanaProduccion, IFNULL(AVG(r.areaFinal),0) AS totalProducido, 
+        $sql = "SELECT r.semanaProduccion, IFNULL(AVG(r.areaFinal),0) AS prom_totalProducido, 
+        IFNULL(SUM(r.areaFinal),0) AS totalProducido,
           IFNULL( SUM( r.total_s ), 0 ) AS total_s,
      ((IFNULL(AVG(r.areaFinal),0)-IFNULL(AVG(r.areaWB),0))
       /IFNULL(AVG(r.areaWB),0))*100 AS difAreaWBCrust, 

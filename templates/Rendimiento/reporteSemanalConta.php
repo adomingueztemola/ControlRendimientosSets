@@ -656,6 +656,20 @@ $DataWB = $obj_rendimiento->getWetBlue("p.years BETWEEN '{$anioStart}' AND '{$an
 
                 </tr>
                 <tr class="c_Calzado collapse">
+                    <td>Prom. Total Producido (FT.<sup>2</sup>)</td>
+                    <?php
+                    $totalResult = 0;
+                    foreach ($DataSemana as $key => $value) {
+                        $result = getRecorrerData($DataSemana[$key]['semanaProduccion'], "prom_totalProducido", $DataCalzado);
+                        $result = $result == '' ? '0' : $result;
+                        $totalResult += $result;
+
+                        echo "<td>" . formatoMil($result) . "</td>";
+                    }
+                    ?>
+                    <td><?= formatoMil($totalResult) ?></td>
+                </tr>
+                <tr class="c_Calzado collapse">
                     <td>Total Producido (FT.<sup>2</sup>)</td>
                     <?php
                     $totalResult = 0;
@@ -763,6 +777,20 @@ $DataWB = $obj_rendimiento->getWetBlue("p.years BETWEEN '{$anioStart}' AND '{$an
                         </span>
                     </td>
 
+                </tr>
+                <tr class="c_Etiquetas collapse">
+                    <td>Prom. Total Producido (FT.<sup>2</sup>)</td>
+                    <?php
+                    $totalResult = 0;
+                    foreach ($DataSemana as $key => $value) {
+                        $result = getRecorrerData($DataSemana[$key]['semanaProduccion'], "prom_totalProducido", $DataEtiquetas);
+                        $result = $result == '' ? '0' : $result;
+                        $totalResult += $result;
+
+                        echo "<td>" . formatoMil($result) . "</td>";
+                    }
+                    ?>
+                    <td><?= formatoMil($totalResult) ?></td>
                 </tr>
                 <tr class="c_Etiquetas collapse">
                     <td>Total Producido (FT.<sup>2</sup>)</td>
