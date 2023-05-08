@@ -269,8 +269,9 @@ class Seguridad
 												<p class=" m-b-0"> ' . $this->nombreNivel . ' </p>
 										</div>
 								</div>
-
+								
 						' . $arsLinks . '
+						<li><a href="../manuales-usuario.php" target="_blank"><span class=""><i class="fas fa-book"></i></span> Manuales de Usuarios</a></li>
 						<div class="dropdown-divider"></div>
 						<li><a href="../logout.php"><span class="text-danger"><i class="fas fa-sign-out-alt"></i></span> Cerrar Sesión</a></li>
 					</ul>

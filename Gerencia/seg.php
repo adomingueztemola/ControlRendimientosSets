@@ -13,7 +13,7 @@ if ($devBug != 1) {
 	echo '<br>Contenido de SESSION: ';
 	var_dump($_SESSION);
 	echo '</br></br>';
-	error_reporting(_ALL);
+	error_reporting();
 
 }
 #echo '<br>linea 14<br>';
@@ -272,6 +272,7 @@ class Seguridad
 								</div>
 
 						' . $arsLinks . '
+						<li><a href="../manuales-usuario.php" target="_blank"><span class=""><i class="fas fa-book"></i></span> Manuales de Usuarios</a></li>
 						<div class="dropdown-divider"></div>
 						<li><a href="../logout.php"><span class="text-danger"><i class="fas fa-sign-out-alt"></i></span> Cerrar Sesión</a></li>
 					</ul>
