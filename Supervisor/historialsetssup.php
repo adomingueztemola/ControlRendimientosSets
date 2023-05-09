@@ -100,6 +100,10 @@ $obj_materia = new MateriaPrima($debug, $idUser);
                                             <label for="semana">Semana:</label>
                                             <select name="semana" id="semana" class="form-control SemanaLotesFilter" style="width:100%"></select>
                                         </div>
+                                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                            <label for="proveedor">Proveedores:</label>
+                                            <select name="proveedor" id="proveedor" class="form-control ProveedorFilter" style="width:100%"></select>
+                                        </div>
                                         <div class="col-lg-1 col-md-1 col-sm-12 col-xs-12  pt-4 mt-1">
                                             <button class="btn button btn-TWM"> Filtrar</button>
                                         </div>
