@@ -117,12 +117,12 @@ switch ($_GET["op"]) {
         $obj_rendimiento->beginTransaction();
 
         //DESCUENTO DE PIEZAS RECHAZADAS EN TOTAL S
-        $datos = $obj_rendimiento->decrementoTotal_S($id);
+       /* $datos = $obj_rendimiento->decrementoTotal_S($id);
         try {
             Excepciones::validaMsjError($datos);
         } catch (Exception $e) {
             $obj_rendimiento->errorBD($e->getMessage(), 1);
-        }
+        }*/
         //CIERRE DE CAPTURA
         $datos = Funciones::cambiarEstatus("rendimientosetiquetas", "2", "estado", $id, $obj_rendimiento->getConexion(), $debug);
         try {
