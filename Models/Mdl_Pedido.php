@@ -131,7 +131,10 @@ class Pedido extends ConexionBD
             return "No existe # de Factura, ingresa nuevamente el # de Factura, si el error persiste comunicate con el depto. Sistema";
         }
         $idPedido = $DataPedido["0"]["id"];
-        $sql = "UPDATE pedidos SET estado='2', cuerosXUsar=totalCuerosFacturados, totalCuerosEntregados=totalCuerosFacturados WHERE id='$idPedido'";
+        $sql = "UPDATE pedidos SET estado='2', cuerosXUsar=totalCuerosFacturados, 
+        totalCuerosEntregados=totalCuerosFacturados,
+        areaWBPromFact=areaProvPie2/totalCuerosFacturados 
+        WHERE id='$idPedido'";
         return $this->ejecutarQuery($sql, "Finalizar Pedido");
     }
 
