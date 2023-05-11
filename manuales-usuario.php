@@ -44,6 +44,12 @@ session_start();
                             <i class="fas fa-book"></i>
                         </a></td>
                     </tr>
+                    <tr>
+                        <td>Manual de Usuario de Producción Etiquetas/Calzado</td>
+                        <td class="text-center"><a href="doctos/Manuales/USUARIO PRODUCCION ETIQUETAS CALZADO Rev1.2.pdf" target="_blank" rel="noopener noreferrer">
+                            <i class="fas fa-book"></i>
+                        </a></td>
+                    </tr>
                     
                 </tbody>
             </table>
