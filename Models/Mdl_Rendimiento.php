@@ -942,6 +942,8 @@ class Rendimiento extends ConexionBD
         $sql = "SELECT
      r.semanaProduccion,IFNULL( SUM( r.total_s ), 0 ) AS total_s,
      IFNULL( SUM( r.areaFinal ), 0 ) AS areaComprada,
+     IFNULL( SUM( r.areaWB ), 0 ) AS areaWB,
+     IFNULL( AVG( r.areaFinal ), 0 ) AS promComprada,
      (
          IFNULL( SUM( r.diferenciaArea ), 0 )/((
              IFNULL( p.areaProvPie2, 0 )/ IFNULL( p.totalCuerosFacturados, 0 ))* IFNULL( SUM( r.total_s ), 0 )))* 100 AS difAreaCompradaMedida,
@@ -1012,7 +1014,8 @@ class Rendimiento extends ConexionBD
     public function getM2AutPiel($filtradoAnio = "1=1")
     {
         $sql = "SELECT
-     r.semanaProduccion,
+     r.semanaProduccion, IFNULL( AVG( r.areaFinal ), 0 ) AS promComprada,
+     IFNULL( SUM( r.areaWB ), 0 ) AS areaWB,
      IFNULL( SUM( r.areaFinal ), 0 ) AS areaComprada,IFNULL( SUM( r.total_s ), 0 ) AS total_s,
      (
          IFNULL( SUM( r.diferenciaArea ), 0 )/((
@@ -1152,8 +1155,10 @@ class Rendimiento extends ConexionBD
     //REPORTE DE METROS CUADRADOS CALZADO
     public function getM2Calzado($filtradoAnio = "1=1")
     {
-        $sql = "SELECT r.semanaProduccion, IFNULL(SUM(r.areaFinal),0) AS totalProducido, 
-        IFNULL(AVG(r.areaFinal),0) AS prom_totalProducido, 
+        $sql = "SELECT r.semanaProduccion, 
+        IFNULL(SUM(r.areaFinal),0) AS totalProducido, 
+        IFNULL(AVG(r.areaFinal),0) AS promProducido, 
+        IFNULL(SUM(r.areaWB),0) AS totalWB, 
         IFNULL( SUM( r.total_s ), 0 ) AS total_s,
      ((IFNULL(AVG(r.areaFinal),0)-IFNULL(AVG(r.areaWB),0))
       /IFNULL(AVG(r.areaWB),0))*100 AS difAreaWBCrust, 
@@ -1167,17 +1172,20 @@ class Rendimiento extends ConexionBD
     }
 
     //REPORTE DE METROS CUADRADOS ETIQUETAS
-    public function getM2Etiquetas($filtradoAnio = "1=1")
+    public function getM2Etiquetas($tipo_materiaPrima, $filtradoAnio = "1=1")
     {
-        $sql = "SELECT r.semanaProduccion, IFNULL(AVG(r.areaFinal),0) AS prom_totalProducido, 
-        IFNULL(SUM(r.areaFinal),0) AS totalProducido,
+        $filtradoTipo="cm.tipo='$tipo_materiaPrima'";
+        $sql = "SELECT r.semanaProduccion, IFNULL(AVG(r.areaFinal),0) AS totalProducido, 
+            IFNULL(AVG(r.areaWB),0) AS totalWB, 
           IFNULL( SUM( r.total_s ), 0 ) AS total_s,
      ((IFNULL(AVG(r.areaFinal),0)-IFNULL(AVG(r.areaWB),0))
       /IFNULL(AVG(r.areaWB),0))*100 AS difAreaWBCrust, 
      ((IFNULL(AVG(r.areaFinal),0)-IFNULL(AVG(r.areaWB),0))
       /IFNULL(AVG(r.areaWB),0))*100 AS totalDifArea, YEAR(r.fechaFinal) AS years
      FROM rendimientosetiquetas AS r 
+     INNER JOIN catmateriasprimas cm ON r.idCatMateriaPrima=cm.id
      WHERE r.estado>='2' AND r.idTipoVenta='2' AND $filtradoAnio
+     AND $filtradoTipo
      GROUP BY years, r.semanaProduccion";
 
         return  $this->ejecutarQuery($sql, "consultar reporte de M2 Etiquetas", true);
