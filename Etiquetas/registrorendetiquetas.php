@@ -209,19 +209,19 @@ $idTipoVenta = $_abierto ? $DataRendimientoAbierto[0]['idTipoVenta'] : '0';
                                                 <tbody>
                                                     <tr>
                                                         <td>
-                                                            <input type="number" name="1s" id="1s" class="form-control sumatoria_s" value="<?= $_1s ?>" step="0.01" min="0">
+                                                            <input type="number" name="1s" id="1s" class="form-control sumatoria_s focusCampo" value="<?= $_1s ?>" step="0.01" min="0">
                                                         </td>
                                                         <td>
-                                                            <input type="number" name="2s" id="2s" class="form-control sumatoria_s" value="<?= $_2s ?>" step="0.01" min="0">
+                                                            <input type="number" name="2s" id="2s" class="form-control sumatoria_s focusCampo" value="<?= $_2s ?>" step="0.01" min="0">
                                                         </td>
                                                         <td>
-                                                            <input type="number" name="3s" id="3s" class="form-control sumatoria_s" value="<?= $_3s ?>" step="0.01" min="0">
+                                                            <input type="number" name="3s" id="3s" class="form-control sumatoria_s focusCampo" value="<?= $_3s ?>" step="0.01" min="0">
                                                         </td>
                                                         <td>
-                                                            <input type="number" name="4s" id="4s" class="form-control sumatoria_s" value="<?= $_4s ?>" step="0.01" min="0">
+                                                            <input type="number" name="4s" id="4s" class="form-control sumatoria_s focusCampo" value="<?= $_4s ?>" step="0.01" min="0">
                                                         </td>
                                                         <td>
-                                                            <input type="number" name="total_s" id="Total" class="form-control" value="<?= $total_s ?>" step="0.01" min="0">
+                                                            <input type="number" name="total_s" readonly id="Total" class="form-control" value="<?= $total_s ?>" step="0.01" min="0">
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -301,6 +301,7 @@ $idTipoVenta = $_abierto ? $DataRendimientoAbierto[0]['idTipoVenta'] : '0';
 <?php include("../templates/libsJS.php"); ?>
 <script src="../assets/scripts/calculaSemanaProduccion.js"></script>
 <script src="../assets/scripts/validaLoteEtiq.js"></script>
+<script src="../assets/scripts/clearData.js"></script>
 
 <script>
     <?php
