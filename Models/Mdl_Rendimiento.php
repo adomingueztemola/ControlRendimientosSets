@@ -1175,8 +1175,8 @@ class Rendimiento extends ConexionBD
     public function getM2Etiquetas($tipo_materiaPrima, $filtradoAnio = "1=1")
     {
         $filtradoTipo="cm.tipo='$tipo_materiaPrima'";
-        $sql = "SELECT r.semanaProduccion, IFNULL(AVG(r.areaFinal),0) AS totalProducido, 
-            IFNULL(AVG(r.areaWB),0) AS totalWB, 
+        $sql = "SELECT r.semanaProduccion, IFNULL(SUM(r.areaFinal),0) AS totalProducido, 
+            IFNULL(SUM(r.areaWB),0) AS totalWB, 
           IFNULL( SUM( r.total_s ), 0 ) AS total_s,
      ((IFNULL(AVG(r.areaFinal),0)-IFNULL(AVG(r.areaWB),0))
       /IFNULL(AVG(r.areaWB),0))*100 AS difAreaWBCrust, 
