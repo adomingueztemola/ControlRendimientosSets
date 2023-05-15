@@ -114,8 +114,8 @@ $disabledMultiMateria = $_abierto?'disabled':'';
                                 <div class="row">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <label class="form-label required" for="programa">Programa:</label>
-                                        <select class="form-control ProgramasFilter" name="programa" style="width:100%" id="programa" required>
-                                            <!-- <option value="">Selecciona Programa</option>
+                                        <select class="form-control select2" name="programa" style="width:100%" id="programa" required>
+                                            <option value="">Selecciona Programa</option>
                                             <?php
                                             $DataPrograma = $obj_programa->getPrograma("p.estado='1'", "(p.tipo='1' or p.tipo='3')");
                                             foreach ($DataPrograma as $key => $value) {
@@ -123,7 +123,7 @@ $disabledMultiMateria = $_abierto?'disabled':'';
                                                 $AreaNeta = $DataPrograma[$key]['areaNeta'] == '' ? '0.00' : $DataPrograma[$key]['areaNeta'];
                                                 echo "<option $selected value='{$DataPrograma[$key]['id']}'>{$DataPrograma[$key]['nombre']} (Área Neta: {$AreaNeta})</option>";
                                             }
-                                            ?> -->
+                                            ?> 
                                         </select>
                                     </div>
                                 </div>

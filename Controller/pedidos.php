@@ -362,8 +362,15 @@ switch ($_GET["op"]) {
             $ErrorLog .= ' intentalo de nuevo.';
             $obj_pedidos->errorBD($ErrorLog, 0);
         }
-        $areaProv = str_replace(",", "", $areaProv);
 
+        $areaProv = str_replace(",", "", $areaProv);
+        if($areaProv<=0){
+            //Recalculo de area proveedor del lote
+            $Data= $obj_pedidos->getPedido($pedido);
+            $Data= Excepciones::validaConsulta($Data);
+            $Data= $Data[0];
+            $areaProv=$Data['areaWBPromFact']*$Total;
+        }
         $datos = $obj_pedidos->registraDetPedido($idRendimiento, $pedido, $areaProv, $_1s, $_2s, $_3s, $_4s, $_20, $Total);
         try {
             Excepciones::validaMsjError($datos);
