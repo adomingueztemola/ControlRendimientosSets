@@ -1230,6 +1230,7 @@ class Rendimiento extends ConexionBD
         $sql = "SELECT 
         p.years, r.semanaProduccion, 
       IFNULL(SUM( r.setsCortadosTeseo ), 0) AS setsCortadosTeseo,
+      IFNULL(SUM( r.totalLote0 ), 0) AS setsRecuMas,
       IFNULL(SUM(r.totalRecu),0)/conf.pzasEnSets AS setsRecuperados,
       IFNULL(SUM(r.totalEmp),0)/conf.pzasEnSets AS setsEmpacados,
       IFNULL(SUM(r.setsRechazados),0) AS setsRechazados,

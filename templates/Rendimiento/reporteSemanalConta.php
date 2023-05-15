@@ -196,6 +196,20 @@ $DataWB = $obj_rendimiento->getWetBlue("p.years BETWEEN '{$anioStart}' AND '{$an
                     ?>
                     <td><?= formatoMil($totalResult) ?></td>
                 </tr>
+                <tr class="c_Sets collapse table-danger">
+                    <td> <i class="fas fa-exclamation-triangle text-danger"></i> Sets Recuperación Masiva</td>
+                    <?php
+                    $totalResult = 0;
+                    foreach ($DataSemana as $key => $value) {
+                        $result = getRecorrerData($DataSemana[$key]['semanaProduccion'], "setsRecuMas", $DataSets);
+                        $result = $result == '' ? '0' : $result;
+                        $totalResult += $result;
+
+                        echo "<td>" . formatoMil($result) . "</td>";
+                    }
+                    ?>
+                    <td><?= formatoMil($totalResult) ?></td>
+                </tr>
                 <tr class="c_Sets collapse">
 
                     <td>% Rechazo inicial</td>

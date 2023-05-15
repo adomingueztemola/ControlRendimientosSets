@@ -206,6 +206,20 @@ $debug = '0';
                     ?>
                     <td><?= formatoMil($totalResult) ?></td>
                 </tr>
+                <tr class="c_Sets collapse table-danger">
+                    <td> <i class="fas fa-exclamation-triangle text-danger"></i> Sets Recuperación Masiva</td>
+                    <?php
+                    $totalResult = 0;
+                    foreach ($DataSemana as $key => $value) {
+                        $result = getRecorrerData($DataSemana[$key]['semanaProduccion'], "setsRecuMas", $DataSets);
+                        $result = $result == '' ? '0' : $result;
+                        $totalResult += $result;
+
+                        echo "<td>" . formatoMil($result) . "</td>";
+                    }
+                    ?>
+                    <td><?= formatoMil($totalResult) ?></td>
+                </tr>
                 <tr class="c_Sets collapse">
 
                     <td>% Rechazo inicial</td>
@@ -420,7 +434,7 @@ $debug = '0';
                 $DataM2Cza = $obj_rendimiento->getM2AutCza("p.years BETWEEN '{$anioStart}' AND '{$anioEnd}'");
 
                 ?>
-        <tr>
+                <tr>
                     <td class="text-TWM" colspan="<?= $count ?>">
                         <a data-toggle="collapse" href=".c_AutoCZA">
                             M<sup>2</sup> AUTO CZA</a>

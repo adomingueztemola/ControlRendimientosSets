@@ -221,8 +221,8 @@ if ($completedCaja == '0') { ?>
             <div class="col-md-12">
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" value="1" id="lote0" name="lote0">
-                    <label class="form-check-label" for="lote0">
-                        Caja Perteneciente de Lote 0
+                    <label class="form-check-label text-danger" for="lote0">
+                    <i class="fas fa-exclamation-triangle"></i> Caja Perteneciente de Lote 0 
                     </label>
                 </div>
             </div>
