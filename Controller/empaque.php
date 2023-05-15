@@ -364,6 +364,7 @@ switch ($_GET["op"]) {
         $pzas_06 = (isset($_POST['pzas_06'])) ? trim($_POST['pzas_06']) : '';
         $pzas_09 = (isset($_POST['pzas_09'])) ? trim($_POST['pzas_09']) : '';
         $remanente = (isset($_POST['remanente'])) ? trim($_POST['remanente']) : '0';
+        $lote0 = (isset($_POST['lote0'])) ? trim($_POST['lote0']) : '0';
         $completedCaja = (isset($_POST['completedCaja'])) ? trim($_POST['completedCaja']) : '0'; //caja cerrada o abierta
         #VALORES UNICOS PARA REMANENTES 
         $pzas_12_rem = $remanente == '1' ? $pzas_12 : '0';
@@ -382,7 +383,7 @@ switch ($_GET["op"]) {
             " Piezas 09:00" => $pzas_09,
 
         ), $obj_empaque);
-      
+
         $obj_empaque->beginTransaction();
 
         //DESGLOSE DE INFORMACION DEL LOTE
@@ -392,8 +393,8 @@ switch ($_GET["op"]) {
         $idDetCaja = $ArrayLote[2];
         //Sumar Total Piezas por Detallado
         $total = $pzas_12 + $pzas_03 + $pzas_06 + $pzas_09;
-        if($total<=0 AND $remanente!='1'){
-            $obj_empaque->errorBD("Error, la caja registrada está vacía, válida tu información.",1);
+        if ($total <= 0 and $remanente != '1') {
+            $obj_empaque->errorBD("Error, la caja registrada está vacía, válida tu información.", 1);
         }
         //PROCESO DE LOS DATOS
         $caja = $remanente == '1' ? '0' : $caja;
@@ -468,7 +469,8 @@ switch ($_GET["op"]) {
                 $pzas_12_rem,
                 $pzas_03_rem,
                 $pzas_06_rem,
-                $pzas_09_rem
+                $pzas_09_rem,
+                $lote0
             );
             try {
                 Excepciones::validaMsjError($datos);
@@ -543,11 +545,20 @@ switch ($_GET["op"]) {
                 $obj_empaque->errorBD($e->getMessage(), 1);
             }
             //AJUSTAR UNIDADES DE EMPAQUE EN DADO CASO QUE YA SE HAYA CERRADO EL LOTE EN EMPAQUE
-            $datos = $obj_empaque->actualizarUnidadesEmpaque($idNew);
-            try {
-                Excepciones::validaMsjError($datos);
-            } catch (Exception $e) {
-                $obj_empaque->errorBD($e->getMessage(), 1);
+            if ($lote0 == '0') {
+                $datos = $obj_empaque->actualizarUnidadesEmpaque($idNew);
+                try {
+                    Excepciones::validaMsjError($datos);
+                } catch (Exception $e) {
+                    $obj_empaque->errorBD($e->getMessage(), 1);
+                }
+            }else if($lote0 == '1'){
+                $datos = $obj_empaque->actualizarUnidadesLote0($idNew);
+                try {
+                    Excepciones::validaMsjError($datos);
+                } catch (Exception $e) {
+                    $obj_empaque->errorBD($e->getMessage(), 1);
+                }
             }
         }
         //AJUSTAR KPIS DE RENDIMIENTO AL AJUSTAR CANTIDAD

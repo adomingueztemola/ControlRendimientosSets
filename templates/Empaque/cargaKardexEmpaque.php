@@ -194,7 +194,6 @@ if ($completedCaja == '0') { ?>
 
                 </div>
 
-
                 <!-- modal de boton de busqueda -->
                 <div class="modal fade" data-keyboard="false" data-backdrop="static" id="busquedaModal" role="dialog" aria-labelledby="busquedaModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg" role="document">
@@ -217,6 +216,16 @@ if ($completedCaja == '0') { ?>
 
             </div>
 
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="1" id="lote0" name="lote0">
+                    <label class="form-check-label" for="lote0">
+                        Caja Perteneciente de Lote 0
+                    </label>
+                </div>
+            </div>
         </div>
         <div class="row mt-2">
             <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 table-responsive">
@@ -245,10 +254,10 @@ if ($completedCaja == '0') { ?>
                             </td>
                         </tr>
                         <tr class="text-danger text-center text-bold">
-                            <td>Almacenado 12:00 -><b><span  id="total_12">0</span></b></td>
-                            <td>Almacenado 03:00 -><b><span  id="total_3">0</span></b></td>
-                            <td>Almacenado 06:00 -><b><span  id="total_6">0</span></b></td>
-                            <td>Almacenado 09:00 -><b><span  id="total_9">0</span></b></td>
+                            <td>Almacenado 12:00 -><b><span id="total_12">0</span></b></td>
+                            <td>Almacenado 03:00 -><b><span id="total_3">0</span></b></td>
+                            <td>Almacenado 06:00 -><b><span id="total_6">0</span></b></td>
+                            <td>Almacenado 09:00 -><b><span id="total_9">0</span></b></td>
                         </tr>
                     </tbody>
                 </table>
@@ -568,7 +577,7 @@ if ($completedCaja == '0') { ?>
     function disminuirRecuperacion() {
         let arr = $("#lote").val().split('|');
         let idLote = arr[0];
-        let paseScrap=  $("#lote option:selected").data("pasescrap");
+        let paseScrap = $("#lote option:selected").data("pasescrap");
         let _12 = $("#pzas_12").val() == '' ? 0 : $("#pzas_12").val();
         let _6 = $("#pzas_06").val() == '' ? 0 : $("#pzas_06").val();
         let _3 = $("#pzas_03").val() == '' ? 0 : $("#pzas_03").val();
@@ -576,7 +585,7 @@ if ($completedCaja == '0') { ?>
         $.ajax({
             url: '../Controller/empaque.php?op=disminuirrecuperacion',
             data: {
-                paseScrap:paseScrap,
+                paseScrap: paseScrap,
                 idLote: idLote,
                 _12: _12,
                 _6: _6,
@@ -585,13 +594,13 @@ if ($completedCaja == '0') { ?>
             },
             type: 'POST',
             success: function(resp) {
-               resp = resp.split('|')
+                resp = resp.split('|')
                 if (resp[0] == 1) {
                     notificaSuc(resp[1])
                     bloqueoBtn("bloqueo-btn-D", 2)
 
-                        cargaContent(<?= $id ?>);
-                  
+                    cargaContent(<?= $id ?>);
+
 
                 } else {
                     notificaBad(resp[1])
@@ -599,7 +608,9 @@ if ($completedCaja == '0') { ?>
 
                 }
             },
-            beforeSend:function() {   bloqueoBtn("bloqueo-btn-D", 1)}
+            beforeSend: function() {
+                bloqueoBtn("bloqueo-btn-D", 1)
+            }
         })
 
 

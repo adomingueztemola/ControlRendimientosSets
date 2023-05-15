@@ -64,7 +64,9 @@ if (count($DataDetallado) <= 0) {
                     $pzasXCaja = 0;
                     $contadorLote = 0;
                     foreach ($DataDetallado as $value) {
-                        $colorTable = $value['tipo'] == '3' ? 'table-warning' : '';
+                        $colorTable = ($value['tipo'] == '3' AND $value['lote0']!='1')? 'table-warning' : '';
+                        $colorTable = ($value['tipo'] == '3' AND $value['lote0']=='1') ? 'table-danger' : $colorTable;
+
                         $checkedInterno = $value['interna'] == '1' ? 'checked' : '';
                         $lblInterno = $value['interna'] == '1' ? '(Interna)' : '';
                         $lblLabel = $value["lblLote"] != '' ? "<i class='fas fa-ticket-alt'></i> {$value["lblLote"]}" : '';

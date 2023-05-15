@@ -87,7 +87,8 @@ class Empaque extends ConexionBD
         $pzas_12_rem,
         $pzas_03_rem,
         $pzas_06_rem,
-        $pzas_09_rem
+        $pzas_09_rem,
+        $lote0
     ) {
         $idUserReg = $this->idUserReg;
         $totalRem = 0;
@@ -95,10 +96,12 @@ class Empaque extends ConexionBD
             $totalRem = $pzas_12 + $pzas_03 + $pzas_06 + $pzas_09;
         }
         $sql = "INSERT INTO  detcajas (numCaja, idEmpaque, tipo, idLote, remanente,
-         fechaReg, idUserReg, _12, _3, _6, _9, total, usoRemanente, _12Rem, _3Rem, _6Rem, _9Rem,_12Rev, _3Rev, _6Rev, _9Rev, totalRev, interna, totalRem) 
+         fechaReg, idUserReg, _12, _3, _6, _9, total, usoRemanente, 
+         _12Rem, _3Rem, _6Rem, _9Rem,_12Rev, _3Rev, _6Rev, _9Rev, totalRev, interna, totalRem, lote0) 
          VALUE ('$caja', '$id', '$tipoLote', '$lote', '$remanente', NOW(),
          '$idUserReg', '$pzas_12', '$pzas_03', '$pzas_06', '$pzas_09', '$total', '0',
-         '$pzas_12_rem', '$pzas_03_rem', '$pzas_06_rem', '$pzas_09_rem','0','0','0','0','0', '0', '$totalRem')";
+         '$pzas_12_rem', '$pzas_03_rem', '$pzas_06_rem', '$pzas_09_rem',
+         '0','0','0','0','0', '0', '$totalRem', '$lote0')";
         return $this->runQuery($sql, "registro de detalle de caja", true);
     }
     /// REVERSA DE LOTE QUE NO HA PASADO A ALMACEN 0
@@ -353,6 +356,17 @@ class Empaque extends ConexionBD
         WHERE d.id='$idDetCaja' AND r.regEmpaque='1'";
         return $this->runQuery($sql, "actualizar Registro de Piezas en Lote");
     }
+     ///ACTUALIZACION DE UNIDADES  DE EMPAQUE EN REGISTRO DE LOTE
+     public function actualizarUnidadesLote0($idDetCaja)
+     {
+         $sql = "UPDATE rendimientos r
+         INNER JOIN detcajas d ON d.idLote=r.id 
+         INNER JOIN config_inventarios conf ON conf.estado = '1'
+         SET 
+         r.totalLote0= IFNULL(r.totalLote0,0)+ IFNULL(d.total,0)
+         WHERE d.id='$idDetCaja' AND r.regEmpaque='1'";
+         return $this->runQuery($sql, "actualizar Registro de Piezas en Lote");
+     }
     ///VER RENDIMIENTO Y DATOS DE TESEO
     public function getRendimiento($id)
     {
