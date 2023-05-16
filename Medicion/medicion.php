@@ -33,10 +33,123 @@ $space = 1;
     <div id="main-wrapper">
         <?= $info->creaHeaderConMenu(); ?>
         <div class="page-wrapper">
-            <div class="container-fluid" style="background: url('../assets/images/teseo-fondo.jpg'); background-size: cover;">
-        
+
+            <div class="container-fluid">
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Lotes:</h3>
+                    </div>
+                    <div class="card-body">
+                        <select name="lotes" id="selectlotes" class="custom-select custom-select-lg">
+                            <option value="" select>Selecciona Un Lote</option>
+                            <option value="">35469</option>
+                            <option value="">35689</option>
+                            <option value="">40356</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="card col-md-7">
+                        <div class="card-body">
+                            <table class="table table-hover  table-sm">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Num. Serie</th>
+                                        <th scope="col">Área Ft<sup>2</sup></th>
+                                        <th scope="col">Área Dm<sup>2</sup></th>
+                                        <th scope="col">Red.</th>
+                                        <th scope="col">Seleccion</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><input type="checkbox"></td>
+                                        <td>00001</td>
+                                        <td>30.12</td>
+                                        <td>15.1</td>
+                                        <td>0.25</td>
+                                        <td>
+                                            <select class="custom-select" name="calidad" id="cali">
+                                                <option selected value="">TR</option>
+                                                <option value="">1S</option>
+                                                <option value="">2S</option>
+                                                <option value="">3S</option>
+                                                <option value="">4S</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox"></td>
+                                        <td>00002</td>
+                                        <td>23.5</td>
+                                        <td>12.2</td>
+                                        <td>0.25</td>
+                                        <td>
+                                            <select class="custom-select" name="calidad" id="cali">
+                                                <option selected value="">TR</option>
+                                                <option value="">1S</option>
+                                                <option value="">2S</option>
+                                                <option value="">3S</option>
+                                                <option value="">4S</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <button class="btn btn-success btn-lg">Crear Paquete</button>
+                        </div>
+                    </div>
+                    <div class="col-md-5 ">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Paquetes</h3>
+                            </div>
+                            <div class="card-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Seleccion</th>
+                                            <th scope="col">Área</th>
+                                            <th scope="col">
+                                                <button class="btn btn-primary" data-toggle="collapse" data-target
+                                                ="#collapselados" role="button" aria-expanded="false" aria-controls="collapselados">
+                                                    Lados
+                                                </button>
+                                                <div class="collapse" id="collapselados">
+                                                    <div class="card" style="width: 18rem;">
+                                                        <ul class="list-group list-group-flush">
+                                                            <li class="list-group-item">12:00 = 123</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>1S</td>
+                                            <td>340</td>
+                                            <td>
+                                                Miedo a la IA
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <button class="btn btn-danger">Finalizar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+
+
         </div>
+    </div>
 
 </body>
 
@@ -54,7 +167,7 @@ $space = 1;
 
     }
     /*************** FILTRADO DE SET'S *********************/
-    $(".filtrado").submit(function(e) {
+    $(".filtrado").submit(function (e) {
         e.preventDefault();
         id = $(this).prop("id");
         switch (id) {
@@ -69,12 +182,12 @@ $space = 1;
             url: url,
             data: formData,
             type: 'POST',
-            success: function(respuesta) {
+            success: function (respuesta) {
                 $('#' + content).html(respuesta);
 
 
             },
-            beforeSend: function() {}
+            beforeSend: function () { }
 
         });
     });
