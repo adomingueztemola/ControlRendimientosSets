@@ -34,10 +34,10 @@ $space = 1;
         <?= $info->creaHeaderConMenu(); ?>
         <div class="page-wrapper">
             <div class="container-fluid" style="background: url('../assets/images/teseo-fondo.jpg'); background-size: cover;">
-        
+
             </div>
         </div>
-
+    </div>
 </body>
 
 
