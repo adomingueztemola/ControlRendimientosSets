@@ -116,7 +116,7 @@ $space = 1;
                                     <div class="row">
                                         <div class="col-lg-4 col-md-4 col-xs-4 col-sm-4">
                                             <label for="folioLote" class="form-label required">Folio de Lote </label>
-                                            <input type="text" id="folioLote" name="folioLote" required class="form-control select2Form">
+                                            <input type="text" id="folioLote" name="folioLote" autocomplete="off" required class="form-control select2Form">
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-xs-8 col-sm-8">
                                             <label for="programaReporte" class="form-label required">Programa</label>

@@ -23,6 +23,13 @@ switch ($_GET["op"]) {
             " Programa" => $programa,
             " Folio de Lote" => $folioLote
         ), $obj_medido);
+        #Valida que Producto no exista en el Catalogo
+        $resultValidacion = Funciones::validarDatoTabla("lotesmediciones", "loteTemola", $folioLote, $debug, $obj_medido->getConexion());
+        try {
+            Excepciones::validaMsjError($resultValidacion);
+        } catch (Exception $e) {
+            $obj_medido->errorBD($e->getMessage(), 1);
+        }
         $reporte = json_decode($reporte, true);
         if (count($reporte) <= 0) {
             $obj_medido->errorBD("Error, Reporte de Teseo sin datos, notifica al departamento de Sistemas.", 1);
@@ -77,10 +84,10 @@ switch ($_GET["op"]) {
         $programa = isset($_POST['programa']) ? $_POST['programa'] : '';
 
         $filtradoPrograma = $programa != '' ? 'l.idCatPrograma=' . $programa . '' : '1=1';
-        if($date_start!="" AND $date_end!=""){
+        if ($date_start != "" and $date_end != "") {
             $filtradoFecha = "DATE_FORMAT(l.fechaReg, '%Y-%m-%d') BETWEEN '$date_start' AND '$date_end'";
-        }else{
-            $filtradoFecha="1=1";
+        } else {
+            $filtradoFecha = "1=1";
         }
 
         $Data = $obj_medido->getReporteMedicion($filtradoFecha,  $filtradoPrograma);
@@ -92,7 +99,7 @@ switch ($_GET["op"]) {
             $areaTotalDM = $value['areaTotalDM'] == '' ? '0' : formatoMil($value['areaTotalDM'], 12);
             $areaTotalFT = $value['areaTotalFT'] == '' ? '0' : formatoMil($value['areaTotalFT'], 12);
             $areaTotalRd = $value['areaTotalRd'] == '' ? '0' : formatoMil($value['areaTotalRd'], 2);
-            $dif= formatoMil($value['areaTotalRd']-$value['areaTotalFT'], 2);
+            $dif = formatoMil($value['areaTotalRd'] - $value['areaTotalFT'], 2);
             array_push($response, [
                 $value['id'],
                 $value['loteTemola'],
@@ -102,7 +109,7 @@ switch ($_GET["op"]) {
                 $areaTotalFT,
                 $areaTotalRd,
                 $dif,
-                $value['id'].'|'.  $value['loteTemola'],
+                $value['id'] . '|' .  $value['loteTemola'],
                 $value['f_fechaReg'],
                 $value['nUsuario']
             ]);
@@ -118,7 +125,7 @@ switch ($_GET["op"]) {
         $id = isset($_POST['id']) ? $_POST['id'] : '';
 
         $Data = $obj_medido->getDetReporteMedicion($id);
-        $Data = Excepciones::validaConsulta($Data);      
+        $Data = Excepciones::validaConsulta($Data);
         $json_string = json_encode($Data);
         echo $json_string;
         break;
@@ -136,6 +143,6 @@ switch ($_GET["op"]) {
         } catch (Exception $e) {
             $obj_medido->errorBD($e->getMessage(), 1);
         }
-        echo "1|Eliminación Correcta del Lote: ".$loteTemola;
+        echo "1|Eliminación Correcta del Lote: " . $loteTemola;
         break;
 }
