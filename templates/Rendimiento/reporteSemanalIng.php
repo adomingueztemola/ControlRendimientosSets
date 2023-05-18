@@ -213,9 +213,8 @@ $debug = '0';
                     foreach ($DataSemana as $key => $value) {
                         $result = getRecorrerData($DataSemana[$key]['semanaProduccion'], "setsRecuMas", $DataSets);
                         $result = $result == '' ? '0' : $result;
-                        $totalResult += $result;
-
-                        echo "<td>" . formatoMil($result) . "</td>";
+                        $totalResult += $result/4;
+                        echo "<td>" . formatoMil($result/4) . "</td>";
                     }
                     ?>
                     <td><?= formatoMil($totalResult) ?></td>
