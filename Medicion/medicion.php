@@ -21,7 +21,6 @@ $space = 1;
 <style>
 
 </style>
-<link href="../assets/libs/morris.js/morris.css" rel="stylesheet">
 
 <body>
     <div class="preloader">
