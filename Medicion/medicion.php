@@ -37,8 +37,8 @@ $space = 1;
             <div class="container-fluid">
 
                 <div class="card">
-                    <div class="card-header">
-                        <h3>Lotes:</h3>
+                    <div class="card-header" style="background-color:#ee5a36;">
+                        <h3 class="text-white">Lotes:</h3>
                     </div>
                     <div class="card-body">
                         <select name="lotes" id="selectlotes" class="custom-select custom-select-lg">
@@ -98,13 +98,14 @@ $space = 1;
                                     </tr>
                                 </tbody>
                             </table>
-                            <button class="btn btn-success btn-lg">Crear Paquete</button>
+                            <button class="btn btn-success btn-lg offset-md-9">Crear Paquete</button>
                         </div>
                     </div>
+
                     <div class="col-md-5 ">
                         <div class="card">
-                            <div class="card-header">
-                                <h3>Paquetes</h3>
+                            <div class="card-header" style="background-color:#ee5a36;">
+                                <h3 class="text-white">Paquetes</h3>
                             </div>
                             <div class="card-body">
                                 <table class="table">
@@ -139,7 +140,9 @@ $space = 1;
                                         </tr>
                                     </tbody>
                                 </table>
-                                <button class="btn btn-danger">Finalizar</button>
+                                <div>
+                                <button class="btn btn-danger btn-lg offset-md-9">Finalizar</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -150,7 +153,6 @@ $space = 1;
 
         </div>
     </div>
-
 </body>
 
 

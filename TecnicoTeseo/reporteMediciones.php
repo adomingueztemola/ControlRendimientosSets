@@ -84,65 +84,30 @@ $space = 1;
                                 </div>
                                 <div class="modal-body">
                                     <div class="row">
-                                        <div class="col-lg-8 col-md-8 col-xs-8 col-sm-8">
-                                            <form id="FormLecturaScrap">
-                                                <label for="inputExcel">Reporte de Teseo</label>
-                                                <div class="input-group mb-3">
-                                                    <input type="file" class="form-control" id="inputExcel" name="file" accept=".xlsm">
-                                                    <div class="input-group-append">
-                                                        <div id="bloqueo-btn-lect" style="display:none">
-                                                            <button class="btn btn-TWM" type="button" disabled="">
-                                                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                                            </button>
-                                                        </div>
-                                                        <div id="desbloqueo-btn-lect">
-                                                            <button class="btn btn-md btn-success" type="button" onclick="lecturaReporte()"><i class="fas fa-eye"></i></button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
                                         <div class="col-lg-4 col-md-4 col-xs-4 col-sm-4">
-                                            <label for="folioLote">Folio de Lote </label>
-                                            <input type="text" id="folioLote" name="folioLote" class="form-control">
+                                            <label for="folioLote" class="form-label required">Folio de Lote </label>
+                                            <input type="text" id="folioLote" name="folioLote" required class="form-control">
                                         </div>
-
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-6 col-md-6 col-xs-6 col-sm-6">
-                                            <label for="folioLote">Programa</label>
-                                            <select class="form-control ProgramaCalzadoFilter" style="width:100%" name="programa" id="programaReporte">
+                                        <div class="col-lg-8 col-md-8 col-xs-8 col-sm-8">
+                                            <label for="programaReporte" class="form-label required">Programa</label>
+                                            <select class="form-control ProgramaCalzadoFilter" required style="width:100%" name="programa" id="programaReporte">
                                             </select>
                                         </div>
-                                        <div class="col-lg-6 col-md-6 col-xs-6 col-sm-6">
-                                            <table class="table table-sm table-bordered">
-                                                <tbody>
-                                                    <tr>
-                                                        <td>Área Total Dm<sup>2</sup></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Área Total Ft<sup>2</sup></td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
                                     </div>
+
                                     <div class="row">
-                                        <div class="col-lg-12">
-                                            <div class="card">
-                                                <div class="card-body">
-                                                    <div id="contenedor" class="contenedor">
-
-                                                    </div>
-                                                </div>
-                                            </div>
-
-
+                                        <div class="col-md-12">
+                                            <label>Pegue los datos de Excel aquí:</label>
+                                            <textarea name="excel_data" class="form-control"></textarea><br>
+                                            <input type="button" onclick="javascript:generateTable()" value="Generar tabla" />
                                         </div>
                                     </div>
-
+                                    <br>
+                                    <p>Los datos de la tabla aparecerán a continuación.</p>
+                                    <hr>
+                                    <div id="excel_table"></div>
+                                    <input type="hidden" name="reporte" id="reporte">
                                 </div>
-
                                 <div class="modal-footer">
                                     <button type="button" onclick="limpiarCargaExcel()" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
                                     <button type="button" id="btn-save" onclick="finalizarCarga()" disabled class="btn btn-success">Guardar</button>
@@ -214,6 +179,7 @@ $space = 1;
 <script src="../assets/libs/bootstrap-datepicker/dist/locales/bootstrap-datepicker.es.min.js"></script>
 <script src="../assets/scripts/selectFiltros.js"></script>
 <script src="../assets/libs/block-ui/jquery.blockUI.js"></script>
+<script src="../assets/scripts/Medicion/lecturaReporte.js"></script>
 
 <script>
     update()
@@ -227,6 +193,8 @@ $space = 1;
 
 
     });
+
+   
     /*********** ACTUALIZA LISTA DE LOTES***************/
     function update() {
         cargaContenido("content-lotes", "../templates/Medicion/medicion.php", '1')
@@ -280,16 +248,11 @@ $space = 1;
         }
         //DESGLOSE DE ARCHIVO CARGADO
         var file = inptXLX.files[0];
-        if (file.type != "application/vnd.ms-excel.sheet.macroEnabled.12") {
-            notificaBad("<b>Asegúrese de cargar el archivo Excel correcto.</b><br> Si el error persiste contacte a su departamento de Sistemas.");
-            return 0;
-        }
         //LECTURA DE ARCHIVO MACRO
-        var formElement = document.getElementById("FormLecturaScrap");
         var form = new FormData(formElement);
         $.ajax({
             type: 'POST',
-            url: '../Controller/scrap.php?op=lecturascrap',
+            url: '../Controller/medicion.php?op=lecturareporte',
             data: form,
             processData: false,
             contentType: false,
