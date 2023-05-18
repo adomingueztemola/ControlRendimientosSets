@@ -793,4 +793,39 @@ switch ($_GET["op"]) {
         $json_string = json_encode($response);
         echo $json_string;
         break;
+    case "cambiarlote0":
+        $numCaja = (isset($_POST['numCaja'])) ? trim($_POST['numCaja']) : '';
+        $lote0 = (isset($_POST['lote0'])) ? trim($_POST['lote0']) : '0';
+        $idEmpaque = (isset($_POST['idEmpaque'])) ? trim($_POST['idEmpaque']) : '';
+        #VALIDACION DE DATOS
+        Excepciones::validaLlenadoDatos(array(
+            " Num. Caja" => $numCaja,
+            " Lote 0" => $lote0,
+            " Empaque" => $idEmpaque
+
+        ), $obj_empaque);
+        //cambiar caja a caja lote 0
+        $datos = $obj_empaque->actualizarLote0EnCaja($numCaja, $idEmpaque, $lote0);
+        try {
+            Excepciones::validaMsjError($datos);
+        } catch (Exception $e) {
+            $obj_empaque->errorBD($e->getMessage(), 1);
+        }
+        if($lote0=='1'){
+            $datos = $obj_empaque->aumentarPzasLote0($numCaja, $idEmpaque, $lote0);
+            try {
+                Excepciones::validaMsjError($datos);
+            } catch (Exception $e) {
+                $obj_empaque->errorBD($e->getMessage(), 1);
+            }
+        }else{
+            $datos = $obj_empaque->disminuirPzasLote0($numCaja, $idEmpaque, $lote0);
+            try {
+                Excepciones::validaMsjError($datos);
+            } catch (Exception $e) {
+                $obj_empaque->errorBD($e->getMessage(), 1);
+            }
+        }
+        echo "1|Cambio Correcto de Origen de Caja.";
+        break;
 }

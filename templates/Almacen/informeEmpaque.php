@@ -23,6 +23,8 @@ if (count($Data) == '0') {
 <div class="row mb-1">
     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
         <h3><span class="label label-info label-rounded mb-2">CAJAS TOTALES: <span id="lbl_contadorCajas">0</span></span></h3>
+        <h3><span class="label label-info label-rounded mb-2">CAJAS RECUPERADAS: <span id="lbl_contadorRecup">0</span></span></h3>
+
         <h3><span class="label label-info label-rounded mb-2">PIEZAS TOTALES: <span id="lbl_contadorPzas">0</span></span></h3>
 
     </div>
@@ -52,6 +54,7 @@ if (count($Data) == '0') {
     <?php
     $count = 1;
     $countCajas = 0;
+    $countRecu=0;
     foreach ($Data as $value) {
         $ArrayMix = explode(',', $value['mixLotes']);
         $mixLbl = count($ArrayMix) >= 2 ? 'Mix: ' . $value['mixLotes'] : "<i class=''></i>";
@@ -59,13 +62,15 @@ if (count($Data) == '0') {
         $lblInterno = $value['interna'] == '1' ? '(Interna)' : '';
         $lblLabel = $value["lblLote"] != '' ? "<i class='fas fa-ticket-alt'></i> {$value["lblLote"]}" : '';
         $iconSales = $value['vendida'] == '1' ? '<i class="fas fa-shopping-cart"></i> Vendida ' . $lblInterno : $lblInterno;
+        $iconLote0=$value['lote0'] == '1' ? '<i class="fas fa-exclamation-triangle text-danger"></i>  ' : "";
+        $countRecu+=$value['lote0'] == '1'?1:0;
     ?>
         <div class="card">
             <div class="card-header" role="tab" id="headingOne">
                 <div class="row">
                     <div claas="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                         <h5 class="mb-0">
-                            <label class="<?= $regDatos ?>" for="chck-caja<?= $value['id'] ?>">#<?= $count ?> Fecha de Empaque: <?= $value['fFechaEmpaque'] ?>
+                            <label class="<?= $regDatos ?>" for="chck-caja<?= $value['id'] ?>"><?=$iconLote0?> #<?= $count ?> Fecha de Empaque: <?= $value['fFechaEmpaque'] ?>
                                 <small><?= $mixLbl ?></small></label>
                         </h5>
                     </div>
@@ -114,6 +119,7 @@ if (count($Data) == '0') {
 <script>
     $("#lbl_contadorCajas").text("<?= $countCajas ?>")
     $("#lbl_contadorPzas").text("<?= formatoMil($pzas, 0) ?>")
+    $("#lbl_contadorRecup").text("<?= formatoMil($countRecu, 0) ?>")
 
     //Ver Detallado de Caja
     function cargaDetCaja(numCaja, idEmpaque, contador) {
