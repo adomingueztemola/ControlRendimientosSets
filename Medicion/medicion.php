@@ -41,123 +41,60 @@ $space = 1;
                         <h3 class="text-white">Lotes:</h3>
                     </div>
                     <div class="card-body">
-                        <select name="lotes" id="selectlotes" class="custom-select custom-select-lg">
-                            <option value="" select>Selecciona Un Lote</option>
-                            <option value="">35469</option>
-                            <option value="">35689</option>
-                            <option value="">40356</option>
-                        </select>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <select name="lotes" id="selectlotes" class="custom-select custom-select-lg">
+                                    <option value="" select>Selecciona Un Lote</option>
+                                    <option value="">35469</option>
+                                    <option value="">35689</option>
+                                    <option value="">40356</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-success btn-lg">Seleccionar</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="row">
+
                     <div class="card col-md-7">
-                        <div class="card-body">
-                            <table class="table table-hover  table-sm">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Num. Serie</th>
-                                        <th scope="col">Área Ft<sup>2</sup></th>
-                                        <th scope="col">Área Dm<sup>2</sup></th>
-                                        <th scope="col">Red.</th>
-                                        <th scope="col">Seleccion</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><input type="checkbox"></td>
-                                        <td>00001</td>
-                                        <td>30.12</td>
-                                        <td>15.1</td>
-                                        <td>0.25</td>
-                                        <td>
-                                            <select class="custom-select" name="calidad" id="cali">
-                                                <option selected value="">TR</option>
-                                                <option value="">1S</option>
-                                                <option value="">2S</option>
-                                                <option value="">3S</option>
-                                                <option value="">4S</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><input type="checkbox"></td>
-                                        <td>00002</td>
-                                        <td>23.5</td>
-                                        <td>12.2</td>
-                                        <td>0.25</td>
-                                        <td>
-                                            <select class="custom-select" name="calidad" id="cali">
-                                                <option selected value="">TR</option>
-                                                <option value="">1S</option>
-                                                <option value="">2S</option>
-                                                <option value="">3S</option>
-                                                <option value="">4S</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <button class="btn btn-success btn-lg offset-md-9">Crear Paquete</button>
+                        <div id="contentCrear">
                         </div>
                     </div>
 
                     <div class="col-md-5 ">
-                        <div class="card">
-                            <div class="card-header" style="background-color:#ee5a36;">
-                                <h3 class="text-white">Paquetes</h3>
-                            </div>
-                            <div class="card-body">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Seleccion</th>
-                                            <th scope="col">Área</th>
-                                            <th scope="col">
-                                                <button class="btn btn-primary" data-toggle="collapse" data-target
-                                                ="#collapselados" role="button" aria-expanded="false" aria-controls="collapselados">
-                                                    Lados
-                                                </button>
-                                                <div class="collapse" id="collapselados">
-                                                    <div class="card" style="width: 18rem;">
-                                                        <ul class="list-group list-group-flush">
-                                                            <li class="list-group-item">12:00 = 123</li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>1S</td>
-                                            <td>340</td>
-                                            <td>
-                                                Miedo a la IA
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <div>
-                                <button class="btn btn-danger btn-lg offset-md-9">Finalizar</button>
-                                </div>
-                            </div>
+                        <div id="contentTabla1">
                         </div>
                     </div>
                 </div>
             </div>
-
-
-
         </div>
+        arriba
     </div>
+
 </body>
 
 
 <?= $info->creaFooter(); ?>
 <?php include("../templates/libsJS.php"); ?>
+
+<script>
+    cargapaquete()
+    function cargapaquete() {
+        $('#contentTabla1').html('<div class="loading text-center"><img src="../assets/images/loading.gif" alt="loading" /><br/>Un momento, por favor...</div>');
+        $('#contentTabla1').load('../templates/Medicion/EtiquetasPaquetes.php');
+    }
+</script>
+
+<script>
+    crearpaquete()
+    function crearpaquete() {
+        $('#contentCrear').html('<div class="loading text-center"><img src="../assets/images/loading.gif" alt="loading" /><br/>Un momento, por favor...</div>');
+        $('#contentCrear').load('../templates/Medicion/CrearPaquete.php');
+    }
+</script>
+
 
 <script>
     actualizarGrafica()

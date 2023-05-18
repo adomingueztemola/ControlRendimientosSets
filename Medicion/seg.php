@@ -164,7 +164,7 @@ class Seguridad
 		} else {
 			problemas('El area donde deseas ingresar tiene problemas. Notifica a tu Administrador... <br>Error: <b>SEG003</b> ');
 		}
-	}  #--FIN SEGURIDAD--
+	} #--FIN SEGURIDAD--
 
 	#-----------------------  CUSTOMIZACIÓN  ------------------------------
 	public function customizerMobil()
@@ -595,7 +595,7 @@ class Seguridad
 					$mnTipo = $dat['tipo'];
 				} // Fin de IF de visualización para subMenus
 			} // Fin de IF de visualización
-		}	// Termina WHILE
+		} // Termina WHILE
 
 		if ($mnOpen2 == 1) {
 			switch ($mnTipo) {
