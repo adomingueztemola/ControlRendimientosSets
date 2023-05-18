@@ -42,7 +42,7 @@ $space = 1;
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-8">
+                            <div class="col-md-8 col-12">
                                 <select name="lotes" id="selectlotes" class="custom-select custom-select-lg">
                                     <option value="" select>Selecciona Un Lote</option>
                                     <option value="">35469</option>
@@ -58,12 +58,12 @@ $space = 1;
                 </div>
                 <div class="row">
 
-                    <div class="card col-md-7">
+                    <div class="card col-md-7 col-12">
                         <div id="contentCrear">
                         </div>
                     </div>
 
-                    <div class="col-md-5 ">
+                    <div class="col-md-5 col-12">
                         <div id="contentTabla1">
                         </div>
                     </div>
