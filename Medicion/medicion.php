@@ -32,16 +32,68 @@ $space = 1;
     <div id="main-wrapper">
         <?= $info->creaHeaderConMenu(); ?>
         <div class="page-wrapper">
-            <div class="container-fluid" style="background: url('../assets/images/teseo-fondo.jpg'); background-size: cover;">
 
+            <div class="container-fluid">
+
+                <div class="card">
+                    <div class="card-header" style="background-color:#ee5a36;">
+                        <h3 class="text-white">Lotes:</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <select name="lotes" id="selectlotes" class="custom-select custom-select-lg">
+                                    <option value="" select>Selecciona Un Lote</option>
+                                    <option value="">35469</option>
+                                    <option value="">35689</option>
+                                    <option value="">40356</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-success btn-lg">Seleccionar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="card col-md-7">
+                        <div id="contentCrear">
+                        </div>
+                    </div>
+
+                    <div class="col-md-5 ">
+                        <div id="contentTabla1">
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+        arriba
     </div>
+
 </body>
 
 
 <?= $info->creaFooter(); ?>
 <?php include("../templates/libsJS.php"); ?>
+
+<script>
+    cargapaquete()
+    function cargapaquete() {
+        $('#contentTabla1').html('<div class="loading text-center"><img src="../assets/images/loading.gif" alt="loading" /><br/>Un momento, por favor...</div>');
+        $('#contentTabla1').load('../templates/Medicion/EtiquetasPaquetes.php');
+    }
+</script>
+
+<script>
+    crearpaquete()
+    function crearpaquete() {
+        $('#contentCrear').html('<div class="loading text-center"><img src="../assets/images/loading.gif" alt="loading" /><br/>Un momento, por favor...</div>');
+        $('#contentCrear').load('../templates/Medicion/CrearPaquete.php');
+    }
+</script>
+
 
 <script>
     actualizarGrafica()
@@ -53,7 +105,7 @@ $space = 1;
 
     }
     /*************** FILTRADO DE SET'S *********************/
-    $(".filtrado").submit(function(e) {
+    $(".filtrado").submit(function (e) {
         e.preventDefault();
         id = $(this).prop("id");
         switch (id) {
@@ -68,12 +120,12 @@ $space = 1;
             url: url,
             data: formData,
             type: 'POST',
-            success: function(respuesta) {
+            success: function (respuesta) {
                 $('#' + content).html(respuesta);
 
 
             },
-            beforeSend: function() {}
+            beforeSend: function () { }
 
         });
     });
