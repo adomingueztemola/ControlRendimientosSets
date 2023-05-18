@@ -1,17 +1,12 @@
 <?php
 session_start();
 define('INCLUDE_CHECK', 1);
-require_once '../PHPExcel/Classes/PHPExcel.php';
-require_once "archivos.php";
-
 require_once "../include/connect_mvc.php";
+include('../assets/scripts/cadenas.php');
 
-$debug = 1;
+$debug = 0;
 $idUser = $_SESSION['CREident'];
-
-$obj_scrap = new Scrap($debug, $idUser);
-$obj_LeerXLS = new LecturaXLSScrap($debug, $idUser);
-
+$obj_medido = new Medido($debug, $idUser);
 $ErrorLog = 'No se recibió';
 if ($debug == 1) {
     print_r($_POST);
@@ -20,122 +15,134 @@ if ($debug == 1) {
     error_reporting(0);
 }
 switch ($_GET["op"]) {
-    case "lecturareporte":
-        if ($_FILES['file']['name'] != null) {
-            if ($_FILES["file"]["error"] > 0) {
-                $obj_scrap->errorBD('No se pudo cargar tu archivo, por favor Intentalo nuevamente.', 0);
-            }
-            if ($debug == 1) {
-                echo "<br><hr><br>PROPIEDADES DE XLS:";
-                echo "Tipo: " . $_FILES['file']['type'] . "<br>";
-                echo "Tamaño: " . ($_FILES["file"]["size"] / 1024) . " kB<br>";
-                echo "Carpeta temporal: " . $_FILES['file']['tmp_name'] . " <br>";
-                echo '<br><br>';
-            }
-            try {
-                $dataExcel = $obj_LeerXLS->leerXLS($_FILES['file']['tmp_name']);
-                if ($dataExcel['error'] != 0) {
-                    $obj_scrap->errorBD('Tuvimos problemas al leer el archivo: ' . $dataExcel['msj'], 0);
-                }
-            } catch (Exception $e) {
-                $obj_scrap->errorBD('Tuvimos problemas al leer el archivo: ' . $e->getMessage(), 0);
-            }
-            if ($dataExcel['gral']['filasIncompletas'] <= 0) {
-                $date = date("YmdHis");
-                $respuesta = guardarPDF($_FILES['file'], "../doctos/Exceles/" . $idUser . "/", "doctos/Exceles/" . $idUser . "/", "Excel_Scrap_" . $idUser);
-                $ArrayRespuestaImg = explode('|', $respuesta);
-                if ($ArrayRespuestaImg['0'] == '0') {
-                    errorBD("El Archivo tuvo problemas al almacenarse, notifica a tu Administrador.", 0);
-                }
-                $_SESSION['dataExcelScrap'] = $dataExcel;
-                $_SESSION['dataExcelScrap']['gral']['doctoserver'] = $ArrayRespuestaImg['2'];
-                echo '1|Alineación alistada correctamente.';
-            } else {
-                $_SESSION['dataExcelScrap'] = $dataExcel;
-
-                $obj_scrap->errorBD('Formato de Alineación Incorrecto.', 0);
-            }
-        }
-        break;
-    
-        $arrayReporte = (isset($_POST['arrayReporte'])) ? ($_POST['arrayReporte']) : '';
-        $fechaSalida = (isset($_POST['fechaSalida'])) ? ($_POST['fechaSalida']) : '';
-
+    case "agregarreporte":
+        $reporte = (isset($_POST['reporte'])) ? ($_POST['reporte']) : array();
+        $programa = (isset($_POST['programa'])) ? trim($_POST['programa']) : '';
+        $folioLote = (isset($_POST['folioLote'])) ? trim($_POST['folioLote']) : '';
         Excepciones::validaLlenadoDatos(array(
-            " Alineación" => $arrayReporte,
-            " Fecha Salida" => $fechaSalida
-        ), $obj_scrap);
+            " Programa" => $programa,
+            " Folio de Lote" => $folioLote
+        ), $obj_medido);
+        #Valida que Producto no exista en el Catalogo
+        $resultValidacion = Funciones::validarDatoTabla("lotesmediciones", "loteTemola", $folioLote, $debug, $obj_medido->getConexion());
+        try {
+            Excepciones::validaMsjError($resultValidacion);
+        } catch (Exception $e) {
+            $obj_medido->errorBD($e->getMessage(), 1);
+        }
+        $reporte = json_decode($reporte, true);
+        if (count($reporte) <= 0) {
+            $obj_medido->errorBD("Error, Reporte de Teseo sin datos, notifica al departamento de Sistemas.", 1);
+        }
+        $ladosTotales = count($reporte);
+        /********FUNCION PARA OBTENER EL AREA TOTAL DEL LOS LADOS *********/
+        $funcTotalArea = function ($reporte) {
+            $sumAreaDm = 0;
+            $sumAreaFt = 0;
+            $sumAreaRd = 0;
+            foreach ($reporte as $value) {
+                $sumAreaDm += $value[2];
+                $sumAreaFt += $value[3];
+                $sumAreaRd += $value[4];
+            }
+            return [$sumAreaDm, $sumAreaFt, $sumAreaRd];
+        };
+        /********FUNCION PARA OBTENER DETALLADO DE LOS LADOS EN SQL *********/
+        $funcQuery = function ($reporte, $idLote) {
+            $query = "";
+            foreach ($reporte as $value) {
+                $query .= "('$idLote', '{$value[0]}', '{$value[2]}',
+                '{$value[3]}', '{$value[4]}', '0'),";
+            }
+            return substr($query, 0, -1);
+        };
 
-        if (count($arrayReporte) <= 0) {
-            $obj_scrap->errorBD("Error, Reporte de Baja Scrap sin datos, notifica al departamento de Sistemas.", 1);
-        }
-        //DATOS SUMATORIAS DEL REPORTE
-        $suma_12 = 0;
-        $suma_3 = 0;
-        $suma_6 = 0;
-        $suma_9 = 0;
-        $pzas_totales = 0;
-        foreach ($arrayReporte as $value) {
-            $suma_12 += $value['_12'];
-            $suma_3 += $value['_3'];
-            $suma_6 += $value['_6'];
-            $suma_9 += $value['_9'];
-            $pzas_totales += $value['total'];
-        }
-        $obj_scrap->insertarCommit();
-        //AGREGAR TARIMA DATOS PRELIMINARES
-        $datos = $obj_scrap->agregarTarima(
-            $fechaSalida,
-            $pzas_totales,
-            $suma_12,
-            $suma_6,
-            $suma_3,
-            $suma_9
-        );
+        $arrayAreas = $funcTotalArea($reporte);
+        $obj_medido->beginTransaction();
+        /* -> agregar lote  */
+        $datos = $obj_medido->agregarLoteMedido($folioLote, $programa, $arrayAreas[0], $arrayAreas[1], $arrayAreas[2], $ladosTotales);
         try {
             Excepciones::validaMsjError($datos);
         } catch (Exception $e) {
-            $obj_scrap->errorBD($e->getMessage(), 1);
+            $obj_medido->errorBD($e->getMessage(), 1);
         }
-        $idTarima = $datos[2];
-        //CICLO QUE INGRESA LOG DE BAJA/DISMINUCION A CEROS DE INVENTARIOS DE SCRAP
-        foreach ($arrayReporte as $value) {
-            //aGREGAR DETALLADO DE TARIMA 
-            $datos = $obj_scrap->agregarLogReporte(
-                $idTarima,
-                $value['idRendimiento'],
-                $value['_12'],
-                $value['_3'],
-                $value['_6'],
-                $value['_9'],
-                $value['_12Scrap'],
-                $value['_3Scrap'],
-                $value['_6Scrap'],
-                $value['_9Scrap'],
-                $value['totalScrap'],
-                $value['total']
-            );
-            try {
-                Excepciones::validaMsjError($datos);
-            } catch (Exception $e) {
-                $obj_scrap->errorBD($e->getMessage(), 1);
-            }
-            //ACTUALIZAR STOCK DE RECHAZOS   
-            $datos = $obj_scrap->actualizarStkRech($value['idStk']);
-            try {
-                Excepciones::validaMsjError($datos);
-            } catch (Exception $e) {
-                $obj_scrap->errorBD($e->getMessage(), 1);
-            }
-            //ACTUALIZAR ESTADO DE SCRAP DE LOTE    
-            $datos = $obj_scrap->actualizarRendimiento($value['idRendimiento']);
-            try {
-                Excepciones::validaMsjError($datos);
-            } catch (Exception $e) {
-                $obj_scrap->errorBD($e->getMessage(), 1);
-            }
+        $ident = $datos[2];
+        /* -> agregar agregar detallado de lados del lote  */
+        $datos = $obj_medido->agregarDetalladoLote($funcQuery($reporte, $ident));
+        try {
+            Excepciones::validaMsjError($datos);
+        } catch (Exception $e) {
+            $obj_medido->errorBD($e->getMessage(), 1);
         }
-        $obj_scrap->beginTransaction();
-        echo '1|Reporte Almacenado Correctamente.|'.$idTarima;
+        $obj_medido->insertarCommit();
+        echo "1|Reporte Almacenado Correctamente";
+
+        break;
+    case "getreportemedicion":
+        $date_start = isset($_POST['date_start']) ? $_POST['date_start'] : '';
+        $date_end = isset($_POST['date_end']) ? $_POST['date_end'] : '';
+        $programa = isset($_POST['programa']) ? $_POST['programa'] : '';
+
+        $filtradoPrograma = $programa != '' ? 'l.idCatPrograma=' . $programa . '' : '1=1';
+        if ($date_start != "" and $date_end != "") {
+            $filtradoFecha = "DATE_FORMAT(l.fechaReg, '%Y-%m-%d') BETWEEN '$date_start' AND '$date_end'";
+        } else {
+            $filtradoFecha = "1=1";
+        }
+
+        $Data = $obj_medido->getReporteMedicion($filtradoFecha,  $filtradoPrograma);
+        $Data = Excepciones::validaConsulta($Data);
+        $response = array();
+        $count = 1;
+        foreach ($Data as $value) {
+            $ladosTotales = $value['ladosTotales'] == '' ? '0' : $value['ladosTotales'];
+            $areaTotalDM = $value['areaTotalDM'] == '' ? '0' : formatoMil($value['areaTotalDM'], 12);
+            $areaTotalFT = $value['areaTotalFT'] == '' ? '0' : formatoMil($value['areaTotalFT'], 12);
+            $areaTotalRd = $value['areaTotalRd'] == '' ? '0' : formatoMil($value['areaTotalRd'], 2);
+            $dif = formatoMil($value['areaTotalRd'] - $value['areaTotalFT'], 2);
+            array_push($response, [
+                $value['id'],
+                $value['loteTemola'],
+                $value['nPrograma'],
+                $ladosTotales,
+                $areaTotalDM,
+                $areaTotalFT,
+                $areaTotalRd,
+                $dif,
+                $value['id'] . '|' .  $value['loteTemola'],
+                $value['f_fechaReg'],
+                $value['nUsuario']
+            ]);
+            $count++;
+        }
+
+        //Creamos el JSON
+        $response = array("data" => $response);
+        $json_string = json_encode($response);
+        echo $json_string;
+        break;
+    case "getdetreporte":
+        $id = isset($_POST['id']) ? $_POST['id'] : '';
+
+        $Data = $obj_medido->getDetReporteMedicion($id);
+        $Data = Excepciones::validaConsulta($Data);
+        $json_string = json_encode($Data);
+        echo $json_string;
+        break;
+    case "eliminarlotemedicion":
+        $id = isset($_POST['id']) ? $_POST['id'] : '';
+        $loteTemola = isset($_POST['loteTemola']) ? $_POST['loteTemola'] : '';
+
+        Excepciones::validaLlenadoDatos(array(
+            " Lote" => $id,
+            " Folio de Lote" => $loteTemola,
+        ), $obj_medido);
+        $datos = $obj_medido->eliminarLoteMedido($id);
+        try {
+            Excepciones::validaMsjError($datos);
+        } catch (Exception $e) {
+            $obj_medido->errorBD($e->getMessage(), 1);
+        }
+        echo "1|Eliminación Correcta del Lote: " . $loteTemola;
         break;
 }

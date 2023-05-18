@@ -1,6 +1,6 @@
 function generateTable() {
   var result = [];
-  var data = $("textarea[name=excel_data]").val().trim();
+  var data = $("textarea[id=excel_data]").val().trim();
   var rows = data.split("\n");
   //Validar que el formato no este vacio
   if(rows.length<=1){
@@ -35,26 +35,34 @@ function generateTable() {
         cells.push(redondeo);
       }
     }
-    result.push(cells);
+    if(y>0){
+        result.push(cells);
+    }
     table.append(row);
   }
-  $("#reporte").val(result)
+  $("#reporte").val(JSON.stringify(result))
+  if($("#reporte").val()==''){
+    $("#btn-save").prop("disabled", true)
+  }else{
+    $("#btn-save").prop("disabled", false)
+  }
   // Insert into DOM
   $("#excel_table").html(table);
 }
 //Convertir Área de Teseo
 function convertDM2aFT2(areaDM) {
-  const unidadFt2 = 0.1076391041671;
-  return (parseFloat(areaDM) * unidadFt2).toFixed(4);
+  return (parseFloat(areaDM) /9.29).toFixed(12);
 }
 //Redondeo de Área en Base a Criterios
 function redondeoArea(areaFT) {
-  entero = Math.floor(areaFT);
-  console.log("Entero: "+entero);
+  // console.log("Área : "+areaFT);
   redondAreaFT = parseFloat(areaFT).toFixed(2);
+  entero = Math.trunc(redondAreaFT);
+  // console.log("Entero: "+entero);
+  // console.log("Redondeo: "+redondAreaFT);
 
-  decimales = parseFloat(redondAreaFT - entero).toFixed(2);
-  console.log(decimales);
+  decimales = parseFloat(redondAreaFT%1).toFixed(2);
+  // console.log("Decimales: "+decimales);
   if (decimales <= 0.19) {
     result = entero;
   }
@@ -70,5 +78,8 @@ function redondeoArea(areaFT) {
   if (decimales <= 0.99 && decimales >= 0.91) {
     result = entero + 1;
   }
+  console.log("Resultado: "+result);
+
   return parseFloat(result).toFixed(2);
 }
+
