@@ -356,17 +356,17 @@ class Empaque extends ConexionBD
         WHERE d.id='$idDetCaja' AND r.regEmpaque='1'";
         return $this->runQuery($sql, "actualizar Registro de Piezas en Lote");
     }
-     ///ACTUALIZACION DE UNIDADES  DE EMPAQUE EN REGISTRO DE LOTE
-     public function actualizarUnidadesLote0($idDetCaja)
-     {
-         $sql = "UPDATE rendimientos r
+    ///ACTUALIZACION DE UNIDADES  DE EMPAQUE EN REGISTRO DE LOTE
+    public function actualizarUnidadesLote0($idDetCaja)
+    {
+        $sql = "UPDATE rendimientos r
          INNER JOIN detcajas d ON d.idLote=r.id 
          INNER JOIN config_inventarios conf ON conf.estado = '1'
          SET 
          r.totalLote0= IFNULL(r.totalLote0,0)+ IFNULL(d.total,0)
          WHERE d.id='$idDetCaja' AND r.regEmpaque='1'";
-         return $this->runQuery($sql, "actualizar Registro de Piezas en Lote");
-     }
+        return $this->runQuery($sql, "actualizar Registro de Piezas en Lote");
+    }
     ///VER RENDIMIENTO Y DATOS DE TESEO
     public function getRendimiento($id)
     {
@@ -445,14 +445,14 @@ class Empaque extends ConexionBD
     /// ACTUALIZAR USO DE REMANENTE 
     public function actualizarUsoRemanante($id)
     {
-       /* $sql = "UPDATE detcajas d 
+        /* $sql = "UPDATE detcajas d 
           INNER JOIN (SELECT idLote, SUM(total) total FROM detcajas
                       WHERE tipo='2' GROUP BY idLote) r ON r.idLote=d.idLote
           INNER JOIN (SELECT idLote, total FROM detcajas
                       WHERE remanente='1') b ON r.idLote=b.idLote
           SET d.usoRemanente='1',  d.totalRem='0' WHERE 
           d.id='$id' AND b.total=r.total";*/
-          $sql="UPDATE detcajas d 
+        $sql = "UPDATE detcajas d 
           INNER JOIN (SELECT idLote, SUM(total) total FROM detcajas
                       WHERE tipo='2' GROUP BY idLote) r ON r.idLote=d.idLote
            SET d.usoRemanente='1'
@@ -668,6 +668,7 @@ class Empaque extends ConexionBD
              SUBSTRING_INDEX(GROUP_CONCAT(d.vendida ORDER BY d.total DESC),',',1) AS vendida,
              MIN(IFNULL(r.regDatos,0)) AS regDatos,
              MIN(IFNULL(d.interna,0)) AS interna,
+             d.lote0,
 
             lbl.loteTemola AS lblLote,
             
@@ -714,7 +715,8 @@ class Empaque extends ConexionBD
         return $this->consultarQuery($sql, "consulta stock de recuperación", false);
     }
 
-    public function getStockCajas(){
+    public function getStockCajas()
+    {
         $sql = "SELECT SUM(total) AS pzasDisponible,
         COUNT(numCaja) AS cantCaja, lote,nPrograma,
         r.loteTemola
@@ -732,5 +734,35 @@ class Empaque extends ConexionBD
         GROUP BY a.lote
         ORDER BY a.nPrograma";
         return $this->consultarQuery($sql, "consulta stock de cajas");
+    }
+
+    public function actualizarLote0EnCaja($numCaja, $idEmpaque, $lote0)
+    {
+        $sql = "UPDATE detcajas d
+        SET d.lote0='$lote0'
+        WHERE d.idEmpaque='$idEmpaque' AND d.numCaja='$numCaja'";
+        return $this->runQuery($sql, "registro de actualizar Lote 0 de la caja");
+    }
+
+    public function aumentarPzasLote0($numCaja, $idEmpaque, $lote0)
+    {
+        $sql = "UPDATE        
+        detcajas d
+        INNER JOIN rendimientos r ON d.idLote=r.id
+        SET r.totalEmp=r.totalEmp-d.total,
+        r.totalLote0=r.totalLote0+d.total
+        WHERE d.idEmpaque='$idEmpaque' AND d.numCaja='$numCaja' AND tipo='3'";
+        return $this->runQuery($sql, "registro de Aumento Lote 0 de la caja");
+    }
+
+    public function disminuirPzasLote0($numCaja, $idEmpaque, $lote0)
+    {
+        $sql = "UPDATE        
+        detcajas d
+        INNER JOIN rendimientos r ON d.idLote=r.id
+        SET r.totalEmp=r.totalEmp+d.total,
+        r.totalLote0=r.totalLote0-d.total
+        WHERE d.idEmpaque='$idEmpaque' AND d.numCaja='$numCaja' AND tipo='3'";
+        return $this->runQuery($sql, "registro de Disminución Lote 0 de la caja");
     }
 }

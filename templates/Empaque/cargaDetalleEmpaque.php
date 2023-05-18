@@ -67,11 +67,13 @@ if (count($DataDetallado) <= 0) {
                         $colorTable = ($value['tipo'] == '3' AND $value['lote0']!='1')? 'table-warning' : '';
                         $colorTable = ($value['tipo'] == '3' AND $value['lote0']=='1') ? 'table-danger' : $colorTable;
 
+                        $checkedLote0 = $value['lote0'] == '1' ? 'checked' : '';
                         $checkedInterno = $value['interna'] == '1' ? 'checked' : '';
                         $lblInterno = $value['interna'] == '1' ? '(Interna)' : '';
                         $lblLabel = $value["lblLote"] != '' ? "<i class='fas fa-ticket-alt'></i> {$value["lblLote"]}" : '';
                         $iconSales = $value['vendida'] == '1' ? '<i class="fas fa-shopping-cart"></i> Vendida ' . $lblInterno : "<input type='checkbox' $checkedInterno class='' onclick='cambiaCajaInterna(this,{$value['numCaja']}, {$value['idEmpaque']})' id='interno{$value['id']}' value='1' name='interno{$value['id']}'>
                         <label class='' for='interno'>Interna</label>";
+                        $inputLote0= $value['tipo']=='3'?"<input type='checkbox' $checkedLote0 class='' onclick='cambiaLote0(this,{$value['numCaja']}, {$value['idEmpaque']})' id='lote0{$value['id']}' value='1' name='lote0{$value['id']}'><label class='text-danger' for='lote0{$value['id']}'>Lote 0</label>":"";
                         if ($cajaAnt != $value['numCaja']) {
                             if ($contadorLote > 0 and $contadorLote < 3) {
                                 echo "<tr><td colspan='5' class='text-center noSearch'></td></tr>";
@@ -97,8 +99,11 @@ if (count($DataDetallado) <= 0) {
                             echo "<tr >
                     <td  class='$classIdentRow' $rowspan>
                         <div class='row'>
-                            <div class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                            <div class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
                                 {$value['numCaja']}
+                            </div>
+                            <div class='col-lg-3 col-md-3 col-sm-3 col-xs-3'>
+                            $inputLote0
                             </div>
                             <div class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
                             $lblLabel
@@ -108,11 +113,11 @@ if (count($DataDetallado) <= 0) {
                             </div>
                         </div>       
                     </td>
-                    <td  class='{$colorTable}'>{$value['loteTemola']}</td>
-                    <td  class='{$colorTable}'>{$value['_12']}</td>
-                    <td  class='{$colorTable}'>{$value['_3']}</td>
-                    <td  class='{$colorTable}'>{$value['_6']}</td>
-                    <td  class='{$colorTable}'>{$value['_9']}</td>
+                    <td  class='{$colorTable} tdpzas{$value['numCaja']}{$value['idEmpaque']}'>{$value['loteTemola']}</td>
+                    <td  class='{$colorTable} tdpzas{$value['numCaja']}{$value['idEmpaque']}'>{$value['_12']}</td>
+                    <td  class='{$colorTable} tdpzas{$value['numCaja']}{$value['idEmpaque']}'>{$value['_3']}</td>
+                    <td  class='{$colorTable} tdpzas{$value['numCaja']}{$value['idEmpaque']}'>{$value['_6']}</td>
+                    <td  class='{$colorTable} tdpzas{$value['numCaja']}{$value['idEmpaque']}'>{$value['_9']}</td>
 
                     </tr>";
                         } else {
@@ -415,6 +420,43 @@ if (count($DataDetallado) <= 0) {
             },
             beforeSend: function() {
                 bloqueoBtn("bloqueo-btn-2", 1)
+            }
+
+        });
+
+    }
+    
+    /******* CAMBIA CAJA DE MATERIAL RECUPERADO*******/
+    function cambiaLote0(checkbox, numCaja, idEmpaque) {
+        lote0 = $(checkbox).prop('checked') ? '1' : '0';
+        $.ajax({
+            url: '../Controller/empaque.php?op=cambiarlote0',
+            data: {
+                numCaja: numCaja,
+                lote0: lote0,
+                idEmpaque: idEmpaque
+            },
+            type: 'POST',
+            success: function(json) {
+                resp = json.split('|')
+                if (resp[0] == 1) {
+                    notificaSuc(resp[1])
+                  if(lote0=='1'){
+                    $(".tdpzas"+numCaja+idEmpaque).addClass("table-danger")
+
+                  }else{
+                    $(".tdpzas"+numCaja+idEmpaque).removeClass("table-danger")
+
+                  }
+
+
+                } else if (resp[0] == 0) {
+                    notificaBad(resp[1])
+
+
+                }
+            },
+            beforeSend: function() {
             }
 
         });
