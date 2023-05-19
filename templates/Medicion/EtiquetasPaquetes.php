@@ -47,7 +47,7 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
     </div>
 </div>
 <div>
-    <button class="btn btn-danger btn-lg offset-md-9">Finalizar</button>
+    <button class="btn btn-info btn-lg offset-md-9">Imprimir Etiquetas</button>
 </div>
 <script>
     $.ajax({
