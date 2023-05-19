@@ -41,16 +41,9 @@ $space = 1;
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-8">
-                                <select name="lotes" id="selectlotes" class="custom-select custom-select-lg">
-                                    <option value="" select>Selecciona Un Lote</option>
-                                    <option value="">35469</option>
-                                    <option value="">35689</option>
-                                    <option value="">40356</option>
+                            <div class="col-md-10">
+                                <select name="lotes" onchange="verLados()" id="selectlotes" style="width:100%" class="custom-select custom-select-lg loteMedidoFilter">
                                 </select>
-                            </div>
-                            <div class="col-md-2">
-                                <button class="btn btn-success btn-lg">Seleccionar</button>
                             </div>
                         </div>
                     </div>
@@ -63,72 +56,74 @@ $space = 1;
                     </div>
 
                     <div class="col-md-5 ">
-                        <div id="contentTabla1">
+                        <div class="card">
+
+                            <div class="card-header" style="background-color:#ee5a36;">
+                                <h3 class="text-white">Paquetes</h3>
+                            </div>
+                            <div class="card-body">
+                                <div id="contentPaquetes">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        arriba
+
     </div>
+    <?= $info->creaFooter(); ?>
 
 </body>
-
-
-<?= $info->creaFooter(); ?>
 <?php include("../templates/libsJS.php"); ?>
-
-<script>
-    cargapaquete()
-    function cargapaquete() {
-        $('#contentTabla1').html('<div class="loading text-center"><img src="../assets/images/loading.gif" alt="loading" /><br/>Un momento, por favor...</div>');
-        $('#contentTabla1').load('../templates/Medicion/EtiquetasPaquetes.php');
-    }
-</script>
-
-<script>
-    crearpaquete()
-    function crearpaquete() {
-        $('#contentCrear').html('<div class="loading text-center"><img src="../assets/images/loading.gif" alt="loading" /><br/>Un momento, por favor...</div>');
-        $('#contentCrear').load('../templates/Medicion/CrearPaquete.php');
-    }
-</script>
+<script src="../assets/scripts/selectFiltros.js"></script>
 
 
 <script>
-    actualizarGrafica()
+    cargaPaquete()
+    verLados()
 
-    function actualizarGrafica() {
-        $('#contentGrafica').html('<div class="loading text-center"><img src="../assets/images/loading.gif" alt="loading" /><br/>Un momento, por favor...</div>');
-        $('#contentGrafica').load('../templates/Rendimiento/Estadistica/grafica_lotes_marcados.php');
-
-
-    }
-    /*************** FILTRADO DE SET'S *********************/
-    $(".filtrado").submit(function (e) {
-        e.preventDefault();
-        id = $(this).prop("id");
-        switch (id) {
-            case "filtrado-conteolotes":
-                url = '../templates/Rendimiento/Estadistica/grafica_lotes_marcados.php'
-                content = "contentGrafica"
-                break;
-
-        }
-        formData = $(this).serialize();
+    function cargaPaquete() {
+        loteMedido = $("#selectlotes").val();
         $.ajax({
-            url: url,
-            data: formData,
-            type: 'POST',
-            success: function (respuesta) {
-                $('#' + content).html(respuesta);
-
-
+            url: '../templates/Medicion/EtiquetasPaquetes.php',
+            data: {
+                id: loteMedido
             },
-            beforeSend: function () { }
+            type: 'POST',
+            success: function(respuesta) {
+                $('#contentPaquetes').html(respuesta);
+            },
+            beforeSend: function() {
+                $('#contentPaquetes').html('<div class="loading text-center"><img src="../assets/images/loading.gif" alt="loading" /><br/>Un momento, por favor...</div>');
+
+            }
 
         });
-    });
+
+    }
+
+    function verLados() {
+        loteMedido = $("#selectlotes").val();
+        $.ajax({
+            url: '../templates/Medicion/CrearPaquete.php',
+            data: {
+                id: loteMedido
+            },
+            type: 'POST',
+            success: function(respuesta) {
+                $('#contentCrear').html(respuesta);
+            },
+            beforeSend: function() {
+                $('#contentCrear').html('<div class="loading text-center"><img src="../assets/images/loading.gif" alt="loading" /><br/>Un momento, por favor...</div>');
+
+            }
+
+        });
+        cargaPaquete()
+
+    }
 </script>
+
 
 </html>

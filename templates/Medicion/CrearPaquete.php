@@ -1,4 +1,13 @@
-<div class="card-body">
+<?php
+$id = !empty($_POST['id']) ? $_POST['id'] : "";
+?>
+<div class="card-body" style="height:500px; overflow-y: scroll;">
+    <div class="row mb-1">
+        <div class="col-md-8"></div>
+        <div class="col-md-4 text-right">
+            <button id="btn-agregar" onclick="agregarPaquete()" class="btn btn-success btn-lg">Crear Paquete</button>
+        </div>
+    </div>
     <table class="table table-hover  table-sm">
         <thead class="thead-dark">
             <tr>
@@ -10,40 +19,145 @@
                 <th scope="col">Seleccion</th>
             </tr>
         </thead>
-        <tbody>
-            <tr>
-                <td><input type="checkbox"></td>
-                <td>00001</td>
-                <td>30.12</td>
-                <td>15.1</td>
-                <td>0.25</td>
-                <td>
-                    <select class="custom-select" name="calidad" id="cali">
-                        <option selected value="">TR</option>
-                        <option value="">1S</option>
-                        <option value="">2S</option>
-                        <option value="">3S</option>
-                        <option value="">4S</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td><input type="checkbox"></td>
-                <td>00002</td>
-                <td>23.5</td>
-                <td>12.2</td>
-                <td>0.25</td>
-                <td>
-                    <select class="custom-select" name="calidad" id="cali">
-                        <option selected value="">TR</option>
-                        <option value="">1S</option>
-                        <option value="">2S</option>
-                        <option value="">3S</option>
-                        <option value="">4S</option>
-                    </select>
-                </td>
-            </tr>
+        <tbody id="tbody-lados">
         </tbody>
     </table>
-    <button class="btn btn-success btn-lg offset-md-9">Crear Paquete</button>
 </div>
+<script>
+    $.ajax({
+        url: '../Controller/medicion.php?op=getladosxlote',
+        data: {
+            id: "<?= $id ?>"
+        },
+        type: 'POST',
+        async: false,
+        dataType: "json",
+        success: function(respuesta) {
+            tabla = ""
+            if (!respuesta.length) {
+                tabla += `
+                        <tr>
+                            <td colspan='6'>Sin registro de lados en el lote</td>
+                        </tr>
+                    `
+                $("#btn-agregar").prop("hidden", true)
+            } else {
+                count = 1;
+                selecciones = getSelecciones();
+                let doOptions = (selecciones, id) => {
+                    var_return = "";
+                    selecciones.forEach(element => {
+                        selected = element.id == id ? "selected" : "";
+                        var_return += `
+                            <option ${selected} value="${element.id}">${element.nombre}</option>
+                        `
+                    });
+                    return var_return
+                };
+                respuesta.forEach(element => {
+                    options = doOptions(selecciones, element.idCatSeleccion)
+                    areaDM = element.areaDM.toLocaleString('es-MX')
+                    areaFT = element.areaFT.toLocaleString('es-MX')
+                    areaRedondFT = parseFloat(element.areaRedondFT).toFixed(2).toLocaleString('es-MX')
+                    tabla += `<tr id="trlado-${element.id}">
+                    <td><input type="checkbox"  id="chck-${element.id}" 
+                         name="lados[]" class="chckPack" value="${element.id}"></td>
+                <td><label for="chck-${element.id}" class="form-label">${element.numSerie}</label></td>
+                <td>${areaFT}</td>
+                <td>${areaDM}</td>
+                <td>${areaRedondFT}</td>
+                <td>
+                    <select class="custom-select" onchange="cambiarSeleccion(this)" 
+                            data-id="${element.id}" name="calidad" id="cali">
+                      ${options}
+                    </select>
+                </td></tr> `;
+                    count++;
+                });
+                $("#btn-agregar").prop("hidden", false)
+
+            }
+            $("#tbody-lados").html(tabla);
+
+        },
+
+
+    });
+
+    function getSelecciones() {
+        options = {};
+        $.ajax({
+            url: '../Controller/medicion.php?op=getselecciones',
+            data: {
+                id: "<?= $id ?>"
+            },
+            type: 'POST',
+            async: false,
+            dataType: "json",
+            success: function(respuesta) {
+                options = respuesta
+
+            },
+
+
+        });
+        return options
+    }
+
+    function cambiarSeleccion(select) {
+        id = $(select).data("id")
+        seleccion = $(select).val()
+
+        $.ajax({
+            type: 'POST',
+            url: '../Controller/medicion.php?op=cambiarseleccion',
+            data: {
+                id: id,
+                seleccion: seleccion
+            },
+            success: function(respuesta) {
+                var resp = respuesta.split('|');
+                if (resp[0] == 1) {
+                    notificaSuc(resp[1])
+
+                } else {
+                    notificaBad(resp[1])
+
+                }
+            },
+            beforeSend: function() {}
+        });
+
+    }
+
+    function agregarPaquete() {
+        ladosPack = [];
+        $("input:checkbox[class=chckPack]:checked").each(function() {
+            let value = $(this).val()
+            ladosPack.push(value);
+        });
+        $.ajax({
+            type: 'POST',
+            url: '../Controller/medicion.php?op=agregarpaquete',
+            data: {
+                ladosPack: ladosPack,
+                id: "<?= $id ?>"
+
+            },
+            success: function(respuesta) {
+                var resp = respuesta.split('|');
+                if (resp[0] == 1) {
+                    notificaSuc(resp[1])
+                    ladosPack.forEach(element => {
+                        $("#trlado-" + element).remove()
+                    });
+                } else {
+                    notificaBad(resp[1])
+
+                }
+            },
+            beforeSend: function() {}
+        });
+
+    }
+</script>

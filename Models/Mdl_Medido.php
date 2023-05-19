@@ -19,10 +19,10 @@ class Medido extends ConexionBD
 
     public function agregarLoteMedido($loteTemola, $idCatPrograma, $areaTotalDM, $areaTotalFT, $areaTotalRd, $ladosTotales)
     {
-        $idUserReg= $this->idUserReg;
+        $idUserReg = $this->idUserReg;
         $sql = "INSERT INTO lotesmediciones (idCatPrograma, loteTemola, areaTotalDM, areaTotalFT, areaTotalRd, ladosTotales, idUserReg, fechaReg) 
               VALUES ('$idCatPrograma', '$loteTemola', '$areaTotalDM', '$areaTotalFT', '$areaTotalRd', '$ladosTotales', '$idUserReg', NOW())";
-        return $this->runQuery($sql, "agregar lote de medicion",1);
+        return $this->runQuery($sql, "agregar lote de medicion", 1);
     }
     public function agregarDetalladoLote($query)
     {
@@ -31,17 +31,18 @@ class Medido extends ConexionBD
         return $this->runQuery($sql, "agregar lote de medicion", 1);
     }
 
-    public function eliminarLoteMedido($id){
+    public function eliminarLoteMedido($id)
+    {
         $sql = " DELETE l, ld, paq, dpaq
         FROM lotesmediciones l
         LEFT JOIN ladosmediciones ld ON l.id=ld.idLoteMedicion
-        LEFT JOIN detpaqueteslados dpaq ON ld.id=dpaq.idLadoMedicion
-        LEFT JOIN paqueteslados paq ON dpaq.idPaqueteLado=paq.id
+        LEFT JOIN paqueteslados paq ON paq.idLoteMedido=l.id
         WHERE l.id='$id'";
         return $this->runQuery($sql, "eliminación lote de medicion");
     }
-    public function getReporteMedicion($filtradoFecha='1=1',  $filtradoPrograma='1=1'){
-        $sql="SELECT l.*, cp.nombre AS nPrograma,
+    public function getReporteMedicion($filtradoFecha = '1=1',  $filtradoPrograma = '1=1')
+    {
+        $sql = "SELECT l.*, cp.nombre AS nPrograma,
         CONCAT(su.nombre, ' ', su.apellidos) AS nUsuario,
         DATE_FORMAT(l.fechaReg,'%d/%m/%Y') AS f_fechaReg
         FROM lotesmediciones l
@@ -50,9 +51,84 @@ class Medido extends ConexionBD
         WHERE $filtradoFecha AND $filtradoPrograma";
         return  $this->consultarQuery($sql, "consultar Reporte de Medición");
     }
-    public function getDetReporteMedicion($id){
-        $sql="SELECT * FROM ladosmediciones lm
+    public function getLadosDisp($id)
+    {
+        $sql = "SELECT lm.* FROM ladosmediciones lm
+        WHERE lm.idLoteMedicion='$id' AND (lm.idPaquete IS NULL OR lm.idPaquete=0 OR lm.idPaquete='')";
+        return  $this->consultarQuery($sql, "consultar Detalle de Reporte de Medición");
+    }
+    public function getDetReporteMedicion($id)
+    {
+        $sql = "SELECT * FROM ladosmediciones lm
         WHERE lm.idLoteMedicion='$id'";
         return  $this->consultarQuery($sql, "consultar Detalle de Reporte de Medición");
+    }
+    public function getLotesSelect2($busqId = '')
+    {
+        $filtradoID = $busqId == '' ? '1=1' : "lm.loteTemola LIKE '%$busqId%'";
+
+        $sql = "SELECT DISTINCT lm.*, cp.nombre AS nPrograma 
+        FROM ladosmediciones ld
+        INNER JOIN lotesmediciones lm ON ld.idLoteMedicion=lm.id
+        INNER JOIN catprogramas cp ON lm.idCatPrograma=cp.id
+        LEFT JOIN detpaqueteslados dp ON ld.id=dp.idLadoMedicion
+        WHERE dp.idLadoMedicion IS NULL
+        AND $filtradoID";
+        return  $this->consultarQuery($sql, "consultar lotes");
+    }
+
+    public function getSelecciones()
+    {
+        $sql = "SELECT *
+        FROM catselecciones
+        WHERE estado='1'";
+        return  $this->consultarQuery($sql, "consultar selecciones");
+    }
+
+    public function cambiarSeleccionLado($id, $seleccion)
+    {
+        $sql = "UPDATE ladosmediciones
+        SET idCatSeleccion='$seleccion'
+        WHERE id='$id'";
+        return $this->runQuery($sql, "cambio de selección de lado");
+    }
+
+    public function getDetalleLados($ids = [])
+    {
+        $str_ids = implode(',', $ids);
+        $filtradosIds = $ids == "" ? "1=1" : "id IN($str_ids)";
+        $sql = "SELECT *
+        FROM ladosmediciones
+        WHERE  $filtradosIds";
+        return  $this->consultarQuery($sql, "consultar Detalles Lados");
+    }
+
+    public function getNumPaquete($id)
+    {
+        $sql = "SELECT IFNULL(count(p.id),0)+1 AS numPaquete FROM paqueteslados p
+        WHERE p.idLoteMedido='$id'";
+        return  $this->consultarQuery($sql, "consultar Num de Paquete", false);
+    }
+    public function agregarPaquete(
+        $id,
+        $numPaquete,
+        $areaTotalDM,
+        $areaTotalFT,
+        $areaTotalRd,
+        $totalLados
+    ) {
+        $idUserReg = $this->idUserReg;
+        $sql = "INSERT INTO paqueteslados (idLoteMedido, numPaquete, areaTotalDM,
+        areaTotalFT, areaTotalRd, fechaReg, idUserReg, totalLados)
+        VALUES('$id', '$numPaquete', '$areaTotalDM', '$areaTotalFT', '$areaTotalRd',NOW(), '$idUserReg',
+        '$totalLados')";
+        return $this->runQuery($sql, "agregar de Paquete", 1);
+    }
+    public function agregarDetPaquete($id, $idPaquete, $numLado)
+    {
+        $sql = "UPDATE ladosmediciones 
+        SET idPaquete= '$idPaquete', numLado='$numLado'
+        WHERE id='$id'";
+        return $this->runQuery($sql, "agregar Lado al Paquete");
     }
 }

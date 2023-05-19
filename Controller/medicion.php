@@ -52,7 +52,7 @@ switch ($_GET["op"]) {
             $query = "";
             foreach ($reporte as $value) {
                 $query .= "('$idLote', '{$value[0]}', '{$value[2]}',
-                '{$value[3]}', '{$value[4]}', '0'),";
+                '{$value[3]}', '{$value[4]}', '1'),";
             }
             return substr($query, 0, -1);
         };
@@ -144,5 +144,99 @@ switch ($_GET["op"]) {
             $obj_medido->errorBD($e->getMessage(), 1);
         }
         echo "1|Eliminación Correcta del Lote: " . $loteTemola;
+        break;
+    case "select2lotes":
+        if (!isset($_POST['palabraClave'])) {
+            $Data = $obj_medido->getLotesSelect2();
+            $Data = Excepciones::validaConsulta($Data);
+        } else {
+            $search = $_POST['palabraClave']; // Palabra a buscar
+            $Data = $obj_medido->getLotesSelect2($search);
+            $Data = Excepciones::validaConsulta($Data);
+        }
+        //Creamos el JSON
+        $json_string = json_encode($Data);
+        echo $json_string;
+        break;
+    case "getladosxlote":
+        $id = isset($_POST['id']) ? $_POST['id'] : '';
+        $Data = $obj_medido->getLadosDisp($id);
+        $Data = Excepciones::validaConsulta($Data);
+        $json_string = json_encode($Data);
+        echo $json_string;
+        break;
+    case "getselecciones":
+        $Data = $obj_medido->getSelecciones();
+        $Data = Excepciones::validaConsulta($Data);
+        $json_string = json_encode($Data);
+        echo $json_string;
+        break;
+    case "cambiarseleccion":
+        $id = (isset($_POST['id'])) ? $_POST['id'] : '';
+        $seleccion = (isset($_POST['seleccion'])) ? $_POST['seleccion'] : '';
+
+        Excepciones::validaLlenadoDatos(array(
+            " Lado" => $id,
+            " Seleccion" => $seleccion
+        ), $obj_medido);
+        $datos = $obj_medido->cambiarSeleccionLado($id, $seleccion);
+        try {
+            Excepciones::validaMsjError($datos);
+        } catch (Exception $e) {
+            $obj_medido->errorBD($e->getMessage(), 1);
+        }
+        echo "1|Selección Almacenada Correctamente";
+
+        break;
+    case "agregarpaquete":
+        $ladosPack = (isset($_POST['ladosPack'])) ? $_POST['ladosPack'] : '';
+        $id = (isset($_POST['id'])) ? $_POST['id'] : '';
+
+        Excepciones::validaLlenadoDatos(array(
+            " Lados" => $ladosPack,
+            " Lote" => $id
+        ), $obj_medido);
+        $totalLados = count($ladosPack);
+        if ($totalLados <= 0) {
+            $obj_medido->errorBD("Selecciona Lados para agregar el paquete", 0);
+        }
+        //Consulta datos de los lados
+        $Data = $obj_medido->getDetalleLados($ladosPack);
+        $Data = Excepciones::validaConsulta($Data);
+        $areaTotalDM = 0;
+        $areaTotalFT = 0;
+        $areaTotalRd = 0;
+        foreach ($Data as $value) {
+            $areaTotalDM += $value["areaDM"];
+            $areaTotalFT += $value["areaFT"];
+            $areaTotalRd += $value["areaRedondFT"];
+        }
+        //Consulta numero de paquete a realizar
+        $Data = $obj_medido->getNumPaquete($id);
+        $Data = Excepciones::validaConsulta($Data);
+        $numPaquete = $Data["numPaquete"];
+
+        $obj_medido->beginTransaction();
+        //Crear Paquete 
+        $datos = $obj_medido->agregarPaquete($id, $numPaquete, $areaTotalDM, $areaTotalFT, $areaTotalRd, $totalLados);
+        try {
+            Excepciones::validaMsjError($datos);
+        } catch (Exception $e) {
+            $obj_medido->errorBD($e->getMessage(), 1);
+        }
+        $idPaq = $datos[2];
+        //Crear detallado de paquete
+        $count = 1;
+        foreach ($ladosPack as $value) {
+            $datos = $obj_medido->agregarDetPaquete($value, $idPaq, $count);
+            try {
+                Excepciones::validaMsjError($datos);
+            } catch (Exception $e) {
+                $obj_medido->errorBD($e->getMessage(), 1);
+            }
+            $count++;
+        }
+        $obj_medido->insertarCommit();
+        echo "1|Paquete Almacenado Correctamente";
         break;
 }
