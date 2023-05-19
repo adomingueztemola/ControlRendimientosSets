@@ -70,7 +70,6 @@ $space = 1;
                 </div>
             </div>
         </div>
-        arriba
     </div>
 
 </body>
