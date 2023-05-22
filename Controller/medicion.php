@@ -239,4 +239,49 @@ switch ($_GET["op"]) {
         $obj_medido->insertarCommit();
         echo "1|Paquete Almacenado Correctamente";
         break;
+    case "getpaquetesxlote":
+        $id = isset($_POST['id']) ? $_POST['id'] : '';
+        $Data = $obj_medido->getPaquetesXLote($id);
+        $Data = Excepciones::validaConsulta($Data);
+        $json_string = json_encode($Data);
+        echo $json_string;
+        break;
+    case "getdetpaquete":
+        $id = isset($_POST['id']) ? $_POST['id'] : '';
+        $Data = $obj_medido->getDetPaquete($id);
+        $Data = Excepciones::validaConsulta($Data);
+        $json_string = json_encode($Data);
+        echo $json_string;
+        break;
+    case "eliminarpaquete":
+        $id = (isset($_POST['id'])) ? $_POST['id'] : '';
+        $idLoteMedido = (isset($_POST['idLoteMedido'])) ? $_POST['idLoteMedido'] : '';
+
+        Excepciones::validaLlenadoDatos(array(
+            " Paquete" => $id,
+            " Lote Medido" => $idLoteMedido
+        ), $obj_medido);
+        $obj_medido->beginTransaction();
+        $datos = $obj_medido->eliminarLadosPaq($id);
+        try {
+            Excepciones::validaMsjError($datos);
+        } catch (Exception $e) {
+            $obj_medido->errorBD($e->getMessage(), 1);
+        }
+        $datos = $obj_medido->eliminarPaquete($id);
+        try {
+            Excepciones::validaMsjError($datos);
+        } catch (Exception $e) {
+            $obj_medido->errorBD($e->getMessage(), 1);
+        }
+        $datos = $obj_medido->reconteoPaquetes($idLoteMedido);
+        try {
+            Excepciones::validaMsjError($datos);
+        } catch (Exception $e) {
+            $obj_medido->errorBD($e->getMessage(), 1);
+        }
+        $obj_medido->insertarCommit();
+        echo "1|Paquete Eliminado Correctamente";
+
+        break;
 }

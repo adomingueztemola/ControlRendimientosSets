@@ -1,18 +1,33 @@
 <?php
 $id = !empty($_POST['id']) ? $_POST['id'] : "";
 ?>
-<div class="card-body" style="height:500px; overflow-y: scroll;">
+<div class="card-body">
     <div class="row mb-1">
-        <div class="col-md-8"></div>
+        <div class="col-md-8">
+            <div class="card text-white bg-TWM mb-3" style="max-width: 18rem;">
+                <div class="card-header">
+                    <h4>Lados Seleccionados: <span id="cont-lados">0</span></h4>
+                </div>
+            </div>
+        </div>
         <div class="col-md-4 text-right">
-            <button id="btn-agregar" onclick="agregarPaquete()" class="btn btn-success btn-lg">Crear Paquete</button>
+            <div id="bloqueo-btn-1" style="display:none">
+                <button class="btn btn-success btn-lg" type="button" disabled="">
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Espere...
+                </button>
+
+            </div>
+            <div id="desbloqueo-btn-1">
+                <button id="btn-agregar" onclick="agregarPaquete()" class="btn btn-success btn-lg">Crear Paquete</button>
+            </div>
         </div>
     </div>
     <table class="table table-hover  table-sm">
         <thead class="thead-dark">
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">Num. Serie</th>
+                <th scope="col">Núm. Serie</th>
                 <th scope="col">Área Ft<sup>2</sup></th>
                 <th scope="col">Área Dm<sup>2</sup></th>
                 <th scope="col">Red.</th>
@@ -24,6 +39,7 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
     </table>
 </div>
 <script>
+  
     $.ajax({
         url: '../Controller/medicion.php?op=getladosxlote',
         data: {
@@ -78,7 +94,7 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
 
             }
             $("#tbody-lados").html(tabla);
-
+            conteoChecks()
         },
 
 
@@ -148,16 +164,37 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
                 var resp = respuesta.split('|');
                 if (resp[0] == 1) {
                     notificaSuc(resp[1])
+                    bloqueoBtn("bloqueo-btn-1", 2)
+                    $("#cont-lados").text("0");
+
                     ladosPack.forEach(element => {
                         $("#trlado-" + element).remove()
                     });
+
+                    cargaPaquete()
                 } else {
                     notificaBad(resp[1])
+                    bloqueoBtn("bloqueo-btn-1", 2)
 
                 }
             },
-            beforeSend: function() {}
+            beforeSend: function() {
+                bloqueoBtn("bloqueo-btn-1", 1)
+
+            }
         });
 
+    }
+
+    function conteoChecks() {
+        //chckPack
+        $('.chckPack').change(function() {
+            contador = 0;
+            $("input:checkbox[class=chckPack]:checked").each(function() {
+                contador++;
+            });
+            contador = parseFloat(contador).toFixed(0).toLocaleString('es-MX')
+            $("#cont-lados").text(contador);
+        })
     }
 </script>

@@ -131,4 +131,42 @@ class Medido extends ConexionBD
         WHERE id='$id'";
         return $this->runQuery($sql, "agregar Lado al Paquete");
     }
+
+    public function getPaquetesXLote($id){
+        $sql = "SELECT p.*, lm.loteTemola, cp.nombre AS nPrograma
+        FROM paqueteslados p
+        INNER JOIN lotesmediciones lm ON p.idLoteMedido=lm.id
+        INNER JOIN catprogramas cp ON lm.idCatPrograma=cp.id
+
+        WHERE p.idLoteMedido='$id'
+        ORDER BY CAST(numPaquete AS unsigned) ";
+        return  $this->consultarQuery($sql, "consultar Paquetes por Lote");
+    }
+
+    public function getDetPaquete($id){
+        $sql = "SELECT lm.*, cs.nombre AS nSeleccion 
+        FROM ladosmediciones lm
+        INNER JOIN catselecciones cs ON lm.idCatSeleccion=cs.id
+        WHERE lm.idPaquete='$id'";
+        return  $this->consultarQuery($sql, "consultar Detallado de Paquete");
+    }
+
+    public function eliminarLadosPaq($id){
+        $sql = "UPDATE ladosmediciones 
+        SET idPaquete= '0', numLado='0'
+        WHERE idPaquete='$id'";
+        return $this->runQuery($sql, "eliminar Lados del Paquete");
+    }
+    public function eliminarPaquete($id){
+        $sql = "DELETE FROM
+                paqueteslados
+                WHERE id='$id'";
+        return $this->runQuery($sql, "eliminar del Paquete");
+    }
+
+    public function reconteoPaquetes($id){
+        $sql="CALL reconteoPaquetes('$id')";
+        return $this->runQuery($sql, "reconteo del Paquete");
+
+    }
 }

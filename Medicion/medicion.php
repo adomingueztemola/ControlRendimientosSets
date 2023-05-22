@@ -50,7 +50,7 @@ $space = 1;
                 </div>
                 <div class="row">
 
-                    <div class="card col-md-7">
+                    <div class="card col-md-7" style="height:555px; overflow-y: scroll;">
                         <div id="contentCrear">
                         </div>
                     </div>
@@ -61,7 +61,7 @@ $space = 1;
                             <div class="card-header" style="background-color:#ee5a36;">
                                 <h3 class="text-white">Paquetes</h3>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body" style="height:500px; overflow-y: scroll;">
                                 <div id="contentPaquetes">
                                 </div>
                             </div>
@@ -103,7 +103,7 @@ $space = 1;
 
     }
 
-    function verLados() {
+    function verLados(actPaq = true) {
         loteMedido = $("#selectlotes").val();
         $.ajax({
             url: '../templates/Medicion/CrearPaquete.php',
@@ -120,7 +120,9 @@ $space = 1;
             }
 
         });
-        cargaPaquete()
+        if (actPaq) {
+            cargaPaquete()
+        }
 
     }
 </script>

@@ -52,8 +52,10 @@ function Row($data, $activarBorde='1', $fill='0', $celdasAlt=5)
 function CheckPageBreak($h)
 {
 	//If the height h would cause an overflow, add a new page immediately
-	if($this->GetY()+$h>$this->PageBreakTrigger)
+	if($this->GetY()+$h>$this->PageBreakTrigger){
 		$this->AddPage($this->CurOrientation);
+
+	}
 }
 
 function NbLines($w,$txt)
