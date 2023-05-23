@@ -33,7 +33,7 @@ class Medido extends ConexionBD
 
     public function eliminarLoteMedido($id)
     {
-        $sql = " DELETE l, ld, paq, dpaq
+        $sql = " DELETE l, ld, paq
         FROM lotesmediciones l
         LEFT JOIN ladosmediciones ld ON l.id=ld.idLoteMedicion
         LEFT JOIN paqueteslados paq ON paq.idLoteMedido=l.id
