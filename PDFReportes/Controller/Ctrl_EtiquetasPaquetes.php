@@ -31,7 +31,7 @@ function getEtiquetaPaq()
                 array_push($result, $value);
             }
         }
-         return array_reverse($result);
+         return ($result);
     };
     foreach ($Data as $key => $value) {
         $areaTotalRd = formatoMil($value['areaTotalRd'], 2);
