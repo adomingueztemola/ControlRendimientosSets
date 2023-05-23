@@ -171,7 +171,9 @@ class Medido extends ConexionBD
     }
 
     public function getLadosConPaquete($idLote){
-        $sql="SELECT * FROM ladosmediciones lm
+        $sql="SELECT lm.*,  cs.nombre AS nSeleccion  FROM ladosmediciones lm
+        INNER JOIN catselecciones cs ON lm.idCatSeleccion=cs.id
+
         WHERE (lm.idPaquete<>'' AND lm.idPaquete IS NOT NULL)
         AND lm.idLoteMedicion='$idLote'
         ORDER BY lm.idPaquete, CAST(lm.numLado AS unsigned)";
