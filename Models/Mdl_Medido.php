@@ -48,7 +48,8 @@ class Medido extends ConexionBD
         FROM lotesmediciones l
         INNER JOIN catprogramas cp ON l.idCatPrograma=cp.id
         LEFT JOIN segusuarios su ON l.idUserReg=su.id
-        WHERE $filtradoFecha AND $filtradoPrograma";
+        WHERE $filtradoFecha AND $filtradoPrograma
+        ORDER BY CAST(l.loteTemola AS unsigned) DESC ";
         return  $this->consultarQuery($sql, "consultar Reporte de Medición");
     }
     public function getLadosDisp($id)
