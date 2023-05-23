@@ -16,10 +16,10 @@ function getEtiquetaScrap()
     $Data= Excepciones::validaConsulta($Data);
 
     $ArrayColor = explode(",", "238,90,54");
-    $obj_docto = new PDFEtiquetas('L', 'mm', ["100","75"]);
+    $obj_docto = new PDFEtiquetas('P', 'mm', ["75","100"], true);
     $obj_docto->SetAutoPageBreak(true,3); 
 
-    $obj_docto->AliasNbPages();
+   $obj_docto->AliasNbPages();
     $obj_docto->AddPage();
     foreach ($Data as $key=>$value) {
         $areaTotalRd= formatoMil($value['areaTotalRd'],2);
