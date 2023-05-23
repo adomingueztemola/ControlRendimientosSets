@@ -17,7 +17,7 @@ switch ($opcion) {
     case 'getetiquetas':
         $idLote = (!empty($_GET['data'])) ? $_GET['data'] : '';
         include('Ctrl_EtiquetasPaquetes.php');
-        getEtiquetaScrap();
+        getEtiquetaPaq();
         break;
 }
 ?>

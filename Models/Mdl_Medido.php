@@ -137,7 +137,6 @@ class Medido extends ConexionBD
         FROM paqueteslados p
         INNER JOIN lotesmediciones lm ON p.idLoteMedido=lm.id
         INNER JOIN catprogramas cp ON lm.idCatPrograma=cp.id
-
         WHERE p.idLoteMedido='$id'
         ORDER BY CAST(numPaquete AS unsigned) ";
         return  $this->consultarQuery($sql, "consultar Paquetes por Lote");
@@ -167,6 +166,15 @@ class Medido extends ConexionBD
     public function reconteoPaquetes($id){
         $sql="CALL reconteoPaquetes('$id')";
         return $this->runQuery($sql, "reconteo del Paquete");
+
+    }
+
+    public function getLadosConPaquete($idLote){
+        $sql="SELECT * FROM ladosmediciones lm
+        WHERE (lm.idPaquete<>'' AND lm.idPaquete IS NOT NULL)
+        AND lm.idLoteMedicion='$idLote'
+        ORDER BY lm.idPaquete, CAST(lm.numLado AS unsigned)";
+        return  $this->consultarQuery($sql, "consultar Lados Con Paquete");
 
     }
 }
