@@ -3,6 +3,7 @@ session_start();
 define('INCLUDE_CHECK', 1);
 require_once "../include/connect_mvc.php";
 include('../assets/scripts/cadenas.php');
+include('../Models/Mdl_Static.php');
 
 $debug = 0;
 $idUser = $_SESSION['CREident'];
