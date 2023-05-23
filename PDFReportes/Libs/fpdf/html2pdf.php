@@ -46,10 +46,10 @@ protected $fontList;
 protected $issetfont;
 protected $issetcolor;
 
-function __construct($orientation='P', $unit='mm', $format='A4')
+function __construct($orientation='P', $unit='mm', $format='A4', $medidasArgox=false)
 {
 	//Call parent constructor
-	parent::__construct($orientation,$unit,$format);
+	parent::__construct($orientation,$unit,$format, $medidasArgox);
 	//Initialization
 	$this->B=0;
 	$this->I=0;
