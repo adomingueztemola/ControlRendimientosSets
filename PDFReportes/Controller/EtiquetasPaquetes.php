@@ -19,5 +19,12 @@ switch ($opcion) {
         include('Ctrl_EtiquetasPaquetes.php');
         getEtiquetaPaq();
         break;
+    case "getetiqueta":
+        $idLote = (!empty($_GET['data'])) ? $_GET['data'] : '';
+        $paq = (!empty($_GET['paq'])) ? $_GET['paq'] : '';
+        include('Ctrl_EtiquetasPaquetes.php');
+        getEtiquetaXPaq();
+
+        break;
 }
 ?>

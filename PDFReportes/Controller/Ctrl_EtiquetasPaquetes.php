@@ -60,7 +60,43 @@ function getEtiquetaPaq()
     }
     $obj_docto->Output();
 }
+function getEtiquetaXPaq(){
+    $debug = $GLOBALS['debug'];
+    $idLote = $GLOBALS['idLote'];
+    $paq = $GLOBALS['paq'];
 
+    $idUserReg = $GLOBALS['idUser'];
+    $obj_medido = new Medido($debug, $idUserReg);
+    $Data = $obj_medido->getNumPaquetesXLote($idLote, $paq);
+    $Data = Excepciones::validaConsulta($Data);
+    $areaTotalRd = formatoMil($Data['areaTotalRd'], 2);
+    $totalLados = formatoMil($Data['totalLados'], 0);
+    $ArrayColor = explode(",", "238,90,54");
+    $obj_docto = new PDFEtiquetas('P', 'mm', ["75", "100"], true);
+    $obj_docto->SetAutoPageBreak(true, 3);
+    $DataDet = $obj_medido->getDetPaquete($Data['id']);
+    $DataDet = Excepciones::validaConsulta($DataDet);
+    $obj_docto->AliasNbPages();
+    $obj_docto->AddPage();
+    $ArrayLados = [];
+    foreach ($DataDet as $det) {
+        $areaRedondFT = formatoMil($det['areaRedondFT'], 2);
+        array_push($ArrayLados, [$det["numLado"], $det["nSeleccion"], $areaRedondFT]);
+    }
+    getEtiqueta(
+        $obj_docto,
+        $Data['id'],
+        $areaTotalRd,
+        $Data['nPrograma'],
+        $Data['numPaquete'],
+        $Data['loteTemola'],
+        $totalLados,
+        $ArrayLados
+    );
+    $obj_docto->Output();
+
+    
+}
 function getEtiqueta(
     $obj_docto,
     $idPaquete,

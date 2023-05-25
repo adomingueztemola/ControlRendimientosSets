@@ -2,6 +2,17 @@
 $id = !empty($_POST['id']) ? $_POST['id'] : "";
 ?>
 <div class="row mb-1">
+    <div class="col-md-7"></div>
+    <div class="col-md-5">
+        <div class="input-group mb-3">
+            <input type="number" class="form-control" id="numPaquete" placeholder="#Paquete" aria-label="" aria-describedby="basic-addon1">
+            <div class="input-group-append">
+                <button class="btn btn-TWM" onclick="panelImpresion()" type="button"><i class="fas fa-print"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mb-1">
     <div class="col-8">
         <div class="card text-white bg-TWM mb-3" style="max-width: 18rem;">
             <div class="card-header">
@@ -10,7 +21,7 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
         </div>
     </div>
     <div class="col-4">
-        <a id="impresionEtiq" href="../PDFReportes/Controller/EtiquetasPaquetes.php?op=getetiquetas&data=<?=$id?>" target="_blank" class="button btn btn-info text-white btn-lg"><i class="fas fa-print"></i> Etiquetas</a>
+        <a id="impresionEtiq" href="../PDFReportes/Controller/EtiquetasPaquetes.php?op=getetiquetas&data=<?= $id ?>" target="_blank" class="button btn btn-info text-white btn-lg"><i class="fas fa-print"></i> Todas las Etiquetas</a>
     </div>
 </div>
 <div class="row">
@@ -22,6 +33,7 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
 </div>
 <script>
     verData()
+
     function verData() {
         $.ajax({
             url: '../Controller/medicion.php?op=getpaquetesxlote',
@@ -95,6 +107,15 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
         });
     }
 
+    function panelImpresion(){
+        numPaquete= $("#numPaquete").val()
+        if(numPaquete<=0 || numPaquete==''){
+            notificaBad("Selecciona un número de paquete");
+        }else{
+            window.open("../PDFReportes/Controller/EtiquetasPaquetes.php?op=getetiqueta&paq="+numPaquete+"&data=<?= $id ?>");
+
+        }
+    }
 
     function verDetPaquete(id) {
         $.ajax({
@@ -159,7 +180,7 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
             url: '../Controller/medicion.php?op=eliminarpaquete',
             data: {
                 id: id,
-                idLoteMedido:idLoteMedido
+                idLoteMedido: idLoteMedido
             },
             success: function(respuesta) {
                 var resp = respuesta.split('|');

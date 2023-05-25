@@ -179,4 +179,12 @@ class Medido extends ConexionBD
         ORDER BY lm.idPaquete, CAST(lm.numLado AS unsigned)";
         return  $this->consultarQuery($sql, "consultar Lados Con Paquete");
     }
+    public function getNumPaquetesXLote($idLote, $paq){
+        $sql = "SELECT p.*, lm.loteTemola, cp.nombre AS nPrograma
+        FROM paqueteslados p
+        INNER JOIN lotesmediciones lm ON p.idLoteMedido=lm.id
+        INNER JOIN catprogramas cp ON lm.idCatPrograma=cp.id
+        WHERE p.idLoteMedido='$idLote' AND p.numPaquete='$paq'";
+        return  $this->consultarQuery($sql, "consultar Paquetes por Lote & Número", false);
+    }
 } 
