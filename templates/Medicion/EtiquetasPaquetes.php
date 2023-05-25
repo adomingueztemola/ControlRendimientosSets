@@ -13,14 +13,14 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
     </div>
 </div>
 <div class="row mb-1">
-    <div class="col-8">
+    <div class="col-6">
         <div class="card text-white bg-TWM mb-3" style="max-width: 18rem;">
             <div class="card-header">
                 <h4>Paquetes Registrados: <span id="cont-paq">0</span></h4>
             </div>
         </div>
     </div>
-    <div class="col-4">
+    <div class="col-6">
         <a id="impresionEtiq" href="../PDFReportes/Controller/EtiquetasPaquetes.php?op=getetiquetas&data=<?= $id ?>" target="_blank" class="button btn btn-info text-white btn-lg"><i class="fas fa-print"></i> Todas las Etiquetas</a>
     </div>
 </div>
