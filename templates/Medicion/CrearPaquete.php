@@ -27,6 +27,7 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
         <thead class="thead-dark">
             <tr>
                 <th scope="col">#</th>
+                <th scope="col"></th>
                 <th scope="col">Núm. Serie</th>
                 <th scope="col">Área Ft<sup>2</sup></th>
                 <th scope="col">Área Dm<sup>2</sup></th>
@@ -53,7 +54,7 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
             if (!respuesta.length) {
                 tabla += `
                         <tr>
-                            <td colspan='6'>Sin registro de lados en el lote</td>
+                            <td colspan='7'>Sin registro de lados en el lote</td>
                         </tr>
                     `
                 $("#btn-agregar").prop("hidden", true)
@@ -70,13 +71,15 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
                     });
                     return var_return
                 };
+                $count=1;
                 respuesta.forEach(element => {
                     options = doOptions(selecciones, element.idCatSeleccion)
                     areaDM = element.areaDM.toLocaleString('es-MX')
                     areaFT = element.areaFT.toLocaleString('es-MX')
                     areaRedondFT = parseFloat(element.areaRedondFT).toFixed(2).toLocaleString('es-MX')
                     tabla += `<tr id="trlado-${element.id}">
-                    <td><input type="checkbox"  id="chck-${element.id}" 
+                    <td>${$count}</td>
+                    <td> <input type="checkbox"  id="chck-${element.id}" 
                          name="lados[]" class="chckPack" value="${element.id}"></td>
                 <td><label for="chck-${element.id}" class="form-label">${element.numSerie}</label></td>
                 <td>${areaFT}</td>
@@ -88,10 +91,9 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
                       ${options}
                     </select>
                 </td></tr> `;
-                    count++;
+                    $count++;
                 });
                 $("#btn-agregar").prop("hidden", false)
-
             }
             $("#tbody-lados").html(tabla);
             conteoChecks()

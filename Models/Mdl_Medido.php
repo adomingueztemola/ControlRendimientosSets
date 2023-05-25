@@ -55,7 +55,9 @@ class Medido extends ConexionBD
     public function getLadosDisp($id)
     {
         $sql = "SELECT lm.* FROM ladosmediciones lm
-        WHERE lm.idLoteMedicion='$id' AND (lm.idPaquete IS NULL OR lm.idPaquete=0 OR lm.idPaquete='')";
+        WHERE lm.idLoteMedicion='$id' 
+        AND (lm.idPaquete IS NULL OR lm.idPaquete=0 OR lm.idPaquete='')
+        ORDER BY CAST(lm.numSerie AS unsigned) DESC";
         return  $this->consultarQuery($sql, "consultar Detalle de Reporte de Medición");
     }
     public function getDetReporteMedicion($id)
@@ -167,17 +169,14 @@ class Medido extends ConexionBD
     public function reconteoPaquetes($id){
         $sql="CALL reconteoPaquetes('$id')";
         return $this->runQuery($sql, "reconteo del Paquete");
-
     }
 
     public function getLadosConPaquete($idLote){
         $sql="SELECT lm.*,  cs.nombre AS nSeleccion  FROM ladosmediciones lm
         INNER JOIN catselecciones cs ON lm.idCatSeleccion=cs.id
-
         WHERE (lm.idPaquete<>'' AND lm.idPaquete IS NOT NULL)
         AND lm.idLoteMedicion='$idLote'
         ORDER BY lm.idPaquete, CAST(lm.numLado AS unsigned)";
         return  $this->consultarQuery($sql, "consultar Lados Con Paquete");
-
     }
 } 
