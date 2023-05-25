@@ -1212,7 +1212,7 @@ $debug = '0';
                     $totalResult = 0;
                     foreach ($DataSemana as $key => $value) {
                         $total = getRecorrerData($DataSemana[$key]['semanaProduccion'], "total_s", $DataEtiquetas);
-                        $total = $total == '' ? '0' : $total * 2;
+                        $total = $total == '' ? '0' : $total;
                         $totalResult += $total;
 
                         $areaComprada = getRecorrerData($DataSemana[$key]['semanaProduccion'], "totalProducido", $DataEtiquetas);
