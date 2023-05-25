@@ -16,7 +16,7 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
     <div class="col-6">
         <div class="card text-white bg-TWM mb-3" style="max-width: 18rem;">
             <div class="card-header">
-                <h4>Paquetes Registrados: <span id="cont-paq">0</span></h4>
+                <h4>Paquetes: <span id="cont-paq">0</span></h4>
             </div>
         </div>
     </div>
