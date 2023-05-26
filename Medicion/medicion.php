@@ -50,7 +50,7 @@ $space = 1;
                 </div>
                 <div class="row">
 
-                    <div class="card col-md-7" style="height:555px; overflow-y: scroll;">
+                    <div class="card col-md-7">
                         <div id="contentCrear">
                         </div>
                     </div>
@@ -61,7 +61,7 @@ $space = 1;
                             <div class="card-header" style="background-color:#ee5a36;">
                                 <h3 class="text-white">Paquetes</h3>
                             </div>
-                            <div class="card-body" style="height:500px; overflow-y: scroll;">
+                            <div class="card-body" >
                                 <div id="contentPaquetes">
                                 </div>
                             </div>

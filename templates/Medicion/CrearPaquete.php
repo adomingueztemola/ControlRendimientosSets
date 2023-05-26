@@ -23,24 +23,28 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
             </div>
         </div>
     </div>
-    <table class="table table-hover  table-sm">
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col"></th>
-                <th scope="col">Núm. Serie</th>
-                <th scope="col">Área Ft<sup>2</sup></th>
-                <th scope="col">Área Dm<sup>2</sup></th>
-                <th scope="col">Red.</th>
-                <th scope="col">Seleccion</th>
-            </tr>
-        </thead>
-        <tbody id="tbody-lados">
-        </tbody>
-    </table>
+    <div class="row"  style="height:555px; overflow-y: scroll;">
+        <div class="col-md-12">
+            <table class="table table-hover  table-sm">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col"></th>
+                        <th scope="col">Núm. Serie</th>
+                        <th scope="col">Área Ft<sup>2</sup></th>
+                        <th scope="col">Área Dm<sup>2</sup></th>
+                        <th scope="col">Red.</th>
+                        <th scope="col">Seleccion</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody-lados">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 </div>
 <script>
-  
     $.ajax({
         url: '../Controller/medicion.php?op=getladosxlote',
         data: {
@@ -71,7 +75,7 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
                     });
                     return var_return
                 };
-                $count=1;
+                $count = 1;
                 respuesta.forEach(element => {
                     options = doOptions(selecciones, element.idCatSeleccion)
                     areaDM = element.areaDM.toLocaleString('es-MX')

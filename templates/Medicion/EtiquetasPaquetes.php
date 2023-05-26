@@ -24,7 +24,7 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
         <a id="impresionEtiq" href="../PDFReportes/Controller/EtiquetasPaquetes.php?op=getetiquetas&data=<?= $id ?>" target="_blank" class="button btn btn-info text-white btn-lg"><i class="fas fa-print"></i> Todas las Etiquetas</a>
     </div>
 </div>
-<div class="row">
+<div class="row" style="height:500px; overflow-y: scroll;">
     <div class="col-12">
         <div id="accordion-paquetes" class="accordion" role="tablist" aria-multiselectable="true">
         </div>
