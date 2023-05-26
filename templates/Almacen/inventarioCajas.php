@@ -97,7 +97,19 @@ $DataRendimiento = $obj_inventario->getInventarioCajas($filtradoSemana, $filtrad
 
     </table>
 </div>
-
+<div class="row">
+    <div class="col-md-4">
+        <table class="table table-sm table-bordered table-dark">
+            <thead>
+                <tr>
+                    <th>Programa</th>
+                    <th>Cajas</th>
+                </tr>
+            </thead>
+            <tbody id="tbody-sumatoria"></tbody>
+        </table>
+    </div>
+</div>
 <!-- Modal -->
 <div class="modal fade" id="detalladoModal" role="dialog" aria-labelledby="detalladoModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -178,4 +190,33 @@ $DataRendimiento = $obj_inventario->getInventarioCajas($filtradoSemana, $filtrad
 
         });
     }
+
+    $.ajax({
+        url: '../Controller/inventario.php?op=conteoxprograma',
+        type: 'POST',
+        async: false,
+        dataType: "json",
+        success: function(respuesta) {
+            tabla = ""
+            if (!respuesta.length) {
+                tabla += `
+                        <tr>
+                            <td colspan='7'>Sin registro de lados en el lote</td>
+                        </tr>
+                    `
+            } else {
+               
+                respuesta.forEach(element => {
+                    totalCajas = element.totalCajas.toLocaleString('es-MX')
+                    tabla += `<tr>
+                    <td>${element.nPrograma}</td>
+                    <td>${totalCajas}</td>
+                    </tr> `;
+                });
+            }
+            $("#tbody-sumatoria").html(tabla);
+        },
+
+
+    });
 </script>

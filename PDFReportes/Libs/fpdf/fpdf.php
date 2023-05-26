@@ -66,12 +66,12 @@ protected $ZoomMode;           // zoom display mode
 protected $LayoutMode;         // layout display mode
 protected $metadata;           // document properties
 protected $PDFVersion;         // PDF version number
-
+protected $medidasArgox;
 /*******************************************************************************
 *                               Public methods                                 *
 *******************************************************************************/
 
-function __construct($orientation='P', $unit='mm', $size='A4')
+function __construct($orientation='P', $unit='mm', $size='A4', $medidasArgox=false)
 {
 	// Some checks
 	$this->_dochecks();
@@ -101,6 +101,7 @@ function __construct($orientation='P', $unit='mm', $size='A4')
 	$this->ColorFlag = false;
 	$this->WithAlpha = false;
 	$this->ws = 0;
+	$this->medidasArgox=$medidasArgox;
 	// Font path
 	if(defined('FPDF_FONTPATH'))
 	{
@@ -133,20 +134,32 @@ function __construct($orientation='P', $unit='mm', $size='A4')
 	$this->CurPageSize = $size;
 	// Page orientation
 	$orientation = strtolower($orientation);
+
 	if($orientation=='p' || $orientation=='portrait')
 	{
 		$this->DefOrientation = 'P';
-		$this->w = $size[0];
-		$this->h = $size[1];
+		if($this->medidasArgox){
+			$this->w = $size[1];
+			$this->h = $size[0];
+
+		}else{
+			$this->w = $size[0];
+			$this->h = $size[1];
+
+		}
+		
 	}
 	elseif($orientation=='l' || $orientation=='landscape')
 	{
 		$this->DefOrientation = 'L';
 		$this->w = $size[1];
 		$this->h = $size[0];
+		
 	}
 	else
 		$this->Error('Incorrect orientation: '.$orientation);
+
+
 	$this->CurOrientation = $this->DefOrientation;
 	$this->wPt = $this->w*$this->k;
 	$this->hPt = $this->h*$this->k;
@@ -167,6 +180,8 @@ function __construct($orientation='P', $unit='mm', $size='A4')
 	$this->SetCompression(true);
 	// Set default PDF version number
 	$this->PDFVersion = '1.3';
+
+
 }
 
 function SetMargins($left, $top, $right=null)
@@ -1566,8 +1581,14 @@ protected function _putpages()
 	$this->_put('/Count '.$nb);
 	if($this->DefOrientation=='P')
 	{
-		$w = $this->DefPageSize[0];
-		$h = $this->DefPageSize[1];
+		if($this->medidasArgox){
+			$w = $this->DefPageSize[1];
+			$h = $this->DefPageSize[0];
+		}else{
+			$w = $this->DefPageSize[0];
+			$h = $this->DefPageSize[1];
+		}
+		
 	}
 	else
 	{

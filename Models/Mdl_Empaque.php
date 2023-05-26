@@ -300,7 +300,7 @@ class Empaque extends ConexionBD
         INNER JOIN (
 					SELECT d.idEmpaque, d.numCaja, sum(d.total) AS totalCajas, d.interna FROM detcajas d
 					INNER JOIN empaques e ON d.idEmpaque= e.id
-					WHERE e.fecha = '$fecha'
+					WHERE e.fecha = '$fecha' AND  d.remanente='0'
 					GROUP BY d.idEmpaque, d.numCaja, d.interna
 					HAVING sum(d.total)=400 
         ) dc ON e.id = dc.idEmpaque
@@ -749,8 +749,18 @@ class Empaque extends ConexionBD
         $sql = "UPDATE        
         detcajas d
         INNER JOIN rendimientos r ON d.idLote=r.id
+        INNER JOIN (SELECT dp.idRendimiento, AVG( p.precioUnitFactUsd ) AS costoProm 
+                        FROM detpedidos dp
+                        INNER JOIN pedidos p ON dp.idPedido = p.id  
+                        GROUP BY dp.idRendimiento) dp ON dp.idRendimiento = r.id 
         SET r.totalEmp=r.totalEmp-d.total,
-        r.totalLote0=r.totalLote0+d.total
+        r.totalRecu=r.totalRecu-d.total,
+        r.totalLote0=r.totalLote0+d.total,
+        r.areaCrustSet=r.areaCrust/((IFNULL((r.totalEmp-d.total),0)+d.total)/4),
+        r.areaWBUnidad= r.areaWB/((IFNULL((r.totalEmp-d.total),0)+d.total)/4),
+        r.costoWBUnit= (r.areaWB/((IFNULL((r.totalEmp-d.total),0)+d.total)/4))* dp.costoProm,
+        r.piezasRecuperadas= IFNULL(r.piezasRecuperadas,0)-d.total, 
+        r.setsRecuperados= (IFNULL(r.piezasRecuperadas,0)-d.total)/4
         WHERE d.idEmpaque='$idEmpaque' AND d.numCaja='$numCaja' AND tipo='3'";
         return $this->runQuery($sql, "registro de Aumento Lote 0 de la caja");
     }
@@ -760,8 +770,18 @@ class Empaque extends ConexionBD
         $sql = "UPDATE        
         detcajas d
         INNER JOIN rendimientos r ON d.idLote=r.id
+        INNER JOIN (SELECT dp.idRendimiento, AVG( p.precioUnitFactUsd ) AS costoProm 
+                        FROM detpedidos dp
+                        INNER JOIN pedidos p ON dp.idPedido = p.id  
+                        GROUP BY dp.idRendimiento) dp ON dp.idRendimiento = r.id 
         SET r.totalEmp=r.totalEmp+d.total,
-        r.totalLote0=r.totalLote0-d.total
+        r.totalRecu=r.totalRecu+d.total,
+        r.totalLote0=r.totalLote0-d.total,
+        r.areaCrustSet=r.areaCrust/((IFNULL((r.totalEmp+d.total),0)+d.total)/4),
+        r.areaWBUnidad= r.areaWB/((IFNULL((r.totalEmp+d.total),0)+d.total)/4),
+        r.costoWBUnit= (r.areaWB/((IFNULL((r.totalEmp+d.total),0)+d.total)/4))* dp.costoProm,
+        r.piezasRecuperadas= IFNULL(r.piezasRecuperadas,0)+d.total, 
+        r.setsRecuperados= (IFNULL(r.piezasRecuperadas,0)+d.total)/4
         WHERE d.idEmpaque='$idEmpaque' AND d.numCaja='$numCaja' AND tipo='3'";
         return $this->runQuery($sql, "registro de Disminución Lote 0 de la caja");
     }
