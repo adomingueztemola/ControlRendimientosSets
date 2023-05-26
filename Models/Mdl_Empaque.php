@@ -300,7 +300,7 @@ class Empaque extends ConexionBD
         INNER JOIN (
 					SELECT d.idEmpaque, d.numCaja, sum(d.total) AS totalCajas, d.interna FROM detcajas d
 					INNER JOIN empaques e ON d.idEmpaque= e.id
-					WHERE e.fecha = '$fecha'
+					WHERE e.fecha = '$fecha' AND  d.remanente='0'
 					GROUP BY d.idEmpaque, d.numCaja, d.interna
 					HAVING sum(d.total)=400 
         ) dc ON e.id = dc.idEmpaque

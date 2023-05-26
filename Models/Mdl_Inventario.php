@@ -417,6 +417,23 @@ GROUP BY r.id
 ORDER BY r.yearWeek DESC, r.semanaProduccion DESC";
         return  $this->consultarQuery($sql, "consultar Inventario de Cajas");
     }
+    public function getInventarioAgrupCajas()
+    {
+        $sql = "SELECT dc.idCatPrograma,  p.nombre AS nPrograma, COUNT(dc.idEmpaque) AS totalCajas
+        FROM  (
+                      SELECT e.fecha, d.idEmpaque, d.numCaja, sum(d.total) AS totalCajas, e.idCatPrograma,
+                      p.nombre AS nPrograma	FROM detcajas d
+                      INNER JOIN empaques e ON d.idEmpaque= e.id
+                            INNER JOIN catprogramas p ON e.idCatPrograma=p.id
+                      WHERE (d.vendida IS NULL OR d.vendida='0' OR d.vendida='') AND d.remanente='0'
+                      GROUP BY d.idEmpaque, d.numCaja
+                      HAVING sum(d.total)=400 
+          ) dc 
+        INNER JOIN catprogramas p ON dc.idCatPrograma=p.id
+          GROUP BY dc.idCatPrograma";
+        return  $this->consultarQuery($sql, "consultar Inventario de Cajas Por Programa");
+    }
+
 
     public function getConsumoInterno($filtradoSemana = '1=1', $filtradoProceso = '1=1', $filtradoPrograma = '1=1', $filtradoMateria = '1=1')
     {
