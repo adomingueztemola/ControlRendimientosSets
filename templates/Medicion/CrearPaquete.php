@@ -45,6 +45,8 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
 
 </div>
 <script>
+    creacionPaquete()
+   function creacionPaquete(){
     $.ajax({
         url: '../Controller/medicion.php?op=getladosxlote',
         data: {
@@ -105,6 +107,8 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
 
 
     });
+   }
+  
 
     function getSelecciones() {
         options = {};

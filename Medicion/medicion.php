@@ -80,7 +80,7 @@ $space = 1;
 
 
 <script>
-    cargaPaquete()
+   // cargaPaquete()
     verLados()
 
     function cargaPaquete() {
