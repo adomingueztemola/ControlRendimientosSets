@@ -2,8 +2,8 @@
 $id = !empty($_POST['id']) ? $_POST['id'] : "";
 ?>
 <div class="row mb-1">
-    <div class="col-md-7"></div>
-    <div class="col-md-5">
+    <div class="col-md-6"></div>
+    <div class="col-md-6">
         <div class="input-group mb-3">
             <input type="number" class="form-control" id="numPaquete" placeholder="#Paquete" aria-label="" aria-describedby="basic-addon1">
             <div class="input-group-append">
