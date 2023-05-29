@@ -15,7 +15,7 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
     </div>
 </div>
 <div class="row mb-1">
-    <div class="col-8">
+    <div class="col-12">
         <div class="card border-danger mb-3" style="max-width: 18rem;">
             <div class="card-header">
                 <div class="row">
