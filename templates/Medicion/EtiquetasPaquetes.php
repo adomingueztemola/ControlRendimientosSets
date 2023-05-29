@@ -94,7 +94,7 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
                                             </button>
                                         </div>
                                         <div id="desbloqueo-btnDlt-${element.id}">
-                                            <button onclick="eliminarPaquete(${element.id}, ${element.idLoteMedido})" class="btn button btn-xs btn-outline-danger"><i class="fas fa-trash-alt"></i></button>    
+                                            <button onclick="eliminarPaquete(${element.id}, ${element.idLoteMedido})" class="btn button btn-xs btn-outline-danger btn-dltpaq"><i class="fas fa-trash-alt"></i></button>    
                                         </div>
                                         </div>
                                     </div>

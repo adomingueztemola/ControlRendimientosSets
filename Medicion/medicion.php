@@ -147,8 +147,12 @@ $space = 1;
                     if (respuesta.paqDelete == '1') {
                         $("#numAbierto").text(respuesta.numPaqDlt);
                         $("#div-abierto").prop("hidden", false)
+                        $(".btn-dltpaq").prop("hidden", true)
+
                     }else{
                         $("#div-abierto").prop("hidden", true)
+                        $(".btn-dltpaq").prop("hidden", false)
+
                     }
 
                 } else if(id!=''){
