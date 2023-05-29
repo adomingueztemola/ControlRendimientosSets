@@ -89,7 +89,7 @@ $space = 1;
 <script>
     // cargaPaquete()
     verLados()
-    $("#tbody-lados.accordionPaq").remove()
+    $('#tbody-lados').find('.accordionPaq').remove()
 
     function cargaPaquete() {
         loteMedido = $("#selectlotes").val();
@@ -101,7 +101,7 @@ $space = 1;
             type: 'POST',
             success: function(respuesta) {
                 $('#contentPaquetes').html(respuesta);
-                $("#tbody-lados.accordionPaq").remove()
+                $('#tbody-lados').find('.accordionPaq').remove()
 
             },
             beforeSend: function() {
