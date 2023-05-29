@@ -19,10 +19,10 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
         <div class="card border-danger mb-3" style="max-width: 18rem;">
             <div class="card-header">
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-8">
                         <h4>Paquetes: <span id="cont-paq">0</span></h4>
                     </div>
-                    <div class="col-6">
+                    <div class="col-4">
                         <div id="bloqueo-btnDltAll" style="display:none">
                             <button class="btn button btn-xs btn-outline-danger" type="button" disabled="">
                                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
