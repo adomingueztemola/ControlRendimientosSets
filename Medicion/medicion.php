@@ -129,6 +129,8 @@ $space = 1;
         });
         if (actPaq) {
             cargaPaquete()
+            $("#tbody-lados.accordionPaq").remove()
+
         }
 
     }

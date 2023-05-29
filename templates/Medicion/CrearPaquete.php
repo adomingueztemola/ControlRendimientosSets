@@ -45,8 +45,7 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
 
 </div>
 <script>
-    creacionPaquete()
-    $("#tbody-lados.accordionPaq").remove()
+    creacionPaquete() 
 
    function creacionPaquete(){
     $.ajax({
