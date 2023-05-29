@@ -100,6 +100,8 @@ $space = 1;
             type: 'POST',
             success: function(respuesta) {
                 $('#contentPaquetes').html(respuesta);
+                $("#tbody-lados.accordionPaq").remove()
+
             },
             beforeSend: function() {
                 $('#contentPaquetes').html('<div class="loading text-center"><img src="../assets/images/loading.gif" alt="loading" /><br/>Un momento, por favor...</div>');
