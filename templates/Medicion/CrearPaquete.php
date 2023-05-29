@@ -107,6 +107,7 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
             conteoChecks()
             console.log( $('#tbody-lados').find('.accordionPaq').html())
             $('#tbody-lados').find('.accordionPaq').remove()
+            $('#tbody-lados').find('.alert-info').remove()
 
         },
 
