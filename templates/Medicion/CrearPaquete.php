@@ -46,6 +46,7 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
 </div>
 <script>
     creacionPaquete() 
+    $("#tbody-lados.accordionPaq").remove()
 
    function creacionPaquete(){
     $.ajax({
@@ -104,6 +105,8 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
             }
             $("#tbody-lados").html(tabla);
             conteoChecks()
+            $("#tbody-lados.accordionPaq").remove()
+
         },
 
 

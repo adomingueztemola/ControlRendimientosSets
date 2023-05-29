@@ -89,6 +89,7 @@ $space = 1;
 <script>
     // cargaPaquete()
     verLados()
+    $("#tbody-lados.accordionPaq").remove()
 
     function cargaPaquete() {
         loteMedido = $("#selectlotes").val();
