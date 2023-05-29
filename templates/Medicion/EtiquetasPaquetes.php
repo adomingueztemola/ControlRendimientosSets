@@ -16,7 +16,7 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
 </div>
 <div class="row mb-1">
     <div class="col-12">
-        <div class="card border-danger mb-3" style="max-width: 18rem;">
+        <div class="card border-danger mb-3" style="">
             <div class="card-header">
                 <div class="row">
                     <div class="col-8">
@@ -48,6 +48,7 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
 </div>
 <script>
     verData()
+    $("#tbody-lados.accordionPaq").remove()
     consultaPaqAbierto("<?=$id?>")
     function verData() {
         $.ajax({
