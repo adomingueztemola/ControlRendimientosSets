@@ -59,9 +59,16 @@ $space = 1;
                         <div class="card">
 
                             <div class="card-header" style="background-color:#ee5a36;">
-                                <h3 class="text-white">Paquetes</h3>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h3 class="text-white">Paquetes</h3>
+                                    </div>
+                                    <div class="col-md-4" hidden id="div-abierto">
+                                        <h3 class="text-white"> # Abierto: <span id="numAbierto">N/A</span></h3>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="card-body" >
+                            <div class="card-body">
                                 <div id="contentPaquetes">
                                 </div>
                             </div>
@@ -80,7 +87,7 @@ $space = 1;
 
 
 <script>
-   // cargaPaquete()
+    // cargaPaquete()
     verLados()
 
     function cargaPaquete() {
@@ -124,6 +131,32 @@ $space = 1;
             cargaPaquete()
         }
 
+    }
+
+    function consultaPaqAbierto(id) {
+        $.ajax({
+            url: '../Controller/medicion.php?op=getpaqabierto',
+            data: {
+                id: id
+            },
+            type: 'POST',
+            async: false,
+            dataType: "json",
+            success: function(respuesta) {
+                if (Object.keys(respuesta).length > 0) {
+                    if (respuesta.paqDelete == '1') {
+                        $("#numAbierto").text(respuesta.numPaqDlt);
+                        $("#div-abierto").prop("hidden", false)
+                    }else{
+                        $("#div-abierto").prop("hidden", true)
+                    }
+
+                } else if(id!=''){
+                    notificaBad("Error al consultar el lote, notifica a sistemas.")
+                }
+
+            },
+        });
     }
 </script>
 

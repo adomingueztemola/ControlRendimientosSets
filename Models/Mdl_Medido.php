@@ -108,7 +108,13 @@ class Medido extends ConexionBD
 
     public function getNumPaquete($id)
     {
-        $sql = "SELECT IFNULL(count(p.id),0)+1 AS numPaquete FROM paqueteslados p
+        $sql = "SELECT 
+         IF(lm.id IS NULL,0, 1) AS abierto,
+        IF(lm.id IS NOT NULL,lm.numPaqDlt, 
+        IFNULL(count(p.id),0)+1) AS numPaquete
+        FROM paqueteslados p
+        LEFT JOIN lotesmediciones lm ON p.idLoteMedido=lm.id 
+        AND lm.paqDelete='1' 
         WHERE p.idLoteMedido='$id'";
         return  $this->consultarQuery($sql, "consultar Num de Paquete", false);
     }
@@ -186,5 +192,42 @@ class Medido extends ConexionBD
         INNER JOIN catprogramas cp ON lm.idCatPrograma=cp.id
         WHERE p.idLoteMedido='$idLote' AND p.numPaquete='$paq'";
         return  $this->consultarQuery($sql, "consultar Paquetes por Lote & Número", false);
+    }
+
+    public function ingresarNumPaqDlt($id){
+        $sql="UPDATE paqueteslados p
+        INNER JOIN lotesmediciones lm ON p.idLoteMedido=lm.id
+            SET lm.paqDelete='1', lm.numPaqDlt=p.numPaquete
+         WHERE p.id='$id'";
+        return $this->runQuery($sql, "ingresa paquete eliminado como pendiente");
+    }
+
+    public function eliminarNumPaqDlt($id){
+        $sql="UPDATE lotesmediciones lm 
+            SET lm.paqDelete='0', lm.numPaqDlt=''
+         WHERE lm.id='$id'";
+        return $this->runQuery($sql, "eliminar paquete como pendiente");
+    }
+
+    public function eliminarAllPaq($id){
+        $sql="DELETE FROM 
+        paqueteslados
+        WHERE idLoteMedido='$id'";
+        return $this->runQuery($sql, "eliminar paquetes del lote");
+    }
+
+    public function devolverLadosLotes($id){
+        $sql="UPDATE paqueteslados p
+        INNER JOIN ladosmediciones lm ON p.id=lm.idPaquete
+            SET lm.idPaquete='', lm.numLado=''
+         WHERE p.idLoteMedido='$id'";
+        return $this->runQuery($sql, "eliminar lados de los paquetes del lote");
+    }
+
+    public function getDetLote($id){
+        $sql = "SELECT lm.*
+        FROM lotesmediciones lm
+        WHERE lm.id='$id'";
+        return  $this->consultarQuery($sql, "consultar Detalle del Lote", false);
     }
 } 

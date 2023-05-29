@@ -2,7 +2,9 @@
 $id = !empty($_POST['id']) ? $_POST['id'] : "";
 ?>
 <div class="row mb-1">
-    <div class="col-md-6"></div>
+    <div class="col-md-6">
+        <a id="impresionEtiq" href="../PDFReportes/Controller/EtiquetasPaquetes.php?op=getetiquetas&data=<?= $id ?>" target="_blank" class="button btn btn-info text-white btn-lg"><i class="fas fa-print"></i> Todas las Etiquetas</a>
+    </div>
     <div class="col-md-6">
         <div class="input-group mb-3">
             <input type="number" class="form-control" id="numPaquete" placeholder="#Paquete" aria-label="" aria-describedby="basic-addon1">
@@ -13,15 +15,28 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
     </div>
 </div>
 <div class="row mb-1">
-    <div class="col-6">
-        <div class="card text-white bg-TWM mb-3" style="max-width: 18rem;">
+    <div class="col-8">
+        <div class="card border-danger mb-3" style="max-width: 18rem;">
             <div class="card-header">
-                <h4>Paquetes: <span id="cont-paq">0</span></h4>
+                <div class="row">
+                    <div class="col-6">
+                        <h4>Paquetes: <span id="cont-paq">0</span></h4>
+                    </div>
+                    <div class="col-6">
+                        <div id="bloqueo-btnDltAll" style="display:none">
+                            <button class="btn button btn-xs btn-outline-danger" type="button" disabled="">
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                        <div id="desbloqueo-btnDltAll">
+                            <button class="btn btn-sm btn-danger" onclick="eliminarTodo()">Eliminar Todos</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     <div class="col-6">
-        <a id="impresionEtiq" href="../PDFReportes/Controller/EtiquetasPaquetes.php?op=getetiquetas&data=<?= $id ?>" target="_blank" class="button btn btn-info text-white btn-lg"><i class="fas fa-print"></i> Todas las Etiquetas</a>
     </div>
 </div>
 <div class="row" style="height:500px; overflow-y: scroll;">
@@ -33,7 +48,7 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
 </div>
 <script>
     verData()
-
+    consultaPaqAbierto("<?=$id?>")
     function verData() {
         $.ajax({
             url: '../Controller/medicion.php?op=getpaquetesxlote',
@@ -59,7 +74,7 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
                     respuesta.forEach(element => {
                         areaTotalRd = parseFloat(element.areaTotalRd).toFixed(2).toLocaleString('es-MX')
                         totalLados = parseFloat(element.totalLados).toFixed(0).toLocaleString('es-MX')
-                        tabla += ` <div class="card" id="cardAccordion-${element.id}">
+                        tabla += ` <div class="card accordionPaq" id="cardAccordion-${element.id}">
                         <div class="card-header" role="tab" id="headingOne">
                             <h5 class="mb-0">
                                     <div class="row">
@@ -107,12 +122,12 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
         });
     }
 
-    function panelImpresion(){
-        numPaquete= $("#numPaquete").val()
-        if(numPaquete<=0 || numPaquete==''){
+    function panelImpresion() {
+        numPaquete = $("#numPaquete").val()
+        if (numPaquete <= 0 || numPaquete == '') {
             notificaBad("Selecciona un número de paquete");
-        }else{
-            window.open("../PDFReportes/Controller/EtiquetasPaquetes.php?op=getetiqueta&paq="+numPaquete+"&data=<?= $id ?>");
+        } else {
+            window.open("../PDFReportes/Controller/EtiquetasPaquetes.php?op=getetiqueta&paq=" + numPaquete + "&data=<?= $id ?>");
 
         }
     }
@@ -188,6 +203,7 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
                     notificaSuc(resp[1])
                     bloqueoBtn("bloqueo-btnDlt-" + id, 2)
                     $("#cardAccordion-" + id).remove();
+                    consultaPaqAbierto(idLoteMedido)
                     verLados(false)
                     verData()
                 } else {
@@ -202,4 +218,35 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
             }
         });
     }
+
+    function eliminarTodo() {
+        $.ajax({
+            type: 'POST',
+            url: '../Controller/medicion.php?op=eliminartodospaquetes',
+            data: {
+                id: "<?= $id ?>"
+            },
+            success: function(respuesta) {
+                var resp = respuesta.split('|');
+                if (resp[0] == 1) {
+                    notificaSuc(resp[1])
+                    bloqueoBtn("bloqueo-btnDltAll", 2)
+                    $(".accordionPaq").remove();
+                    verLados(false)
+                    verData()
+                    $("#div-abierto").prop("hidden", true)
+                } else {
+                    notificaBad(resp[1])
+                    bloqueoBtn("bloqueo-btnDltAll", 2)
+
+                }
+            },
+            beforeSend: function() {
+                bloqueoBtn("bloqueo-btnDltAll", 1)
+
+            }
+        });
+    }
+
+   
 </script>
