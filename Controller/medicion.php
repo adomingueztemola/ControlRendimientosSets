@@ -19,9 +19,12 @@ switch ($_GET["op"]) {
     case "agregarreporte":
         $reporte = (isset($_POST['reporte'])) ? ($_POST['reporte']) : array();
         $programa = (isset($_POST['programa'])) ? trim($_POST['programa']) : '';
+        $grosor = (isset($_POST['grosor'])) ? trim($_POST['grosor']) : '';
+
         $folioLote = (isset($_POST['folioLote'])) ? trim($_POST['folioLote']) : '';
         Excepciones::validaLlenadoDatos(array(
             " Programa" => $programa,
+            " Grosor" => $grosor,
             " Folio de Lote" => $folioLote
         ), $obj_medido);
         #Valida que Producto no exista en el Catalogo
@@ -61,7 +64,7 @@ switch ($_GET["op"]) {
         $arrayAreas = $funcTotalArea($reporte);
         $obj_medido->beginTransaction();
         /* -> agregar lote  */
-        $datos = $obj_medido->agregarLoteMedido($folioLote, $programa, $arrayAreas[0], $arrayAreas[1], $arrayAreas[2], $ladosTotales);
+        $datos = $obj_medido->agregarLoteMedido($folioLote, $programa, $arrayAreas[0], $arrayAreas[1], $arrayAreas[2], $ladosTotales, $grosor);
         try {
             Excepciones::validaMsjError($datos);
         } catch (Exception $e) {
@@ -105,6 +108,7 @@ switch ($_GET["op"]) {
                 $value['id'],
                 $value['loteTemola'],
                 $value['nPrograma'],
+                $value['nGrosor'],
                 $ladosTotales,
                 $areaTotalDM,
                 $areaTotalFT,
@@ -153,6 +157,19 @@ switch ($_GET["op"]) {
         } else {
             $search = $_POST['palabraClave']; // Palabra a buscar
             $Data = $obj_medido->getLotesSelect2($search);
+            $Data = Excepciones::validaConsulta($Data);
+        }
+        //Creamos el JSON
+        $json_string = json_encode($Data);
+        echo $json_string;
+        break;
+    case "select2grosor":
+        if (!isset($_POST['palabraClave'])) {
+            $Data = $obj_medido->getGrosorSelect2();
+            $Data = Excepciones::validaConsulta($Data);
+        } else {
+            $search = $_POST['palabraClave']; // Palabra a buscar
+            $Data = $obj_medido->getGrosorSelect2($search);
             $Data = Excepciones::validaConsulta($Data);
         }
         //Creamos el JSON
@@ -239,7 +256,7 @@ switch ($_GET["op"]) {
             $count++;
         }
         //cierre de paquete abierto
-        if($abierto=='1'){
+        if ($abierto == '1') {
             $datos = $obj_medido->eliminarNumPaqDlt($id);
             try {
                 Excepciones::validaMsjError($datos);

@@ -35,6 +35,7 @@ $date_end = $date_end != "" ? date("Y-m-d", strtotime(str_replace("/", "-", $dat
                     <th scope="col">#</th>
                     <th scope="col">Lote</th>
                     <th scope="col">Programa</th>
+                    <th scope="col">Grosor</th>
                     <th scope="col">Lados Totales</th>
                     <th scope="col">Área Total Dm<sup>2</sup></th>
                     <th scope="col">Área Total Ft<sup>2</sup></th>
@@ -82,7 +83,7 @@ $date_end = $date_end != "" ? date("Y-m-d", strtotime(str_replace("/", "-", $dat
                 defaultContent: '',
             },
             {
-                'targets': 8,
+                'targets': 9,
                 "bSortable": false,
 
                 'searchable': false,
