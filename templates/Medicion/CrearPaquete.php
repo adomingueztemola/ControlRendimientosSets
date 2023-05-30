@@ -3,13 +3,21 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
 ?>
 <div class="card-body">
     <div class="row mb-1">
-        <div class="col-md-8">
+        <div class="col-md-4">
+            <div class="card text-white bg-info mb-3" style="max-width: 18rem;">
+                <div class="card-header">
+                    <h4>Total de Lados: <span id="cont-total">0</span></h4>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
             <div class="card text-white bg-TWM mb-3" style="max-width: 18rem;">
                 <div class="card-header">
                     <h4>Lados Seleccionados: <span id="cont-lados">0</span></h4>
                 </div>
             </div>
         </div>
+
         <div class="col-md-4 text-right">
             <div id="bloqueo-btn-1" style="display:none">
                 <button class="btn btn-success btn-lg" type="button" disabled="">
@@ -23,7 +31,7 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
             </div>
         </div>
     </div>
-    <div class="row"  style="height:555px; overflow-y: scroll;">
+    <div class="row" style="height:555px; overflow-y: scroll;">
         <div class="col-md-12">
             <table class="table table-hover  table-sm">
                 <thead class="thead-dark">
@@ -45,47 +53,46 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
 
 </div>
 <script>
-    creacionPaquete() 
+    creacionPaquete()
     $('#tbody-lados').find('.accordionPaq').remove()
 
-   function creacionPaquete(){
-    $.ajax({
-        url: '../Controller/medicion.php?op=getladosxlote',
-        data: {
-            id: "<?= $id ?>"
-        },
-        type: 'POST',
-        async: false,
-        dataType: "json",
-        success: function(respuesta) {
-            tabla = ""
-            if (!respuesta.length) {
-                tabla += `
+    function creacionPaquete() {
+        $.ajax({
+            url: '../Controller/medicion.php?op=getladosxlote',
+            data: {
+                id: "<?= $id ?>"
+            },
+            type: 'POST',
+            async: false,
+            dataType: "json",
+            success: function(respuesta) {
+                tabla = ""
+                if (!respuesta.length) {
+                    tabla += `
                         <tr>
                             <td colspan='7'>Sin registro de lados en el lote</td>
                         </tr>
                     `
-                $("#btn-agregar").prop("hidden", true)
-            } else {
-                count = 1;
-                selecciones = getSelecciones();
-                let doOptions = (selecciones, id) => {
-                    var_return = "";
-                    selecciones.forEach(element => {
-                        selected = element.id == id ? "selected" : "";
-                        var_return += `
+                    $("#btn-agregar").prop("hidden", true)
+                } else {
+                    selecciones = getSelecciones();
+                    let doOptions = (selecciones, id) => {
+                        var_return = "";
+                        selecciones.forEach(element => {
+                            selected = element.id == id ? "selected" : "";
+                            var_return += `
                             <option ${selected} value="${element.id}">${element.nombre}</option>
                         `
-                    });
-                    return var_return
-                };
-                $count = 1;
-                respuesta.forEach(element => {
-                    options = doOptions(selecciones, element.idCatSeleccion)
-                    areaDM = element.areaDM.toLocaleString('es-MX')
-                    areaFT = element.areaFT.toLocaleString('es-MX')
-                    areaRedondFT = parseFloat(element.areaRedondFT).toFixed(2).toLocaleString('es-MX')
-                    tabla += `<tr id="trlado-${element.id}">
+                        });
+                        return var_return
+                    };
+                    $count = 1;
+                    respuesta.forEach(element => {
+                        options = doOptions(selecciones, element.idCatSeleccion)
+                        areaDM = element.areaDM.toLocaleString('es-MX')
+                        areaFT = element.areaFT.toLocaleString('es-MX')
+                        areaRedondFT = parseFloat(element.areaRedondFT).toFixed(2).toLocaleString('es-MX')
+                        tabla += `<tr id="trlado-${element.id}">
                     <td>${$count}</td>
                     <td> <input type="checkbox"  id="chck-${element.id}" 
                          name="lados[]" class="chckPack" value="${element.id}"></td>
@@ -99,22 +106,22 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
                       ${options}
                     </select>
                 </td></tr> `;
-                    $count++;
-                });
-                $("#btn-agregar").prop("hidden", false)
-            }
-            $("#tbody-lados").html(tabla);
-            conteoChecks()
-            console.log( $('#tbody-lados').find('.accordionPaq').html())
-            $('#tbody-lados').find('.accordionPaq').remove()
-            $('#tbody-lados').find('.alert-info').remove()
+                        $count++;
+                    });
+                    $("#btn-agregar").prop("hidden", false)
+                }
+                $("#tbody-lados").html(tabla);
+                conteoChecks()
+                console.log($('#tbody-lados').find('.accordionPaq').html())
+                $('#tbody-lados').find('.accordionPaq').remove()
+                $('#tbody-lados').find('.alert-info').remove()
+                $("#cont-total").text($count-1);
+            },
 
-        },
 
+        });
+    }
 
-    });
-   }
-  
 
     function getSelecciones() {
         options = {};
