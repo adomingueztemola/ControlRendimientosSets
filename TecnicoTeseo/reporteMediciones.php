@@ -114,11 +114,16 @@ $space = 1;
                             <form id="formcarga">
                                 <div class="modal-body">
                                     <div class="row">
-                                        <div class="col-lg-4 col-md-4 col-xs-4 col-sm-4">
+                                        <div class="col-lg-3 col-md-3 col-xs-3 col-sm-3">
                                             <label for="folioLote" class="form-label required">Folio de Lote </label>
                                             <input type="text" id="folioLote" name="folioLote" autocomplete="off" required class="form-control select2Form">
                                         </div>
-                                        <div class="col-lg-8 col-md-8 col-xs-8 col-sm-8">
+                                        <div class="col-lg-3 col-md-3 col-xs-3 col-sm-3">
+                                            <label for="grosor" class="form-label required">Grosor </label>
+                                            <select class="form-control GrosorFilter select2Form" required style="width:100%" name="grosor" id="grosorReporte">
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-xs-6 col-sm-6">
                                             <label for="programaReporte" class="form-label required">Programa</label>
                                             <select class="form-control ProgramaCalzadoFilter select2Form" required style="width:100%" name="programa" id="programaReporte">
                                             </select>

@@ -29,10 +29,10 @@ class PDFEtiquetas extends PDF_MC_Table
         EOD);
         $this->SetLineWidth(1);
         $this->SetDrawColor(238, 113, 24);
-        $this->Rect(1, 1, 98, 33, "D"); //Marco exterior
-        $this->Rect(1, 33, 98, 41, "D"); //Marco exterior
+        $this->Rect(10, 2, 88, 33, "D"); //Marco exterior
+        $this->Rect(10, 35, 88, 38, "D"); //Marco exterior
         $this->SetDrawColor(0, 0, 0);
-        $this->Rect(2.5, 2.5, 95.10, 28.5, "D"); //Marco exterior
+        $this->Rect(12, 4, 84, 29, "D"); //Marco exterior
 
     }
     public function DatosPaquete(
@@ -41,7 +41,7 @@ class PDFEtiquetas extends PDF_MC_Table
         $noPaquete,
         $loteTemola
     ) {
-        $this->SetY('3');
+        $this->SetXY('12','4.5');
         $this->SetFont('Times', '', 11);
         $this->SetTextColor(0, 0, 0);
         $this->SetDrawColor(0, 0, 0);
@@ -51,16 +51,19 @@ class PDFEtiquetas extends PDF_MC_Table
         $this->Row([
             utf8_decode("NOMBRE: " . $programa)
         ], 0);
+        $this->SetX('12');
 
         $this->SetWidths([50, 50]);
         $this->Row([
             utf8_decode("TOTAL DE LADOS: " . $totalLados),
             utf8_decode("No. PAQUETE: " . $noPaquete)
         ], 0);
+        $this->SetX('12');
         $this->SetWidths([240]);
         $this->Row([
             utf8_decode("LOTE: " . $loteTemola)
         ], 0);
+        $this->SetX('12');
         $this->SetWidths([240]);
 
         $this->Row([
@@ -70,21 +73,21 @@ class PDFEtiquetas extends PDF_MC_Table
 
     public function insertCodeNormal($image,  $y, $x = 30)
     {
-        $this->Image($image, 29, 23, 30, 7, 'PNG');
+        $this->Image($image, 29, 24.5, 30, 7, 'PNG');
     }
 
     public function DetalleLados($arrayLado, $totalFt2)
     {
-        $this->SetXY('5', "36");
+        $this->SetXY('11', "36");
         $this->SetFont('Times', '', 10);
-        $this->SetWidths([20, 35, 35]);
+        $this->SetWidths([20, 35, 30.5]);
         $this->Row([
             utf8_decode("#LADO"),
             utf8_decode("CLASIFICACIÓN"),
             utf8_decode("MEDIDA Ft²")
         ]);
         foreach ($arrayLado as  $value) {
-            $this->SetX('5');
+            $this->SetX('11');
 
             $this->Row([
                 utf8_decode($value[0]),
@@ -92,8 +95,8 @@ class PDFEtiquetas extends PDF_MC_Table
                 utf8_decode($value[2])
             ],1,0,4);
         }
-        $this->SetWidths([55, 35]);
-        $this->SetX('5');
+        $this->SetWidths([55, 30.5]);
+        $this->SetX('11');
 
         $this->Row([
             utf8_decode("TOTAL FT²"),

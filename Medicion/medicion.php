@@ -50,7 +50,7 @@ $space = 1;
                 </div>
                 <div class="row">
 
-                    <div class="card col-md-7" style="height:555px; overflow-y: scroll;">
+                    <div class="card col-md-7">
                         <div id="contentCrear">
                         </div>
                     </div>
@@ -59,9 +59,16 @@ $space = 1;
                         <div class="card">
 
                             <div class="card-header" style="background-color:#ee5a36;">
-                                <h3 class="text-white">Paquetes</h3>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <h3 class="text-white">Paquetes</h3>
+                                    </div>
+                                    <div class="col-md-8 mt-2" hidden id="div-abierto">
+                                        <h4 class="text-white"> # Abierto: <span id="numAbierto">N/A</span></h4>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="card-body" style="height:500px; overflow-y: scroll;">
+                            <div class="card-body">
                                 <div id="contentPaquetes">
                                 </div>
                             </div>
@@ -80,8 +87,9 @@ $space = 1;
 
 
 <script>
-    cargaPaquete()
+    // cargaPaquete()
     verLados()
+    $('#tbody-lados').find('.accordionPaq').remove()
 
     function cargaPaquete() {
         loteMedido = $("#selectlotes").val();
@@ -93,6 +101,8 @@ $space = 1;
             type: 'POST',
             success: function(respuesta) {
                 $('#contentPaquetes').html(respuesta);
+                $('#tbody-lados').find('.accordionPaq').remove()
+
             },
             beforeSend: function() {
                 $('#contentPaquetes').html('<div class="loading text-center"><img src="../assets/images/loading.gif" alt="loading" /><br/>Un momento, por favor...</div>');
@@ -122,8 +132,40 @@ $space = 1;
         });
         if (actPaq) {
             cargaPaquete()
+            $("#tbody-lados.accordionPaq").remove()
+
         }
 
+    }
+
+    function consultaPaqAbierto(id) {
+        $.ajax({
+            url: '../Controller/medicion.php?op=getpaqabierto',
+            data: {
+                id: id
+            },
+            type: 'POST',
+            async: false,
+            dataType: "json",
+            success: function(respuesta) {
+                if (Object.keys(respuesta).length > 0) {
+                    if (respuesta.paqDelete == '1') {
+                        $("#numAbierto").text(respuesta.numPaqDlt);
+                        $("#div-abierto").prop("hidden", false)
+                        $(".btn-dltpaq").prop("hidden", true)
+
+                    }else{
+                        $("#div-abierto").prop("hidden", true)
+                        $(".btn-dltpaq").prop("hidden", false)
+
+                    }
+
+                } else if(id!=''){
+                    notificaBad("Error al consultar el lote, notifica a sistemas.")
+                }
+
+            },
+        });
     }
 </script>
 

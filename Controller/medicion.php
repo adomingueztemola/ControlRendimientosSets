@@ -19,9 +19,12 @@ switch ($_GET["op"]) {
     case "agregarreporte":
         $reporte = (isset($_POST['reporte'])) ? ($_POST['reporte']) : array();
         $programa = (isset($_POST['programa'])) ? trim($_POST['programa']) : '';
+        $grosor = (isset($_POST['grosor'])) ? trim($_POST['grosor']) : '';
+
         $folioLote = (isset($_POST['folioLote'])) ? trim($_POST['folioLote']) : '';
         Excepciones::validaLlenadoDatos(array(
             " Programa" => $programa,
+            " Grosor" => $grosor,
             " Folio de Lote" => $folioLote
         ), $obj_medido);
         #Valida que Producto no exista en el Catalogo
@@ -61,7 +64,7 @@ switch ($_GET["op"]) {
         $arrayAreas = $funcTotalArea($reporte);
         $obj_medido->beginTransaction();
         /* -> agregar lote  */
-        $datos = $obj_medido->agregarLoteMedido($folioLote, $programa, $arrayAreas[0], $arrayAreas[1], $arrayAreas[2], $ladosTotales);
+        $datos = $obj_medido->agregarLoteMedido($folioLote, $programa, $arrayAreas[0], $arrayAreas[1], $arrayAreas[2], $ladosTotales, $grosor);
         try {
             Excepciones::validaMsjError($datos);
         } catch (Exception $e) {
@@ -105,6 +108,7 @@ switch ($_GET["op"]) {
                 $value['id'],
                 $value['loteTemola'],
                 $value['nPrograma'],
+                $value['nGrosor'],
                 $ladosTotales,
                 $areaTotalDM,
                 $areaTotalFT,
@@ -153,6 +157,19 @@ switch ($_GET["op"]) {
         } else {
             $search = $_POST['palabraClave']; // Palabra a buscar
             $Data = $obj_medido->getLotesSelect2($search);
+            $Data = Excepciones::validaConsulta($Data);
+        }
+        //Creamos el JSON
+        $json_string = json_encode($Data);
+        echo $json_string;
+        break;
+    case "select2grosor":
+        if (!isset($_POST['palabraClave'])) {
+            $Data = $obj_medido->getGrosorSelect2();
+            $Data = Excepciones::validaConsulta($Data);
+        } else {
+            $search = $_POST['palabraClave']; // Palabra a buscar
+            $Data = $obj_medido->getGrosorSelect2($search);
             $Data = Excepciones::validaConsulta($Data);
         }
         //Creamos el JSON
@@ -215,6 +232,7 @@ switch ($_GET["op"]) {
         //Consulta numero de paquete a realizar
         $Data = $obj_medido->getNumPaquete($id);
         $Data = Excepciones::validaConsulta($Data);
+        $abierto = $Data["abierto"];
         $numPaquete = $Data["numPaquete"];
 
         $obj_medido->beginTransaction();
@@ -237,6 +255,15 @@ switch ($_GET["op"]) {
             }
             $count++;
         }
+        //cierre de paquete abierto
+        if ($abierto == '1') {
+            $datos = $obj_medido->eliminarNumPaqDlt($id);
+            try {
+                Excepciones::validaMsjError($datos);
+            } catch (Exception $e) {
+                $obj_medido->errorBD($e->getMessage(), 1);
+            }
+        }
         $obj_medido->insertarCommit();
         echo "1|Paquete Almacenado Correctamente";
         break;
@@ -257,12 +284,35 @@ switch ($_GET["op"]) {
     case "eliminarpaquete":
         $id = (isset($_POST['id'])) ? $_POST['id'] : '';
         $idLoteMedido = (isset($_POST['idLoteMedido'])) ? $_POST['idLoteMedido'] : '';
-
         Excepciones::validaLlenadoDatos(array(
             " Paquete" => $id,
             " Lote Medido" => $idLoteMedido
         ), $obj_medido);
         $obj_medido->beginTransaction();
+        // 1. Verifica que haya lados en paquete
+        $DataPaq = $obj_medido->getPaquetesXLote($idLoteMedido);
+        $DataPaq = Excepciones::validaConsulta($DataPaq);
+        $countPaq = count($DataPaq);
+        $_paqpend = $countPaq - 1 > 0 ? true : false;
+        // 2. Si hay lados ingresar el paquete pendiente por surtir en lote
+        if ($_paqpend) {
+            $datos = $obj_medido->ingresarNumPaqDlt($id);
+            try {
+                Excepciones::validaMsjError($datos);
+            } catch (Exception $e) {
+                $obj_medido->errorBD($e->getMessage(), 1);
+            }
+        }
+        // 3. Si ya no hay paquete quitar pendientes de lote 
+        else {
+            $datos = $obj_medido->eliminarNumPaqDlt($idLoteMedido);
+            try {
+                Excepciones::validaMsjError($datos);
+            } catch (Exception $e) {
+                $obj_medido->errorBD($e->getMessage(), 1);
+            }
+        }
+
         $datos = $obj_medido->eliminarLadosPaq($id);
         try {
             Excepciones::validaMsjError($datos);
@@ -275,14 +325,51 @@ switch ($_GET["op"]) {
         } catch (Exception $e) {
             $obj_medido->errorBD($e->getMessage(), 1);
         }
-        $datos = $obj_medido->reconteoPaquetes($idLoteMedido);
+
+        $obj_medido->insertarCommit();
+        echo "1|Paquete Eliminado Correctamente";
+
+        break;
+    case "eliminartodospaquetes":
+        $id = (isset($_POST['id'])) ? $_POST['id'] : '';
+        Excepciones::validaLlenadoDatos(array(
+            " Lote" => $id,
+        ), $obj_medido);
+        $obj_medido->beginTransaction();
+
+        $datos = $obj_medido->devolverLadosLotes($id);
+        try {
+            Excepciones::validaMsjError($datos);
+        } catch (Exception $e) {
+            $obj_medido->errorBD($e->getMessage(), 1);
+        }
+
+        $datos = $obj_medido->eliminarAllPaq($id);
+        try {
+            Excepciones::validaMsjError($datos);
+        } catch (Exception $e) {
+            $obj_medido->errorBD($e->getMessage(), 1);
+        }
+
+        $datos = $obj_medido->eliminarNumPaqDlt($id);
         try {
             Excepciones::validaMsjError($datos);
         } catch (Exception $e) {
             $obj_medido->errorBD($e->getMessage(), 1);
         }
         $obj_medido->insertarCommit();
-        echo "1|Paquete Eliminado Correctamente";
 
+        echo "1|Paquetes Eliminados Correctamente";
+
+
+        break;
+
+    case "getpaqabierto":
+        $id = isset($_POST['id']) ? $_POST['id'] : '';
+
+        $Data = $obj_medido->getDetLote($id);
+        $Data = Excepciones::validaConsulta($Data);
+        $json_string = json_encode($Data);
+        echo $json_string;
         break;
 }

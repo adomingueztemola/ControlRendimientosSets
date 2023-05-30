@@ -661,3 +661,26 @@ $(".loteMedidoFilter").select2({
   },
  
 });
+
+$(".GrosorFilter").select2({
+  placeholder: "Selecciona un Grosor",
+  allowClear: true,
+
+  ajax: {
+    url: "../Controller/medicion.php?op=select2grosor",
+    type: "post",
+    dataType: "json",
+    delay: 250,
+    data: function (params) {
+      return {
+        palabraClave: params.term, // search term
+      };
+    },
+    processResults: function (response) {
+      return {
+        results: response,
+      };
+    },
+    cache: true,
+  },
+});
