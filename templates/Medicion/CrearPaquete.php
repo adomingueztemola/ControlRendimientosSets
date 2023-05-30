@@ -10,7 +10,7 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-5">
             <div class="card text-white bg-TWM mb-3" style="max-width: 18rem;">
                 <div class="card-header">
                     <h4>Lados Seleccionados: <span id="cont-lados">0</span></h4>
@@ -18,7 +18,7 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
             </div>
         </div>
 
-        <div class="col-md-4 text-right">
+        <div class="col-md-3 text-right">
             <div id="bloqueo-btn-1" style="display:none">
                 <button class="btn btn-success btn-lg" type="button" disabled="">
                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
