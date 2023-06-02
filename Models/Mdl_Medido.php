@@ -168,7 +168,8 @@ class Medido extends ConexionBD
         $sql = "SELECT lm.*, cs.nombre AS nSeleccion 
         FROM ladosmediciones lm
         INNER JOIN catselecciones cs ON lm.idCatSeleccion=cs.id
-        WHERE lm.idPaquete='$id'";
+        WHERE lm.idPaquete='$id'
+        ORDER BY CAST(numLado AS unsigned)";
         return  $this->consultarQuery($sql, "consultar Detallado de Paquete");
     }
 

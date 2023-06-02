@@ -684,3 +684,26 @@ $(".GrosorFilter").select2({
     cache: true,
   },
 });
+
+$(".ProgramaMedidoFilter").select2({
+  placeholder: "Selecciona un programa",
+  allowClear: true,
+
+  ajax: {
+    url: "../Controller/programas.php?op=select2programasmedido",
+    type: "post",
+    dataType: "json",
+    delay: 250,
+    data: function (params) {
+      return {
+        palabraClave: params.term, // search term
+      };
+    },
+    processResults: function (response) {
+      return {
+        results: response,
+      };
+    },
+    cache: true,
+  },
+});

@@ -42,7 +42,7 @@ class PDFEtiquetas extends PDF_MC_Table
         $loteTemola
     ) {
         $this->SetXY('12','4.5');
-        $this->SetFont('Times', '', 11);
+        $this->SetFont('Times', '', 10);
         $this->SetTextColor(0, 0, 0);
         $this->SetDrawColor(0, 0, 0);
         $this->SetLineWidth(0.2);
