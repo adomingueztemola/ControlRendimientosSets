@@ -19,6 +19,7 @@ $_abierto = count($DataRendimientoAbierto) > 0 ? true : false;
 //IDENTIFICACION DE TIPO DE PROCESO PARA EL MANEJO DE LOS DATOS
 $tipoProceso = $_abierto ? $DataRendimientoAbierto[0]['tipoProceso'] : 0;
 //PARAMETROS PARA CARGA DEL FORMULARIO
+
 $areaWB = $_abierto ? $DataRendimientoAbierto[0]['areaWB'] : '0.0';
 $diferenciaArea  = $_abierto ? $DataRendimientoAbierto[0]['diferenciaArea'] : '0.0';
 $promedioAreaWB = $_abierto ? $DataRendimientoAbierto[0]['promedioAreaWB'] : '0.0';
@@ -69,11 +70,11 @@ if (count($ArrayFechaEmpaque) > 0) {
     $semanaProduccion = "";
 }
 
-$labelSetsEmpacado = $tipoProceso == '1' ? "Piezas Totales Empacadas" : "M<sup>2</sup> Finales";
-$labelAreaFinal = $tipoProceso == '1' ? "Área Final de Teseo" : "Área Final";
-$labelPerdidaAreaCrust = $tipoProceso == '1' ? "Pérdida Área Crust a Teseo" : "Pérdida Área Crust a Terminado";
-$labelPzasRechazadas = $tipoProceso == '1' ? "Hides Rechazados" : "Hides Rechazados";
-$labelAreaXCantFinal = $tipoProceso == '1' ? "Área WB Real por Set" : "Área WB Real por M<sup>2</sup>";
+// $labelSetsEmpacado = $tipoProceso == '1' ? "Piezas Totales Empacadas" : "M<sup>2</sup> Finales";
+// $labelAreaFinal = $tipoProceso == '1' ? "Área Final de Teseo" : "Área Final";
+// $labelPerdidaAreaCrust = $tipoProceso == '1' ? "Pérdida Área Crust a Teseo" : "Pérdida Área Crust a Terminado";
+// $labelPzasRechazadas = $tipoProceso == '1' ? "Hides Rechazados" : "Hides Rechazados";
+// $labelAreaXCantFinal = $tipoProceso == '1' ? "Área WB Real por Set" : "Área WB Real por M<sup>2</sup>";
 
 if (!$_abierto) {
     echo "<div style='height:365px;'>
@@ -108,7 +109,7 @@ if (count($DataValidaUsoDelLote) <= 0) {
                 <td>
                     <div class="row">
                         <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
-                            <input class="form-control" type="date" onchange="guardarValor('fechaempaque', this, true);" name="fechaEmpaque" value="<?= $fechaEmpaque ?>" id="fechaEmpaque" required></input>
+                            <input class="form-control Validate" type="date" onchange="guardarValor('fechaempaque', this, true);" name="fechaEmpaque" value="<?= $fechaEmpaque ?>" id="fechaEmpaque" required></input>
                         </div>
                         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" hidden id="success-fechaempaque">
                             <i class="fas fa-check text-success"></i>
@@ -124,7 +125,7 @@ if (count($DataValidaUsoDelLote) <= 0) {
                 <td>
                     <div class="row">
                         <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
-                            <input class="form-control" type="week" value="<?= $semanaProduccion ?>" onchange="guardarValor('semanaproduccion', this, true)" name="semanaProduccion" id="semanaProduccion" required></input>
+                            <input class="form-control Validate" type="week" value="<?= $semanaProduccion ?>" onchange="guardarValor('semanaproduccion', this, true)" name="semanaProduccion" id="semanaProduccion" required></input>
                         </div>
                         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" hidden id="success-semanaproduccion">
                             <i class="fas fa-check text-success"></i>
@@ -152,12 +153,12 @@ if (count($DataValidaUsoDelLote) <= 0) {
 
             <tr>
                 <td class="bg-TWM text-white">
-                    <label for="piezasRechazadas"><?= $labelPzasRechazadas ?></label>
+                    <label for="piezasRechazadas">Hides Rechazados</label>
                 </td>
                 <td>
                     <div class="row">
                         <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
-                            <input class="form-control" type="number" step="1" min="0" name="piezasRechazadas" value="<?= $piezasRechazadas*2 ?>" onchange="guardarValor('pzasrechazadas', this)" id="piezasRechazadas"></input>
+                            <input class="form-control" type="number" step="1" min="0" name="piezasRechazadas" value="<?= $piezasRechazadas * 2 ?>" onchange="guardarValor('pzasrechazadas', this)" id="piezasRechazadas"></input>
                         </div>
                         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" hidden id="success-pzasrechazadas">
                             <i class="fas fa-check text-success"></i>
@@ -182,12 +183,12 @@ if (count($DataValidaUsoDelLote) <= 0) {
             </tr>
             <tr>
                 <td class="bg-TWM text-white">
-                    <label for="piezasReasig">Hides ReAsignados</label>
+                    <label for="piezasReasig">Hides Re-asignados</label>
                 </td>
                 <td>
                     <div class="row">
                         <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
-                            <input class="form-control" type="number" step="1" min="0" name="piezasReasig" value="<?= $piezasReasig*2 ?>" onchange="guardarValor('pzasreasig', this)" id="piezasReasig"></input>
+                            <input class="form-control" type="number" step="1" min="0" name="piezasReasig" value="<?= $piezasReasig * 2 ?>" onchange="guardarValor('pzasreasig', this)" id="piezasReasig"></input>
                         </div>
                         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" hidden id="success-pzasreasig">
                             <i class="fas fa-check text-success"></i>
@@ -203,15 +204,27 @@ if (count($DataValidaUsoDelLote) <= 0) {
                 </td>
                 <td>
                     <div class="row">
-                        <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                            <label for="pesoCorteWB">Peso Corte</label>
+                            <input type="number" class="form-control" name="" id="pesoCorteWB" step="0.01">
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                            <label for="pesoRaspadoWB">Peso Raspado</label>
+                            <input type="number" class="form-control" name="" id="pesoRaspadoWB" step="0.01">
+                        </div>
+                        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 pt-4 mt-1 item-center">
+                            <button class="btn btn-success btn-md" onclick="getPorcRecorteWB()" type="button">=</button>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                            <label for="pesoRaspadoWB">Recorte WB %</label>
                             <div class="input-group mb-3">
-                                <input class="form-control Validate" type="number" step="0.01" onchange="guardarValor('recortewb', this)" name="recorteWB" value="<?= $porcRecorteWB ?>" id="recorteWB"></input>
+                                <input class="form-control Validate" type="number" step="0.01" readonly name="recorteWB" value="<?= $porcRecorteWB ?>" id="recorteWB"></input>
                                 <div class="input-group-append">
                                     <span class="input-group-text">%</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" hidden id="success-recortewb">
+                        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 pt-4 mt-1" hidden id="success-recortewb">
                             <i class="fas fa-check text-success"></i>
                         </div>
                     </div>
@@ -224,22 +237,32 @@ if (count($DataValidaUsoDelLote) <= 0) {
                 </td>
                 <td>
                     <div class="row">
-                        <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                            <label for="pesoCorteWB">Peso "Recortar"</label>
+                            <input type="number" class="form-control" name="" id="recortar" step="0.01">
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                            <label for="pesoRaspadoWB">Peso "Pesar"</label>
+                            <input type="number" class="form-control" name="" id="pesar" step="0.01">
+                        </div>
+                        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 pt-4 mt-1 item-center">
+                            <button class="btn btn-success btn-md" onclick="getPorcRecorteCrust()" type="button">=</button>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                            <label for="pesoRaspadoWB">Recorte Crust %</label>
                             <div class="input-group mb-3">
-                                <input class="form-control  Validate" type="number" step="0.01" onchange="guardarValor('recortecrust', this)" name="recorteCrust" value="<?= $porcRecorteCrust ?>" id="recorteCrust"></input>
+                                <input class="form-control  Validate" type="number" step="0.01" readonly name="recorteCrust" value="<?= $porcRecorteCrust ?>" id="recorteCrust"></input>
                                 <div class="input-group-append">
                                     <span class="input-group-text">%</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" hidden id="success-recortecrust">
+                        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1  pt-4 mt-1" hidden id="success-recortecrust">
                             <i class="fas fa-check text-success"></i>
                         </div>
                     </div>
                 </td>
             </tr>
-
-
             <tr>
                 <td class="bg-TWM text-white">
                     <label for="humedad">Humedad</label>
@@ -260,7 +283,6 @@ if (count($DataValidaUsoDelLote) <= 0) {
                     </div>
                 </td>
             </tr>
-
             <tr>
                 <td class="bg-TWM text-white">
                     <label for="areaCrust">Área Crust</label>
@@ -285,8 +307,24 @@ if (count($DataValidaUsoDelLote) <= 0) {
                 </td>
                 <td>
                     <div class="row">
-                        <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
-                            <input class="form-control  Validate" type="number" step="0.01" onchange="guardarValor('recorteacabado', this)" name="recorteAcabado" value="<?= $recorteAcabado ?>" id="recorteCrust"></input>
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                            <div class="input-group mb-3">
+                                <input class="form-control" type="number" step="0.01" name="" id="sumRecorteAcab"></input>
+                                <div class="input-group-append">
+                                    <div id="bloqueo-btn-ra" style="display:none">
+                                        <button class="btn btn-success btn-md" type="button" disabled="">
+                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                        </button>
+
+                                    </div>
+                                    <div id="desbloqueo-btn-ra">
+                                        <button class="btn btn-success btn-md" onclick="sumarRecorteAcab()" type="button"><b>+</b></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                            <input class="form-control  Validate" type="number" step="0.01" readonly name="recorteAcabado" value="<?= $recorteAcabado ?>" id="recorteAcabado"></input>
                         </div>
                         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" hidden id="success-recorteacabado">
                             <i class="fas fa-check text-success"></i>
@@ -332,12 +370,39 @@ if (count($DataValidaUsoDelLote) <= 0) {
             </tr>
             <tr class="identificadoresSoloMts">
                 <td class="bg-TWM text-white">
-                    <label for="areaFinalTeseo"><?= $labelAreaFinal ?></label>
+                    <label for="areaDmTeseo">Área Dm<sup>2</sup> Final</label>
+                </td>
+                <td>
+                    <div class="row">
+                        <div class="col-11">
+                            <div class="input-group mb-3">
+                                <input class="form-control" type="number" step="0.01" name="" id="areaDMFinal"></input>
+                                <div class="input-group-append">
+                                    <div id="bloqueo-btn-dm" style="display:none">
+                                        <button class="btn btn-success btn-md" type="button" disabled="">
+                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                        </button>
+
+                                    </div>
+                                    <div id="desbloqueo-btn-dm">
+                                        <button class="btn btn-success btn-md" onclick="convertAreaFinalDM()" type="button"><i class="fas fa-exchange-alt"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </td>
+            </tr>
+            <tr class="identificadoresSoloMts">
+                <td class="bg-TWM text-white">
+                    <label id="lbl-areaFinalTeseo" for="areaFinalTeseo"></label>
                 </td>
                 <td>
                     <div class="row">
                         <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
-                            <input class="form-control  Validate Positivos" type="number" step="0.01" name="areaFinalTeseo" value="<?= $areaFinal ?>" id="areaFinalTeseo" onchange="guardarValor('areafinalteseo', this)"></input>
+                            <input class="form-control  Validate Positivos" type="number" step="0.01" name="areaFinalTeseo" id="areaFinalTeseo" readonly></input>
                         </div>
                         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" hidden id="success-areafinalteseo">
                             <i class="fas fa-check text-success"></i>
@@ -346,73 +411,17 @@ if (count($DataValidaUsoDelLote) <= 0) {
                 </td>
             </tr>
 
-            <!--- Area de solo para set's -->
-            <!--- <tr class="identificadoresSoloSet">
-                <td class="bg-TWM text-white">
-                    <label for="yieldIniTeseo">Yield Inicial Teseo</label>
-                </td>
-                <td>
-                    <div class="row">
-                        <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
-                            <div class="input-group mb-3">
-                                <input class="form-control Validate" type="number" step="0.01" name="yieldIniTeseo" onchange="guardarValor('yieldinicialteseo', this)" value="<?= $yieldInicialTeseo ?>" id="yieldIniTeseo"></input>
-                                <div class="input-group-append">
-                                    <span class="input-group-text">%</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" hidden id="success-yieldinicialteseo">
-                            <i class="fas fa-check text-success"></i>
-                        </div>
-                    </div>
-                </td>
-            </tr>-->
-            <!---<tr class="identificadoresSoloSet">
-                <td class="bg-TWM text-white">
-                    <label for="pzasCutTeseo">Piezas Cortadas por Teseo</label>
-                </td>
-                <td>
-                    <div class="row">
-                        <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
-                            <input class="form-control Validate Positivos" readonly type="number" step="1" min="0" name="pzasCutTeseo" onchange="guardarValor('pzascortadasteseo', this)" value="<?= $pzasCortadasTeseo ?>" id="pzasCutTeseo"></input>
-                        </div>
-                        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" hidden id="success-pzascortadasteseo">
-                            <i class="fas fa-check text-success"></i>
-                        </div>
-                    </div>
-                </td>
-            </tr>-->
-
-
-            <!---  <tr class="identificadoresSoloSet">
-                <td class="bg-TWM text-white">
-                    <label for="pzasRecuperadas">Piezas Recuperadas</label>
-                </td>
-                <td>
-                    <div class="row">
-                        <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
-                            <input class="form-control Positivos" <?= $disabledLoteUso ?> type="number" step="1" min="0" name="pzasRecuperadas" value="<?= $piezasRecuperadas ?>" onchange="guardarValor('piezasrecuperadas', this)" id="pzasRecuperadas"></input>
-                        </div>
-                        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" hidden id="success-piezasrecuperadas">
-                            <i class="fas fa-check text-success"></i>
-                        </div>
-                    </div>
-                </td>
-            </tr>-->
 
             <!--- Final de solo para set's -->
 
             <tr class="identificadoresSoloMts">
                 <td class="bg-TWM text-white">
-                    <label for="setsEmpacados"><?= $labelSetsEmpacado ?></label>
+                    <label id="lbl-setsEmpacados" for="setsEmpacados"></label>
                 </td>
                 <td>
-                    <?php
-                    $readonlyEmpacados = $tipoProceso == '2' ? '' : 'readonly';
-                    ?>
                     <div class="row">
                         <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
-                            <input class="form-control Validate Positivos" <?= $readonlyEmpacados ?> <?= $disabledLoteUso ?> type="number" step="1" min="0" name="unidadesEmpacadas" value="<?= $unidadesEmpacadas ?>" onchange="guardarValor('setsempacados', this)" id="unidadesEmpacadas"></input>
+                            <input class="form-control Validate Positivos" type="number" step="1" min="0" name="unidadesEmpacadas" readonly id="unidadesEmpacadas"></input>
                         </div>
                         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" hidden id="success-setsempacados">
                             <i class="fas fa-check text-success"></i>
@@ -432,27 +441,126 @@ if (count($DataValidaUsoDelLote) <= 0) {
 <script src="../assets/scripts/functionStorageRendimiento.js"></script>
 
 <script>
-    if ($("#unidadesEmpacadas").val() > 0 && $("#unidadesEmpacadas").val() != '') {
-        $("#btn-finalizarYield").prop("hidden", false);
+    cargaData()
+
+    function cargaData() {
+        $.ajax({
+            url: '../Controller/rendimiento.php?op=getloteabierto',
+            type: 'POST',
+            async: false,
+            dataType: "json",
+            success: function(respuesta) {
+                console.log(respuesta);
+                if (respuesta.tipoProceso == '1') {
+                    //Activar-Desactivar fecha de empaque
+                    if (respuesta.regEmpaque == '1') {
+                        $("#fechaEmpaque").prop("disabled", false)
+                        $("#semanaProduccion").prop("disabled", false)
+
+                    } else {
+                        $("#fechaEmpaque").prop("disabled", true)
+                        $("#semanaProduccion").prop("disabled", true)
+                    }
+                    //Confirmar que los datos esten completos para el cierre
+
+                    //Pre rellenado de datos cargados
+                    $("#areaWBRecibida").val(respuesta.areaWB == null ? '0.0' : respuesta.areaWB)
+                    $("#piezasRechazadas").val(respuesta.piezasRechazadas == null ? '0' : respuesta.piezasRechazadas * 2)
+                    $("#piezasReasig").val(respuesta.piezasRecuperadas == null ? '0' : respuesta.piezasRecuperadas * 2)
+                    $("#recorteWB").val(respuesta.porcRecorteWB == null ? '0.0' : respuesta.porcRecorteWB)
+                    $("#recorteCrust").val(respuesta.porcRecorteCrust == null ? '0.0' : respuesta.porcRecorteCrust)
+                    $("#humedad").val(respuesta.humedad == null ? '0.0' : respuesta.humedad)
+                    $("#areaCrust").val(respuesta.areaCrust == null ? '0.0' : respuesta.areaCrust)
+                    $("#recorteAcabado").val(respuesta.recorteAcabado == null ? '0.0' : respuesta.recorteAcabado)
+                    $("#quiebre").val(respuesta.quiebre == null ? '0.0' : respuesta.quiebre)
+                    $("#suavidad").val(respuesta.suavidad == null ? '0.0' : respuesta.suavidad)
+                    //Comentarios de Rechazo
+                    piezasRechazadas = respuesta.piezasRechazadas == null ? '0.0' : respuesta.piezasRechazadas;
+                    if (piezasRechazadas > 0) {
+                        $("#divCausaRechazo").prop("hidden", false);
+                    } else {
+                        $("#divCausaRechazo").prop("hidden", true);
+                    }
+                    $(".identificadoresSoloMts").remove();
+
+                }
+                if (respuesta.tipoProceso == '2') {
+                    $("#lbl-setsEmpacados").html("Área M<sup>2</sup> Final")
+                    $("#lbl-areaFinalTeseo").html("Área Ft<sup>2</sup> Final")
+                    $("#areaFinalTeseo").val(respuesta.areaFinal == null ? '0.0' : respuesta.areaFinal)
+                    $("#unidadesEmpacadas").val(respuesta.unidadesEmpacadas == null ? '0.0' : respuesta.unidadesEmpacadas)
+                    $(".identificadoresSoloSet").remove();
+                    if ($("#unidadesEmpacadas").val() > 0 && $("#unidadesEmpacadas").val() != '') {
+                        $("#btn-finalizarYield").prop("hidden", false);
+                    }
+                }
+                if (validaCamposLlenos()) {
+                    $("#btn-finalizarYield").prop("hidden", false);
+                } else {
+                    $("#btn-finalizarYield").prop("hidden", true);
+
+                }
+            },
+
+
+        });
     }
-    <?php
-    if ($tipoProceso == 2) { ?>
-        //  $(".identificadoresSoloSet").attr("hidden", true)
-        $(".identificadoresSoloSet").remove();
 
 
 
-    <?php
+    function getPorcRecorteWB() {
+        pesoRaspadoWB = parseFloat($("#pesoRaspadoWB").val());
+        pesoCorteWB = parseFloat($("#pesoCorteWB").val());
+        $("#recorteWB").val(((pesoCorteWB / pesoRaspadoWB) * 100).toFixed(2))
+        guardarValor('recortewb', $("#recorteWB"))
     }
-    ?>
-    <?php
-    if ($tipoProceso == 1) { ?>
-        //  $(".identificadoresSoloSet").attr("hidden", true)
-        $(".identificadoresSoloMts").remove();
 
-
-
-    <?php
+    function getPorcRecorteCrust() {
+        recortar = parseFloat($("#recortar").val());
+        pesar = parseFloat($("#pesar").val());
+        $("#recorteCrust").val(((recortar / pesar) * 100).toFixed(2))
+        guardarValor('recortecrust', $("#recorteCrust"))
     }
-    ?>
+
+    function sumarRecorteAcab(sumRecorteAcab) {
+        v_sumRecorteAcab = parseFloat($("#sumRecorteAcab").val())
+        recorteAcabado = parseFloat($("#recorteAcabado").val())
+
+        $.ajax({
+            url: '../Controller/rendimiento.php?op=recorteacabado',
+            data: {
+                value: v_sumRecorteAcab
+            },
+            type: 'POST',
+            success: function(json) {
+                resp = json.split('|')
+                if (resp[0] == 1) {
+                    notificaSuc(resp[1])
+                    bloqueoBtn("bloqueo-btn-ra", 2)
+                    $("#recorteAcabado").val(parseFloat(recorteAcabado) + parseFloat(v_sumRecorteAcab))
+                    $("#sumRecorteAcab").val(0)
+
+                } else if (resp[0] == 0) {
+                    notificaBad(resp[1])
+                    bloqueoBtn("bloqueo-btn-ra", 2)
+
+
+                }
+            },
+            beforeSend: function() {
+                bloqueoBtn("bloqueo-btn-ra", 1)
+            }
+
+        });
+    }
+
+    function convertAreaFinalDM() {
+        areaDMFinal = parseFloat($("#areaDMFinal").val())
+        const param = parseFloat(9.29)
+        $("#areaFinalTeseo").val(parseFloat(areaDMFinal / param).toFixed(2))
+        $("#unidadesEmpacadas").val(parseFloat(areaDMFinal / 100).toFixed(2))
+        guardarValor('areafinalteseo', $("#areaFinalTeseo"))
+        guardarValor('setsempacados', $("#unidadesEmpacadas"))
+
+    }
 </script>

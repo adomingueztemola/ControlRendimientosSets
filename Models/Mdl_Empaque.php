@@ -170,7 +170,7 @@ class Empaque extends ConexionBD
         rendimientos r
         LEFT JOIN vw_detalladocaja d ON d.idLote=r.id
         WHERE 
-        r.regOkNok='1' AND r.estado='2'
+        r.regOkNok='1' AND r.estado<>'4'
         AND (r.regEmpaque!='1' OR regEmpaque IS NULL )
         AND (d.idLote IS NULL OR d.pzasEmp<r.pzasCortadasTeseo) 
         
@@ -409,7 +409,11 @@ class Empaque extends ConexionBD
         $sql = "UPDATE rendimientos r
                 INNER JOIN detcajas d ON r.id=d.idLote
                 SET r._12OKAct=IFNULL(r._12OKAct,0)-IFNULL(d._12,0), r._3OKAct=IFNULL(r._3OKAct,0)-IFNULL(d._3,0),
-                r._6OKAct=IFNULL(r._6OKAct,0)-IFNULL(d._6,0),  r._9OKAct=IFNULL(r._9OKAct,0)-IFNULL(d._9,0)
+                r._6OKAct=IFNULL(r._6OKAct,0)-IFNULL(d._6,0),  r._9OKAct=IFNULL(r._9OKAct,0)-IFNULL(d._9,0),
+                r.totalEmp=IFNULL(r.totalEmp,0)+IFNULL(d._12,0)+IFNULL(d._3,0)+IFNULL(d._6,0)+IFNULL(d._9,0),
+                r.unidadesEmpacadas=IFNULL(r.unidadesEmpacadas,0)+IFNULL(d._12,0)+IFNULL(d._3,0)+IFNULL(d._6,0)+IFNULL(d._9,0),
+                r.setsEmpacados=(IFNULL(r.totalEmp,0)+IFNULL(d._12,0)+IFNULL(d._3,0)+IFNULL(d._6,0)+IFNULL(d._9,0))/4
+
                 WHERE d.id='$idDetCaja'";
         return $this->runQuery($sql, "actualizar uso de Piezas OK");
     }

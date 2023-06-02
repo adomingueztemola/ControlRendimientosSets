@@ -918,7 +918,9 @@ switch ($_GET["op"]) {
             $obj_rendimiento->errorBD($ErrorLog, 0);
         }
         $DatosAbiertos = $obj_rendimiento->getRendimientoAbierto();
-        $datos = Funciones::edicionBasica("rendimientos", "recorteAcabado", $value, "id", $DatosAbiertos[0]['id'], $obj_rendimiento->getConexion(), $debug);
+        $recorteAcabado= $DatosAbiertos[0]['recorteAcabado']==''?'0':$DatosAbiertos[0]['recorteAcabado'];
+        $suma= $recorteAcabado+ $value;
+        $datos = Funciones::edicionBasica("rendimientos", "recorteAcabado", $suma, "id", $DatosAbiertos[0]['id'], $obj_rendimiento->getConexion(), $debug);
         try {
             Excepciones::validaMsjError($datos);
         } catch (Exception $e) {
@@ -1172,4 +1174,10 @@ switch ($_GET["op"]) {
         }
         echo '1|Sets Recuperados fueron Recalculados Correctamente.';*/
         break;
-}
+    case "getloteabierto":
+        $Data = $obj_rendimiento->getRendimientoAbierto();
+        $Data = Excepciones::validaConsulta($Data);
+        $json_string = json_encode($Data[0]);
+        echo $json_string;
+        break;
+    }

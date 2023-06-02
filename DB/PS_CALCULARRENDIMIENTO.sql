@@ -90,7 +90,7 @@ CREATE PROCEDURE calcularRendimientoFase2 (
         r.yieldFinalReal=@yieldFinalReal, 
 		/*r.porcSetsRechazoInicial=@porcRechazo,*/
 		r.porcFinalRechazo=@porcRechazo, 
-		r.estado='4',
+		r.estado=IF(r.regDatos='1', '4',r.estado),
         r.areaWBTerminado=@perdidaAreaWBTerminado, 
 		r.envioSolicitud='0',
 		r.porcRecorteAcabado=@porcRecorteAcabado
@@ -98,9 +98,9 @@ CREATE PROCEDURE calcularRendimientoFase2 (
 		--r.total_s=@total_s*/
 
 
-	WHERE r.id=id_Rendimiento AND r.regDatos='1';
+	WHERE r.id=id_Rendimiento ;
 	
-	
+	-- AND r.regDatos='1'
 	IF cambioPzas='1' THEN
 	
 		/*INSERT INTO inventariorecuperado (idRendimiento, pzasTotales,setsTotales,rezago, fechaReg, idUserReg)
