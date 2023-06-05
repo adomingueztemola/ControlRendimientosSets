@@ -278,4 +278,27 @@ EOD;
         echo '1|Proceso Editado Correctamente.';
 
         break;
+    case "select2programasmedido":
+        if (!isset($_POST['palabraClave'])) {
+            $Data = $obj_programa->getProgramasSetsSelect2("(ca.tipo='3' OR ca.tipo='4')");
+            $Data = Excepciones::validaConsulta($Data);
+        } else {
+            $search = $_POST['palabraClave']; // Palabra a buscar
+            $Data = $obj_programa->getProgramasSetsSelect2("(ca.tipo='3' OR ca.tipo='4')", $search);
+            $Data = Excepciones::validaConsulta($Data);
+        }
+        $response = array();
+
+        // Leer la informacion
+        foreach ($Data as $area) {
+            $response[] = array(
+                "id" => $area['id'],
+                "text" => $area['nombre']
+            );
+        }
+
+        //Creamos el JSON
+        $json_string = json_encode($response);
+        echo $json_string;
+        break;
 }

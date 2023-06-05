@@ -12,11 +12,14 @@
   background: white;
   z-index: 2000;
   display: inline-block;
+
 }
 /* line 13, ../sass/_offline-theme-base-indicator.sass */
 .offline-ui .offline-ui-retry {
   display: none;
+
 }
+
 /* line 16, ../sass/_offline-theme-base-indicator.sass */
 .offline-ui.offline-ui-up {
   display: block;
@@ -68,8 +71,16 @@
 /* line 36, ../sass/offline-theme-chrome-indicator.sass */
 .offline-ui.offline-ui-up .offline-ui-content:after {
   background: #80d580;
+
+}
+.offline-ui.offline-ui-up .offline-ui-content:before {
+  content: "Conectado";
+}
+.offline-ui.offline-ui-down .offline-ui-content:before {
+  content: "Sin Internet";
 }
 /* line 41, ../sass/offline-theme-chrome-indicator.sass */
 .offline-ui.offline-ui-down .offline-ui-content:after {
   background: #ec8787;
+
 }
