@@ -73,7 +73,35 @@ $cambioPzas = count($DataValidaUsoDelLote) > 0 ? '1' : '0';
                                         </div>
                                     </div>
                                     <div class="row pt-2">
-                                        <div class="col-md-2"></div>
+                                        <div class="col-md-4">
+                                            <ul class="timeline timeline-left" hidden id="linea-proceso">
+                                                <li class="timeline-inverted timeline-item">
+                                                    <div class="timeline-badge ligth" id="step-empaque"></div>
+                                                    <div class="timeline-panel">
+                                                        <div class="timeline-heading">
+                                                            <h4 class="timeline-title  p-0 m-0">Empaque</h4>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="timeline-inverted timeline-item">
+                                                    <div class="timeline-badge ligth" id="step-teseo"></div>
+                                                    <div class="timeline-panel">
+                                                        <div class="timeline-heading">
+                                                            <h4 class="timeline-title  p-0 m-0">Marcado de Teseo</h4>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="timeline-inverted timeline-item">
+                                                    <div class="timeline-badge success" id="step-inicio"></div>
+                                                    <div class="timeline-panel">
+                                                        <div class="timeline-heading">
+                                                            <h4 class="timeline-title  p-0 m-0">Inicio</h4>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+
+                                        </div>
                                         <div class="col-md-8">
                                             <div id="info-lote">
                                                 <table class="table table-sm table-bordered">
@@ -121,7 +149,7 @@ $cambioPzas = count($DataValidaUsoDelLote) > 0 ? '1' : '0';
                                             <div class="form-check">
                                                 <input class="form-check-input" required type="checkbox" value="1" id="verificacion" name="verificacion">
                                                 <label class="form-check-label form-label required" for="verificacion">
-                                                    Confirmo que la información actual es correcta y actual.
+                                                    Confirmo que la información es correcta y actual.
                                                 </label>
                                             </div>
                                         </div>
@@ -171,8 +199,8 @@ $cambioPzas = count($DataValidaUsoDelLote) > 0 ? '1' : '0';
 
                                                     </div>
                                                     <div id="desbloqueo-btn-2">
-                                                        <button type="button" onclick="eliminarPreRegistro(<?= $id ?>)" class="button btn btn-danger">Cancelar Pre-Registro</button>
-                                                        <button type="button" hidden id="btn-finalizarYield" onclick="cierrePreRegistro(<?= $cambioPzas ?>)" class="button btn btn-success">Finalizar</button>
+                                                        <button type="button" onclick="eliminarPreRegistro(<?= $id ?>)" class="button btn btn-info">Guardar Cambios</button>
+                                                        <button type="button" hidden id="btn-finalizarYield" onclick="cierrePreRegistro(<?= $cambioPzas ?>)" class="button btn btn-success">Finalizar Lote</button>
                                                     </div>
                                                 </div>
 
@@ -196,11 +224,11 @@ $cambioPzas = count($DataValidaUsoDelLote) > 0 ? '1' : '0';
 <script src="../assets/scripts/calculaSemanaProduccion.js"></script>
 <script src="../assets/scripts/validaLotePiel.js"></script>
 <script src="../assets/scripts/selectFiltros.js"></script>
-<script src="../assets/libs/sweetalert2/dist/sweetalert2.all.min.js"></script>
 
 <script>
     mostrarInfo()
-
+   
+   
     update()
     <?php
     if (isset($_SESSION['CRESuccessRendimiento']) and $_SESSION['CRESuccessRendimiento'] != '') { ?>
@@ -271,8 +299,30 @@ $cambioPzas = count($DataValidaUsoDelLote) > 0 ? '1' : '0';
                             $("#c-pruebas").text(data["total_pruebas"])
                             $("#c-hides").text(data["total_s"])
                             $(".unidadMP").text("CRUPONES")
+                            $("#linea-proceso").prop("hidden", true);
                         }
+                        if (data["tipoProceso"] == '1') {
+                            $("#linea-proceso").prop("hidden", false);
+                            if (data["regEmpaque"] == '1') {
+                                $("#step-empaque").addClass("success")
+                                $("#step-empaque").removeClass("ligth")
 
+                            } else {
+                                $("#step-empaque").addClass("ligth")
+                                $("#step-empaque").removeClass("success")
+                            }
+
+                            if (data["regTeseo"] == '1') {
+                                $("#step-teseo").addClass("success")
+                                $("#step-teseo").removeClass("ligth")
+
+                            } else {
+                                $("#step-teseo").addClass("ligth")
+                                $("#step-teseo").removeClass("success")
+                            }
+
+
+                        }
 
                     } else {
                         // $("#_1s").text("0")

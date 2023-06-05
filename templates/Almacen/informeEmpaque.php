@@ -40,6 +40,10 @@ if (count($Data) == '0') {
                     <td><?= formatoMil($DataLote['precioUnitFactUsd'], 2) ?> USD.</td>
                 </tr>
                 <tr>
+                    <td>Costo USD x Set </td>
+                    <td><?= formatoMil($DataLote['costoWBUnit'], 2) ?> USD.</td>
+                </tr>
+                <tr>
                     <td>Piezas Cortadas en Teseo </td>
                     <td><?= formatoMil($DataLote['pzasCortadasTeseo'], 0) ?></td>
                 </tr>

@@ -11,41 +11,6 @@ function guardarValor(codigo, input, str = false) {
     } else if (codigo == "pzasrechazadas" && value_input <= 0) {
       $("#divCausaRechazo").attr("hidden", true);
     }
-    pzasCutTeseo =
-      $("#pzasCutTeseo").val() == "" ? "0" : $("#pzasCutTeseo").val();
-    if (codigo == "piezasrecuperadas" && value_input > pzasCutTeseo) {
-      /* notificaBad(
-        "Las piezas cortadas por Teseo son menor a las recuperadas en el lote"
-      );*/
-        Swal.fire({
-          type: "error",
-          title: "Error en Piezas Recuperadas",
-          text: "Las piezas cortadas por Teseo son menor a las recuperadas en el lote.",
-        });
-      setTimeout(() => {
-        $(input).val("0");
-        $(input).change();
-      }, 1000);
-      return 0;
-    }
-
-    pzasCutTeseo =
-      $("#pzasCutTeseo").val() == "" ? "0" : $("#pzasCutTeseo").val();
-    if (codigo == "setsempacados" && value_input > pzasCutTeseo) {
-      // notificaBad("Las piezas cortadas por Teseo son menor a las empacadas en el lote");
-        Swal.fire({
-          type: "error",
-          title: "Error en Piezas Empacadas",
-          text: "Las piezas cortadas por Teseo son menor a las empacadas en el lote.",
-        });
-      
-
-      setTimeout(() => {
-        $(input).val(pzasCutTeseo);
-        $(input).change();
-      }, 1000);
-      return 0;
-    }
     if (codigo == "fechaempaque") {
       setSemanaInput("fechaEmpaque", "semanaProduccion");
       $("#semanaProduccion").change();
@@ -66,7 +31,12 @@ function guardarValor(codigo, input, str = false) {
           else   if(codigo=='setsempacados' && value_input<=0 ){
             $("#btn-finalizarYield").prop("hidden", true);
           }
-          //    notificaSuc(resp[1], "toastr toast-bottom-left");
+          if(validaCamposLlenos()){
+            $("#btn-finalizarYield").prop("hidden", false);
+          }else{
+            $("#btn-finalizarYield").prop("hidden", true);
+
+          }
         } else if (resp[0] == 0) {
           notificaBad(resp[1], "toastr toast-bottom-left");
           $("#success-" + codigo).attr("hidden", true);
@@ -383,13 +353,6 @@ function YieldFinalReal() {
   $("#yieldFinalReal").val(result);
   guardarValor("yieldfinalreal", $("#yieldFinalReal"));
 }
-/*$(".YieldFinalReal").change(function () {
-  let result = getYieldFinalReal().toFixed(2);
-  console.log(result);
-  let fto = new Intl.NumberFormat("es-MX").format(result);
-  $("#yieldFinalReal").val(result);
-  guardarValor("yieldfinalreal", $("#yieldFinalReal"));
-});*/
 
 $(".SetsRechazados").change(function () {
   if ($("#tipoProceso").val() == "1") {

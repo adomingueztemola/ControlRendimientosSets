@@ -7,7 +7,7 @@ include('../Models/Mdl_Rendimiento.php');
 include('../Models/Mdl_Static.php');
 include('../Models/Mdl_Excepciones.php');
 
-$debug = 0;
+$debug =0;
 $idUser = $_SESSION['CREident'];
 
 $obj_rendimiento = new Rendimiento($debug, $idUser);
@@ -303,6 +303,12 @@ switch ($_GET["op"]) {
         $obj_rendimiento->beginTransaction();
         //Eliminar Registro
         $datos = $obj_rendimiento->eliminarRendimiento($id);
+        try {
+            Excepciones::validaMsjError($datos);
+        } catch (Exception $e) {
+            $obj_rendimiento->errorBD($e->getMessage(), 1);
+        }
+        $datos = $obj_rendimiento->calcularRendimiento('0', false, $id);
         try {
             Excepciones::validaMsjError($datos);
         } catch (Exception $e) {
@@ -918,7 +924,9 @@ switch ($_GET["op"]) {
             $obj_rendimiento->errorBD($ErrorLog, 0);
         }
         $DatosAbiertos = $obj_rendimiento->getRendimientoAbierto();
-        $datos = Funciones::edicionBasica("rendimientos", "recorteAcabado", $value, "id", $DatosAbiertos[0]['id'], $obj_rendimiento->getConexion(), $debug);
+        $recorteAcabado= $DatosAbiertos[0]['recorteAcabado']==''?'0':$DatosAbiertos[0]['recorteAcabado'];
+        $suma= $recorteAcabado+ $value;
+        $datos = Funciones::edicionBasica("rendimientos", "recorteAcabado", $suma, "id", $DatosAbiertos[0]['id'], $obj_rendimiento->getConexion(), $debug);
         try {
             Excepciones::validaMsjError($datos);
         } catch (Exception $e) {
@@ -1172,4 +1180,10 @@ switch ($_GET["op"]) {
         }
         echo '1|Sets Recuperados fueron Recalculados Correctamente.';*/
         break;
-}
+    case "getloteabierto":
+        $Data = $obj_rendimiento->getRendimientoAbierto();
+        $Data = Excepciones::validaConsulta($Data);
+        $json_string = json_encode($Data[0]);
+        echo $json_string;
+        break;
+    }

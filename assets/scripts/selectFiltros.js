@@ -402,10 +402,21 @@ $(".LotesProceso").select2({
 /*************************************************
  * 9. OPCIONES DE LOTES EN LISTOS PARA REGISTRAR DATOS FINALES
 /*************************************************/
+function formatLote (state) {
+
+  if (!state.id) {
+    return state.text;
+  }
+  var $state = $(
+    '<span><i class="fas fa-circle '+state.color+'"></i> '+state.text+'</span>'
+  );
+  return $state;
+};
 
 $(".LotesFinales").select2({
   placeholder: "Selecciona un lote",
   allowClear: true,
+  templateResult: formatLote,
 
   ajax: {
     url: "../Controller/rendimiento.php?op=select2lotesfinales",
@@ -438,12 +449,14 @@ $(".LotesFinales").select2({
           hijoOpt.id = element.id;
           hijoOpt.text = element.loteTemola;
           hijoOpt.element = HTMLOptionElement;
+          hijoOpt.color=element.color;
           childrenOpt.push(hijoOpt); //Agraga children OPT
         } else {
           //Agrega su hijito
           hijoOpt.id = element.id;
           hijoOpt.text = element.loteTemola;
           hijoOpt.element = HTMLOptionElement;
+          hijoOpt.color=element.color;
           childrenOpt.push(hijoOpt); //Agraga children OPT
         }
         textOpt = element.nPrograma;
