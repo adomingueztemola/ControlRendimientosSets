@@ -7,7 +7,7 @@ include('../Models/Mdl_Rendimiento.php');
 include('../Models/Mdl_Static.php');
 include('../Models/Mdl_Excepciones.php');
 
-$debug = 0;
+$debug =0;
 $idUser = $_SESSION['CREident'];
 
 $obj_rendimiento = new Rendimiento($debug, $idUser);
@@ -303,6 +303,12 @@ switch ($_GET["op"]) {
         $obj_rendimiento->beginTransaction();
         //Eliminar Registro
         $datos = $obj_rendimiento->eliminarRendimiento($id);
+        try {
+            Excepciones::validaMsjError($datos);
+        } catch (Exception $e) {
+            $obj_rendimiento->errorBD($e->getMessage(), 1);
+        }
+        $datos = $obj_rendimiento->calcularRendimiento('0', false, $id);
         try {
             Excepciones::validaMsjError($datos);
         } catch (Exception $e) {
