@@ -107,7 +107,7 @@ $space = 1;
 
 
 <?= $info->creaFooter(); ?>
-<?php include("../templates/libsJS.php"); ?>
+<?php include("../templates/libsJSMedidor.php"); ?>
 
 <script src="../assets/extra-libs/datatables.net/js/jquery.dataTables.min-ESP.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js"></script>

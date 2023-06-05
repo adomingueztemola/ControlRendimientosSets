@@ -82,7 +82,7 @@ $space = 1;
     <?= $info->creaFooter(); ?>
 
 </body>
-<?php include("../templates/libsJS.php"); ?>
+<?php include("../templates/libsJSMedidor.php"); ?>
 <script src="../assets/scripts/selectFiltros.js"></script>
 
 
