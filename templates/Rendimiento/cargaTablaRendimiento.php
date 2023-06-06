@@ -12,95 +12,11 @@ $debug = 0;
 $idUser = $_SESSION['CREident'];
 $nameUser = $_SESSION['CREnombreUser'];
 setlocale(LC_TIME, 'es_ES.UTF-8');
-$obj_rendimiento = new Rendimiento($debug, $idUser);
-$DataRendimientoAbierto = $obj_rendimiento->getRendimientoAbierto();
-$DataRendimientoAbierto = $DataRendimientoAbierto == '' ? array() : $DataRendimientoAbierto;
-$_abierto = count($DataRendimientoAbierto) > 0 ? true : false;
-//IDENTIFICACION DE TIPO DE PROCESO PARA EL MANEJO DE LOS DATOS
-$tipoProceso = $_abierto ? $DataRendimientoAbierto[0]['tipoProceso'] : 0;
-//PARAMETROS PARA CARGA DEL FORMULARIO
 
-$areaWB = $_abierto ? $DataRendimientoAbierto[0]['areaWB'] : '0.0';
-$diferenciaArea  = $_abierto ? $DataRendimientoAbierto[0]['diferenciaArea'] : '0.0';
-$promedioAreaWB = $_abierto ? $DataRendimientoAbierto[0]['promedioAreaWB'] : '0.0';
-$porcDifAreaWB = $_abierto ? $DataRendimientoAbierto[0]['porcDifAreaWB'] : '0.0';
-$piezasRechazadas = $_abierto ? $DataRendimientoAbierto[0]['piezasRechazadas'] : '0.0';
-$comentariosRechazo = $_abierto ? $DataRendimientoAbierto[0]['comentariosRechazo'] : '';
-$hidden_comentarios = ($_abierto and $DataRendimientoAbierto[0]['piezasRechazadas']) > 0 ? '' : 'hidden';
-$areaPzasRechazo = $_abierto ? $DataRendimientoAbierto[0]['areaPzasRechazo'] : '0.0';
-$porcRecorteWB = $_abierto ? $DataRendimientoAbierto[0]['porcRecorteWB'] : '0.0';
-$porcRecorteCrust = $_abierto ? $DataRendimientoAbierto[0]['porcRecorteCrust'] : '0.0';
-$totalRecorte = $_abierto ? $DataRendimientoAbierto[0]['totalRecorte'] : '0.0';
-$humedad = $_abierto ? $DataRendimientoAbierto[0]['humedad'] : '0.0';
-$areaCrust = $_abierto ? $DataRendimientoAbierto[0]['areaCrust'] : '0.0';
-$perdidaAreaWBCrust = $_abierto ? $DataRendimientoAbierto[0]['perdidaAreaWBCrust'] : '0.0';
-$quiebre = $_abierto ? $DataRendimientoAbierto[0]['quiebre'] : '0.0';
-$suavidad = $_abierto ? $DataRendimientoAbierto[0]['suavidad'] : '0.0';
-$areaFinal = $_abierto ? $DataRendimientoAbierto[0]['areaFinal'] : '0.0';
-$perdidaAreaCrustTeseo = $_abierto ? $DataRendimientoAbierto[0]['perdidaAreaCrustTeseo'] : '0.0';
-$yieldInicialTeseo = $_abierto ? $DataRendimientoAbierto[0]['yieldInicialTeseo'] : '0.0';
-$pzasCortadasTeseo = $_abierto ? $DataRendimientoAbierto[0]['pzasCortadasTeseo'] : '0.0';
-$yieldFinalReal = $_abierto ? $DataRendimientoAbierto[0]['yieldFinalReal'] : '0.0';
-$porcSetsRechazoInicial = $_abierto ? $DataRendimientoAbierto[0]['porcSetsRechazoInicial'] : '0.0';
-$setsRechazados = $_abierto ? $DataRendimientoAbierto[0]['setsRechazados'] : '0.0';
-$piezasRecuperadas = $_abierto ? $DataRendimientoAbierto[0]['piezasRecuperadas'] : '0.0';
-$porcRecuperacion = $_abierto ? $DataRendimientoAbierto[0]['porcRecuperacion'] : '0.0';
-$piezasRecuperadas = $_abierto ? $DataRendimientoAbierto[0]['piezasRecuperadas'] : '0.0';
-$porcFinalRechazo = $_abierto ? $DataRendimientoAbierto[0]['porcFinalRechazo'] : '0.0';
-$unidadesEmpacadas = $_abierto ? $DataRendimientoAbierto[0]['unidadesEmpacadas'] : '0.0';
-$areaCrustSet = $_abierto ? $DataRendimientoAbierto[0]['areaCrustSet'] : '0.0';
-$areaWBUnidad = $_abierto ? $DataRendimientoAbierto[0]['areaWBUnidad'] : '0.0';
-$setsCortadosTeseo = $_abierto ? $DataRendimientoAbierto[0]['setsCortadosTeseo'] : '0.0';
-$setsRecuperados = $_abierto ? $DataRendimientoAbierto[0]['setsRecuperados'] : '0.0';
-$areaNeta = $_abierto ? $DataRendimientoAbierto[0]['areaNeta_Prg'] : '0.0';
-$tipoProceso = $_abierto ? $DataRendimientoAbierto[0]['tipoProceso'] : '';
-$tipoMateriaPrima = $_abierto ? $DataRendimientoAbierto[0]['tipoMateriaPrima'] : '';
-$areaWBTerminado = $_abierto ? $DataRendimientoAbierto[0]['areaWBTerminado'] : '0.0';
-$recorteAcabado = $_abierto ? $DataRendimientoAbierto[0]['recorteAcabado'] : '0.0';
-$piezasReasig = $_abierto ? $DataRendimientoAbierto[0]['cuerosReasig'] : '0.0';
-
-
-$semanaProduccion = $_abierto ? $DataRendimientoAbierto[0]['semanaProduccion'] : '';
-
-$fechaEmpaque = $_abierto ? $DataRendimientoAbierto[0]['fechaEmpaque'] : '';
-$ArrayFechaEmpaque = explode('-', $fechaEmpaque);
-if (count($ArrayFechaEmpaque) > 0) {
-    $semanaProduccion = $ArrayFechaEmpaque["0"] . "-W" . str_pad($semanaProduccion, 2, "0", STR_PAD_LEFT);
-} else {
-    $semanaProduccion = "";
-}
-
-// $labelSetsEmpacado = $tipoProceso == '1' ? "Piezas Totales Empacadas" : "M<sup>2</sup> Finales";
-// $labelAreaFinal = $tipoProceso == '1' ? "Área Final de Teseo" : "Área Final";
-// $labelPerdidaAreaCrust = $tipoProceso == '1' ? "Pérdida Área Crust a Teseo" : "Pérdida Área Crust a Terminado";
-// $labelPzasRechazadas = $tipoProceso == '1' ? "Hides Rechazados" : "Hides Rechazados";
-// $labelAreaXCantFinal = $tipoProceso == '1' ? "Área WB Real por Set" : "Área WB Real por M<sup>2</sup>";
-
-if (!$_abierto) {
-    echo "<div style='height:365px;'>
-            <div class='alert alert-dark' role='alert'>
-                Para iniciar,  Registra Datos Generales del Rendimiento.
-            </div>
-          </div>";
-    exit(0);
-}
-
-//Validacion De Lote En Edicion
-$obj_solicitudes = new Solicitud($debug, $idUser);
-$DataValidaUsoDelLote = $obj_solicitudes->validaCambioDePzas($DataRendimientoAbierto[0]['id']);
-$DataValidaUsoDelLote = $DataValidaUsoDelLote == '' ? array() : $DataValidaUsoDelLote;
-if (!is_array($DataValidaUsoDelLote)) {
-    echo "<p class='text-danger'>Error, $DataValidaUsoDelLote</p>";
-    exit(0);
-}
-$disabledLoteUso = "";
-if (count($DataValidaUsoDelLote) <= 0) {
-    $disabledLoteUso = "disabled";
-}
 ?>
-<div class="">
+<div id="content-detallado">
     <table class="table table-sm">
-        <input type="hidden" name="tipoProceso" id="tipoProceso" value="<?= $tipoProceso ?>">
+        <input type="hidden" name="tipoProceso" id="tipoProceso" value="">
         <tbody>
             <tr>
                 <td class="bg-success text-dark">
@@ -109,7 +25,7 @@ if (count($DataValidaUsoDelLote) <= 0) {
                 <td>
                     <div class="row">
                         <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
-                            <input class="form-control Validate" type="date" onchange="guardarValor('fechaempaque', this, true);" name="fechaEmpaque" value="<?= $fechaEmpaque ?>" id="fechaEmpaque" required></input>
+                            <input class="form-control Validate" type="date" onchange="guardarValor('fechaempaque', this, true);" name="fechaEmpaque" value="" id="fechaEmpaque" required></input>
                         </div>
                         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" hidden id="success-fechaempaque">
                             <i class="fas fa-check text-success"></i>
@@ -125,7 +41,7 @@ if (count($DataValidaUsoDelLote) <= 0) {
                 <td>
                     <div class="row">
                         <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
-                            <input class="form-control Validate" type="week" value="<?= $semanaProduccion ?>" onchange="guardarValor('semanaproduccion', this, true)" name="semanaProduccion" id="semanaProduccion" required></input>
+                            <input class="form-control Validate" type="week" value="" onchange="guardarValor('semanaproduccion', this, true)" name="semanaProduccion" id="semanaProduccion" required></input>
                         </div>
                         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" hidden id="success-semanaproduccion">
                             <i class="fas fa-check text-success"></i>
@@ -140,7 +56,7 @@ if (count($DataValidaUsoDelLote) <= 0) {
                 <td>
                     <div class="row">
                         <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
-                            <input class="form-control Validate Positivos" value="<?= $areaWB ?>" onchange="guardarValor('areawb', this)" type="number" step="0.001" name="areaWBRecibida" id="areaWBRecibida"></input>
+                            <input class="form-control Validate Positivos" value="" onchange="guardarValor('areawb', this)" type="number" step="0.001" name="areaWBRecibida" id="areaWBRecibida"></input>
                         </div>
                         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" hidden id="success-areawb">
                             <i class="fas fa-check text-success"></i>
@@ -158,7 +74,7 @@ if (count($DataValidaUsoDelLote) <= 0) {
                 <td>
                     <div class="row">
                         <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
-                            <input class="form-control" type="number" step="1" min="0" name="piezasRechazadas" value="<?= $piezasRechazadas * 2 ?>" onchange="guardarValor('pzasrechazadas', this)" id="piezasRechazadas"></input>
+                            <input class="form-control" type="number" step="1" min="0" name="piezasRechazadas" value="" onchange="guardarValor('pzasrechazadas', this)" id="piezasRechazadas"></input>
                         </div>
                         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" hidden id="success-pzasrechazadas">
                             <i class="fas fa-check text-success"></i>
@@ -169,11 +85,11 @@ if (count($DataValidaUsoDelLote) <= 0) {
 
             </tr>
 
-            <tr id="divCausaRechazo" <?= $hidden_comentarios ?>>
+            <tr id="divCausaRechazo">
                 <td colspan="2">
                     <div class="row">
                         <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
-                            <textarea class="form-control Validate" name="comentariosrechazo" onchange="guardarValor('comentariosrechazo', this, true)" id="comentariosrechazo" cols="30" rows="1" placeholder="Captura causa del rechazo en piezas"><?= $comentariosRechazo ?></textarea>
+                            <textarea class="form-control Validate" name="comentariosrechazo" onchange="guardarValor('comentariosrechazo', this, true)" id="comentariosrechazo" cols="30" rows="1" placeholder="Captura causa del rechazo en piezas"></textarea>
                         </div>
                         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" hidden id="success-comentariosrechazo">
                             <i class="fas fa-check text-success"></i>
@@ -188,7 +104,7 @@ if (count($DataValidaUsoDelLote) <= 0) {
                 <td>
                     <div class="row">
                         <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
-                            <input class="form-control" type="number" step="1" min="0" name="piezasReasig" value="<?= $piezasReasig * 2 ?>" onchange="guardarValor('pzasreasig', this)" id="piezasReasig"></input>
+                            <input class="form-control" type="number" step="1" min="0" name="piezasReasig" value="" onchange="guardarValor('pzasreasig', this)" id="piezasReasig"></input>
                         </div>
                         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" hidden id="success-pzasreasig">
                             <i class="fas fa-check text-success"></i>
@@ -218,7 +134,7 @@ if (count($DataValidaUsoDelLote) <= 0) {
                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                             <label for="pesoRaspadoWB">Recorte WB %</label>
                             <div class="input-group mb-3">
-                                <input class="form-control Validate" type="number" step="0.01" readonly name="recorteWB" value="<?= $porcRecorteWB ?>" id="recorteWB"></input>
+                                <input class="form-control Validate" type="number" step="0.01" readonly name="recorteWB" value="" id="recorteWB"></input>
                                 <div class="input-group-append">
                                     <span class="input-group-text">%</span>
                                 </div>
@@ -333,11 +249,6 @@ if (count($DataValidaUsoDelLote) <= 0) {
                 </td>
             </tr>
 
-
-            <?php
-            $hidden_area = $tipoMateriaPrima == "1" ? "" : "hidden";
-            ?>
-
             <tr>
                 <td class="bg-warning  text-dark">
                     <label for="quiebre">Quiebre</label>
@@ -450,20 +361,43 @@ if (count($DataValidaUsoDelLote) <= 0) {
             async: false,
             dataType: "json",
             success: function(respuesta) {
-                console.log(respuesta);
-                if (respuesta.tipoProceso == '1') {
-                    //Activar-Desactivar fecha de empaque
-                    if (respuesta.regEmpaque == '1') {
-                        $("#fechaEmpaque").prop("disabled", false)
-                        $("#semanaProduccion").prop("disabled", false)
+                if (respuesta == null) {
+                    $("#content-detallado").html("");
+                    $("#content-detallado").html(`<div style='height:365px;'>
+                        <div class='alert alert-dark' role='alert'>
+                            Para iniciar,  Registra Datos Generales del Rendimiento.
+                        </div>
+                    </div>`);
+                 
+                } else {
+                    if (respuesta.tipoProceso == '1') {
+                        //Activar-Desactivar fecha de empaque
+                        if (respuesta.regEmpaque == '1') {
+                            $("#fechaEmpaque").prop("disabled", false)
+                            $("#semanaProduccion").prop("disabled", false)
 
-                    } else {
-                        $("#fechaEmpaque").prop("disabled", true)
-                        $("#semanaProduccion").prop("disabled", true)
+                        } else {
+                            $("#fechaEmpaque").prop("disabled", true)
+                            $("#semanaProduccion").prop("disabled", true)
+                        }
+                        $(".identificadoresSoloMts").remove();
+
                     }
-                    //Confirmar que los datos esten completos para el cierre
+                    if (respuesta.tipoProceso == '2') {
+                        $("#lbl-setsEmpacados").html("Área M<sup>2</sup> Final")
+                        $("#lbl-areaFinalTeseo").html("Área Ft<sup>2</sup> Final")
+                        $("#areaFinalTeseo").val(respuesta.areaFinal == null ? '0.0' : respuesta.areaFinal)
+                        $("#unidadesEmpacadas").val(respuesta.unidadesEmpacadas == null ? '0.0' : respuesta.unidadesEmpacadas)
+                        $(".identificadoresSoloSet").remove();
 
+                        if ($("#unidadesEmpacadas").val() > 0 && $("#unidadesEmpacadas").val() != '') {
+                            $("#btn-finalizarYield").prop("hidden", false);
+                        }
+                    }
                     //Pre rellenado de datos cargados
+                    $("#fechaEmpaque").val(respuesta.fechaEmpaque == null ? '' : respuesta.fechaEmpaque)
+                    $("#semanaProduccion").val(respuesta.semanaProduccion == null ? '' : respuesta.yearWeek + "-W" + respuesta.semanaProduccion)
+
                     $("#areaWBRecibida").val(respuesta.areaWB == null ? '0.0' : respuesta.areaWB)
                     $("#piezasRechazadas").val(respuesta.piezasRechazadas == null ? '0' : respuesta.piezasRechazadas * 2)
                     $("#piezasReasig").val(respuesta.piezasRecuperadas == null ? '0' : respuesta.piezasRecuperadas * 2)
@@ -474,6 +408,8 @@ if (count($DataValidaUsoDelLote) <= 0) {
                     $("#recorteAcabado").val(respuesta.recorteAcabado == null ? '0.0' : respuesta.recorteAcabado)
                     $("#quiebre").val(respuesta.quiebre == null ? '0.0' : respuesta.quiebre)
                     $("#suavidad").val(respuesta.suavidad == null ? '0.0' : respuesta.suavidad)
+                    $("#tipoProceso").val(respuesta.tipoProceso == null ? '0' : respuesta.tipoProceso)
+                    $("#comentariosrechazo").text(respuesta.comentariosRechazo == null ? '' : respuesta.comentariosRechazo)
                     //Comentarios de Rechazo
                     piezasRechazadas = respuesta.piezasRechazadas == null ? '0.0' : respuesta.piezasRechazadas;
                     if (piezasRechazadas > 0) {
@@ -481,24 +417,12 @@ if (count($DataValidaUsoDelLote) <= 0) {
                     } else {
                         $("#divCausaRechazo").prop("hidden", true);
                     }
-                    $(".identificadoresSoloMts").remove();
-
-                }
-                if (respuesta.tipoProceso == '2') {
-                    $("#lbl-setsEmpacados").html("Área M<sup>2</sup> Final")
-                    $("#lbl-areaFinalTeseo").html("Área Ft<sup>2</sup> Final")
-                    $("#areaFinalTeseo").val(respuesta.areaFinal == null ? '0.0' : respuesta.areaFinal)
-                    $("#unidadesEmpacadas").val(respuesta.unidadesEmpacadas == null ? '0.0' : respuesta.unidadesEmpacadas)
-                    $(".identificadoresSoloSet").remove();
-                    if ($("#unidadesEmpacadas").val() > 0 && $("#unidadesEmpacadas").val() != '') {
+                    if (validaCamposLlenos()) {
                         $("#btn-finalizarYield").prop("hidden", false);
-                    }
-                }
-                if (validaCamposLlenos()) {
-                    $("#btn-finalizarYield").prop("hidden", false);
-                } else {
-                    $("#btn-finalizarYield").prop("hidden", true);
+                    } else {
+                        $("#btn-finalizarYield").prop("hidden", true);
 
+                    }
                 }
             },
 
@@ -537,6 +461,7 @@ if (count($DataValidaUsoDelLote) <= 0) {
                 if (resp[0] == 1) {
                     notificaSuc(resp[1])
                     bloqueoBtn("bloqueo-btn-ra", 2)
+                    // console.log(parseFloat(recorteAcabado) + parseFloat(v_sumRecorteAcab));
                     $("#recorteAcabado").val(parseFloat(recorteAcabado) + parseFloat(v_sumRecorteAcab))
                     $("#sumRecorteAcab").val(0)
 

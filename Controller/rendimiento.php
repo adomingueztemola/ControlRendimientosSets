@@ -1056,12 +1056,21 @@ switch ($_GET["op"]) {
             $obj_rendimiento->errorBD($ErrorLog, 0);
         }
         $DatosAbiertos = $obj_rendimiento->getRendimientoAbierto();
+        $obj_rendimiento->beginTransaction();
         $datos = Funciones::edicionBasica("rendimientos", "semanaProduccion", $WeekYear[1], "id", $DatosAbiertos[0]['id'], $obj_rendimiento->getConexion(), $debug);
         try {
             Excepciones::validaMsjError($datos);
         } catch (Exception $e) {
-            $obj_materias->errorBD($e->getMessage(), 1);
+            $obj_rendimiento->errorBD($e->getMessage(), 1);
         }
+        $datos = Funciones::edicionBasica("rendimientos", "yearWeek", $WeekYear[0], "id", $DatosAbiertos[0]['id'], $obj_rendimiento->getConexion(), $debug);
+        try {
+            Excepciones::validaMsjError($datos);
+        } catch (Exception $e) {
+            $obj_rendimiento->errorBD($e->getMessage(), 1);
+        }
+        $obj_rendimiento->insertarCommit();
+
         echo '1| Registro de Semana de Producción.';
 
         break;
