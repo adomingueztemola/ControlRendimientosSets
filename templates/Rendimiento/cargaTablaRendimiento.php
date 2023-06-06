@@ -103,7 +103,7 @@ if (count($DataValidaUsoDelLote) <= 0) {
         <input type="hidden" name="tipoProceso" id="tipoProceso" value="<?= $tipoProceso ?>">
         <tbody>
             <tr>
-                <td class="bg-TWM text-white">
+                <td class="bg-success text-dark">
                     <label for="fechaEmpaque">Fecha Empaque</label>
                 </td>
                 <td>
@@ -119,7 +119,7 @@ if (count($DataValidaUsoDelLote) <= 0) {
             </tr>
 
             <tr>
-                <td class="bg-TWM text-white">
+                <td class="bg-success text-dark">
                     <label for="semanaProduccion">Semana de Producción:</label>
                 </td>
                 <td>
@@ -134,7 +134,7 @@ if (count($DataValidaUsoDelLote) <= 0) {
             </tr>
 
             <tr>
-                <td class="bg-TWM text-white">
+                <td class="text-dark" style="background:#ffa0bd">
                     <label for="areaWBRecibida">Área WB en Recibo (pie<sup>2</sup>)</label>
                 </td>
                 <td>
@@ -152,7 +152,7 @@ if (count($DataValidaUsoDelLote) <= 0) {
             </tr>
 
             <tr>
-                <td class="bg-TWM text-white">
+                <td class="bg-success text-dark">
                     <label for="piezasRechazadas">Hides Rechazados</label>
                 </td>
                 <td>
@@ -182,7 +182,7 @@ if (count($DataValidaUsoDelLote) <= 0) {
                 </td>
             </tr>
             <tr>
-                <td class="bg-TWM text-white">
+                <td class="bg-success text-dark">
                     <label for="piezasReasig">Hides Re-asignados</label>
                 </td>
                 <td>
@@ -199,7 +199,7 @@ if (count($DataValidaUsoDelLote) <= 0) {
 
             </tr>
             <tr>
-                <td class="bg-TWM text-white">
+                <td class="">
                     <label for="recorteWB">Recorte WB %</label>
                 </td>
                 <td>
@@ -232,7 +232,7 @@ if (count($DataValidaUsoDelLote) <= 0) {
                 </td>
             </tr>
             <tr>
-                <td class="bg-TWM text-white">
+                <td class="text-dark" style="background:#ffa0bd">
                     <label for="recorteCrust">Recorte Crust %</label>
                 </td>
                 <td>
@@ -264,7 +264,7 @@ if (count($DataValidaUsoDelLote) <= 0) {
                 </td>
             </tr>
             <tr>
-                <td class="bg-TWM text-white">
+                <td class="bg-warning  text-dark">
                     <label for="humedad">Humedad</label>
                 </td>
                 <td>
@@ -284,7 +284,7 @@ if (count($DataValidaUsoDelLote) <= 0) {
                 </td>
             </tr>
             <tr>
-                <td class="bg-TWM text-white">
+                <td class="bg-success text-dark">
                     <label for="areaCrust">Área Crust</label>
                 </td>
                 <td>
@@ -302,7 +302,7 @@ if (count($DataValidaUsoDelLote) <= 0) {
             <!---IMPLEMENTACION DEL 24/AGOSTO/2022  BY: ANA KAREN DOMINGUEZ --->
 
             <tr>
-                <td class="bg-TWM text-white">
+                <td class="bg-success  text-dark">
                     <label for="recorteAcabado">Recorte Acabado Gr.</label>
                 </td>
                 <td>
@@ -339,7 +339,7 @@ if (count($DataValidaUsoDelLote) <= 0) {
             ?>
 
             <tr>
-                <td class="bg-TWM text-white">
+                <td class="bg-warning  text-dark">
                     <label for="quiebre">Quiebre</label>
                 </td>
                 <td>
@@ -354,7 +354,7 @@ if (count($DataValidaUsoDelLote) <= 0) {
                 </td>
             </tr>
             <tr>
-                <td class="bg-TWM text-white">
+                <td class="bg-warning  text-dark">
                     <label for="suavidad">Suavidad</label>
                 </td>
                 <td>
@@ -369,7 +369,7 @@ if (count($DataValidaUsoDelLote) <= 0) {
                 </td>
             </tr>
             <tr class="identificadoresSoloMts">
-                <td class="bg-TWM text-white">
+                <td class="bg-success  text-dark">
                     <label for="areaDmTeseo">Área Dm<sup>2</sup> Final</label>
                 </td>
                 <td>
@@ -396,7 +396,7 @@ if (count($DataValidaUsoDelLote) <= 0) {
                 </td>
             </tr>
             <tr class="identificadoresSoloMts">
-                <td class="bg-TWM text-white">
+                <td class="bg-success  text-dark">
                     <label id="lbl-areaFinalTeseo" for="areaFinalTeseo"></label>
                 </td>
                 <td>
@@ -415,7 +415,7 @@ if (count($DataValidaUsoDelLote) <= 0) {
             <!--- Final de solo para set's -->
 
             <tr class="identificadoresSoloMts">
-                <td class="bg-TWM text-white">
+                <td class="bg-success  text-dark">
                     <label id="lbl-setsEmpacados" for="setsEmpacados"></label>
                 </td>
                 <td>
