@@ -67,7 +67,7 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
                         <td>
                             <div class="row">
                                 <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
-                                    <input class="form-control Validate Positivos" value="" onchange="guardarValor('areawb', this)" type="number" step="0.001" name="areaWBRecibida" id="areaWBRecibida"></input>
+                                    <input class="form-control Validate Positivos focusCampo" value="" onchange="guardarValor('areawb', this)" type="number" step="0.001" name="areaWBRecibida" id="areaWBRecibida"></input>
                                 </div>
                                 <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" hidden id="success-areawb">
                                     <i class="fas fa-check text-success"></i>
@@ -85,7 +85,7 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
                         <td>
                             <div class="row">
                                 <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
-                                    <input class="form-control" type="number" step="1" min="0" name="piezasRechazadas" value="" onchange="guardarValor('pzasrechazadas', this)" id="piezasRechazadas"></input>
+                                    <input class="form-control focusCampo" type="number" step="1" min="0" name="piezasRechazadas" value="" onchange="guardarValor('pzasrechazadas', this)" id="piezasRechazadas"></input>
                                 </div>
                                 <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" hidden id="success-pzasrechazadas">
                                     <i class="fas fa-check text-success"></i>
@@ -115,7 +115,7 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
                         <td>
                             <div class="row">
                                 <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
-                                    <input class="form-control" type="number" step="1" min="0" name="piezasReasig" value="" onchange="guardarValor('pzasreasig', this)" id="piezasReasig"></input>
+                                    <input class="form-control focusCampo" type="number" step="1" min="0" name="piezasReasig" value="" onchange="guardarValor('pzasreasig', this)" id="piezasReasig"></input>
                                 </div>
                                 <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" hidden id="success-pzasreasig">
                                     <i class="fas fa-check text-success"></i>
@@ -133,11 +133,11 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
                             <div class="row">
                                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                     <label for="pesoCorteWB">Peso Corte</label>
-                                    <input type="number" class="form-control" name="" id="pesoCorteWB" step="0.01">
+                                    <input type="number" class="form-control focusCampo" name="" id="pesoCorteWB" step="0.01">
                                 </div>
                                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                     <label for="pesoRaspadoWB">Peso Raspado</label>
-                                    <input type="number" class="form-control" name="" id="pesoRaspadoWB" step="0.01">
+                                    <input type="number" class="form-control focusCampo" name="" id="pesoRaspadoWB" step="0.01">
                                 </div>
                                 <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 pt-4 mt-1 item-center">
                                     <button class="btn btn-success btn-md" onclick="getPorcRecorteWB()" type="button">=</button>
@@ -166,11 +166,11 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
                             <div class="row">
                                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                     <label for="pesoCorteWB">Peso "Recortar"</label>
-                                    <input type="number" class="form-control" name="" id="recortar" step="0.01">
+                                    <input type="number" class="form-control focusCampo" name="" id="recortar" step="0.01">
                                 </div>
                                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                     <label for="pesoRaspadoWB">Peso "Pesar"</label>
-                                    <input type="number" class="form-control" name="" id="pesar" step="0.01">
+                                    <input type="number" class="form-control focusCampo" name="" id="pesar" step="0.01">
                                 </div>
                                 <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 pt-4 mt-1 item-center">
                                     <button class="btn btn-success btn-md" onclick="getPorcRecorteCrust()" type="button">=</button>
@@ -198,7 +198,7 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
                             <div class="row">
                                 <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
                                     <div class="input-group mb-3">
-                                        <input class="form-control Validate" type="number" step="0.01" name="humedad" value="<?= $humedad ?>" onchange="guardarValor('humedad', this)" id="humedad"></input>
+                                        <input class="form-control Validate focusCampo" type="number" step="0.01" name="humedad" value="<?= $humedad ?>" onchange="guardarValor('humedad', this)" id="humedad"></input>
                                         <div class="input-group-append">
                                             <span class="input-group-text">%</span>
                                         </div>
@@ -217,7 +217,7 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
                         <td>
                             <div class="row">
                                 <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
-                                    <input class="form-control Validate Positivos" type="number" step="0.01" name="areaCrust" value="<?= $areaCrust ?>" id="areaCrust" onchange="guardarValor('areacrust', this)"></input>
+                                    <input class="form-control Validate Positivos focusCampo" type="number" step="0.01" name="areaCrust" value="<?= $areaCrust ?>" id="areaCrust" onchange="guardarValor('areacrust', this)"></input>
                                 </div>
                                 <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" hidden id="success-areacrust">
                                     <i class="fas fa-check text-success"></i>
@@ -236,7 +236,7 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
                             <div class="row">
                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                     <div class="input-group mb-3">
-                                        <input class="form-control" type="number" step="0.01" name="" id="sumRecorteAcab"></input>
+                                        <input class="form-control focusCampo" type="number" step="0.01" name="" id="sumRecorteAcab"></input>
                                         <div class="input-group-append">
                                             <div id="bloqueo-btn-ra" style="display:none">
                                                 <button class="btn btn-success btn-md" type="button" disabled="">
@@ -267,7 +267,7 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
                         <td>
                             <div class="row">
                                 <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
-                                    <input class="form-control Validate" type="number" step="0.01" name="quiebre" id="quiebre" value="<?= $quiebre ?>" onchange="guardarValor('quiebre', this)"></input>
+                                    <input class="form-control Validate focusCampo" type="number" step="0.01" name="quiebre" id="quiebre" value="<?= $quiebre ?>" onchange="guardarValor('quiebre', this)"></input>
                                 </div>
                                 <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" hidden id="success-quiebre">
                                     <i class="fas fa-check text-success"></i>
@@ -282,7 +282,7 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
                         <td>
                             <div class="row">
                                 <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
-                                    <input class="form-control Validate" type="number" step="0.01" name="suavidad" id="suavidad" value="<?= $suavidad ?>" onchange="guardarValor('suavidad', this)"></input>
+                                    <input class="form-control Validate focusCampo" type="number" step="0.01" name="suavidad" id="suavidad" value="<?= $suavidad ?>" onchange="guardarValor('suavidad', this)"></input>
                                 </div>
                                 <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" hidden id="success-suavidad">
                                     <i class="fas fa-check text-success"></i>
@@ -298,7 +298,7 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
                             <div class="row">
                                 <div class="col-11">
                                     <div class="input-group mb-3">
-                                        <input class="form-control" type="number" step="0.01" name="" id="areaDMFinal"></input>
+                                        <input class="form-control focusCampo" type="number" step="0.01" name="" id="areaDMFinal"></input>
                                         <div class="input-group-append">
                                             <div id="bloqueo-btn-dm" style="display:none">
                                                 <button class="btn btn-success btn-md" type="button" disabled="">
