@@ -1195,4 +1195,25 @@ switch ($_GET["op"]) {
         $json_string = json_encode($Data[0]);
         echo $json_string;
         break;
+    case "resetdatoslote":
+        $DatosAbiertos = $obj_rendimiento->getRendimientoAbierto();
+        $DatosAbiertos= Excepciones::validaConsulta($DatosAbiertos);
+        $id=$DatosAbiertos[0]['id'];
+        $obj_rendimiento->beginTransaction();
+
+        $datos = $obj_rendimiento->resetDatosLote();
+        try {
+            Excepciones::validaMsjError($datos);
+        } catch (Exception $e) {
+            $obj_rendimiento->errorBD($e->getMessage(), 1);
+        }
+        $datos = $obj_rendimiento->calcularRendimiento('0');
+        try {
+            Excepciones::validaMsjError($datos);
+        } catch (Exception $e) {
+            $obj_rendimiento->errorBD($e->getMessage(), 1);
+        }
+        $obj_rendimiento->insertarCommit();
+        echo '1|Reseteo de Lote Correcto.';
+        break;
     }

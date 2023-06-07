@@ -1175,7 +1175,7 @@ class Rendimiento extends ConexionBD
     //REPORTE DE METROS CUADRADOS ETIQUETAS
     public function getM2Etiquetas($tipo_materiaPrima, $filtradoAnio = "1=1")
     {
-        $filtradoTipo="cm.tipo='$tipo_materiaPrima'";
+        $filtradoTipo = "cm.tipo='$tipo_materiaPrima'";
         $sql = "SELECT r.semanaProduccion, IFNULL(SUM(r.areaFinal),0) AS totalProducido, 
             IFNULL(SUM(r.areaWB),0) AS totalWB, 
           IFNULL( SUM( r.total_s ), 0 ) AS total_s,
@@ -1435,6 +1435,28 @@ class Rendimiento extends ConexionBD
         return  $this->consultarQuery($sql, "consultar Tendencias");
     }
 
+    public function resetDatosLote($_abierto=true)
+    {
+        if ($_abierto) {
+            $datosAbierto = $this->getRendimientoAbierto();
+            $idRendimiento = $datosAbierto[0]['id'];
+        }
+        $sql = "UPDATE rendimientos r 
+        SET fechaEmpaque='', semanaProduccion='',
+        areaWB='0', piezasRechazadas='0', 
+        piezasRecuperadas='0',
+        porcRecorteWB='0',
+        porcRecorteCrust='0',
+        humedad='0',
+        areaCrust='0',
+        recorteAcabado='0',
+        quiebre='0',
+        suavidad='0',
+        comentariosRechazo='',
+        piezasRechazadas='0'
+        WHERE r.id='$idRendimiento'";
+        return  $this->runQuery($sql, "");
+    }
     /*************************************** 
      * CALCULO OPERACIONAL
      ***************************************/
