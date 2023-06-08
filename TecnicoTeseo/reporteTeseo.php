@@ -43,11 +43,11 @@ $obj_materia = new MateriaPrima($debug, $idUser);
                                         <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                                             <label for="date-range">Búsqueda de por Rangos de Fechas: </label>
                                             <div class="input-daterange input-group" id="date-range">
-                                                <input type="text" autocomplete="off" class="form-control" name="date-start" value="<?=date("01/01/Y")?>">
+                                                <input type="text" autocomplete="off" class="form-control" name="date-start" value="<?= date("01/01/Y") ?>">
                                                 <div class="input-group-append">
                                                     <span class="input-group-text bg-TWM b-0 text-white">AL</span>
                                                 </div>
-                                                <input type="text" autocomplete="off" class="form-control" name="date-end" value="<?=date("t/12/Y")?>">
+                                                <input type="text" autocomplete="off" class="form-control" name="date-end" value="<?= date("t/12/Y") ?>">
                                             </div>
                                         </div>
                                         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
@@ -81,8 +81,12 @@ $obj_materia = new MateriaPrima($debug, $idUser);
                             <div class="card-body">
                                 <!-- BOTON DE CAMBIO DE PROGRAMA DE LOTE REASIGNACION                    -->
                                 <div class="row mb-2">
-                                    <div class="col-md-11">
+                                    <div class="col-md-2">
                                         <button class="btn btn-md btn-dark" data-toggle="modal" data-target="#reasignarModal"><i class="far fa-sun"></i>Reasignar Programa</button>
+                                    </div>
+                                    <div class="col-md-2">
+                                    </div>
+                                    <div class="col-md-7">
                                     </div>
                                     <div class="col-md-1 text-right">
                                         <button class="btn button btn-rounded btn-sm btn-light" onclick="update()" title="Actualizar Historial"> <i class="fas fa-history"></i></button>
@@ -112,7 +116,7 @@ $obj_materia = new MateriaPrima($debug, $idUser);
                 <div class="modal-content conteoModal-block">
                     <div class="modal-header bg-TWM text-white">
                         <h5 class="modal-title" id="reasignarModalLabel">Reasignar Programa a Lote Teseo</h5>
-                        <button type="button" class="close text-white" onclick="limpiarForm()"  data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close text-white" onclick="limpiarForm()" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -140,6 +144,7 @@ $obj_materia = new MateriaPrima($debug, $idUser);
         </div>
         <!-- FIN DE MODAL DE REASIGNAR PROGRAMA -->
 
+     
     </div>
 
 </body>
@@ -180,7 +185,7 @@ $obj_materia = new MateriaPrima($debug, $idUser);
 
     }
 
-    function limpiarForm(){
+    function limpiarForm() {
         clearForm("formChangeProgram")
 
     }

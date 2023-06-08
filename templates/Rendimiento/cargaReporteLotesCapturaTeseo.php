@@ -76,8 +76,8 @@ $Data = Excepciones::validaConsulta($Data);
         <tbody>
             <?php
             $count = 1;
-            $dataedit="";
-            $rowData="";
+            $dataedit = "";
+            $rowData = "";
             foreach ($Data as $key => $value) {
                 $remarkTable = ($row != '' and $value['id'] == $row) ? 'table-secondary' : '';
                 $input = '<div class="input-group mb-3">
@@ -88,7 +88,7 @@ $Data = Excepciones::validaConsulta($Data);
             </div>';
                 $popover = "data-container='body' data-toggle='popover' data-html='true' data-title='CONVERSIÓN DE DM<sup>2</sup> A FT<sup>2</sup>' data-placement='top' 
                 data-content='$input'";
-
+                $btnEdicion = "<button class='btn btn-xs btn-outline-dark' data-toggle='modal' data-target='#edicionModal'><i class='fas fa-pencil-alt'></i></button>";
                 $lblLiberacion = $value["regOkNok"] == '1' ?
                     "{$value["fFechaRegTeseo"]}" :
                     "<div id='bloqueo-btn-{$value['id']}' style='display: none;'>
@@ -140,10 +140,10 @@ $Data = Excepciones::validaConsulta($Data);
 
                 $iconReprog = $value["reprogramado"] == '1' ? '<i class="fas fa-recycle text-success"></i>' : '';
                 $totalHides = formatoMil($value["total_s"] * 2, 0);
-              
+
                 if ($row != $value['id']) {
-                    $rowData.= "<tr class='$remarkTable'>
-                    <td>{$count}</td>
+                    $rowData .= "<tr class='$remarkTable'>
+                    <td>{$btnEdicion} </td>
                     <td>{$iconReprog}</td>
                     <td>{$value['fFechaEngrase']}</td>
                     <td>{$value['loteTemola']}</td>
@@ -161,7 +161,7 @@ $Data = Excepciones::validaConsulta($Data);
 
                 </tr>";
                 } else {
-                    $dataedit="<tr class='$remarkTable'>
+                    $dataedit = "<tr class='$remarkTable'>
                     <td>{$count}</td>
                     <td>{$iconReprog}</td>
                     <td>{$value['fFechaEngrase']}</td>
@@ -182,13 +182,104 @@ $Data = Excepciones::validaConsulta($Data);
                 }
                 $count++;
             }
-            echo $dataedit.$rowData;
+            echo $dataedit . $rowData;
             ?>
         </tbody>
     </table>
 </div>
+<!-- INICIAL DE MODAL DE EDICION DE LOTES -->
+<div class="modal fade" id="edicionModal" role="dialog" aria-labelledby="reasignarModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content conteoModal-block">
+            <div class="modal-header bg-TWM text-white">
+                <h5 class="modal-title" id="reasignarModalLabel">Solicitud de Edición de Datos Teseo</h5>
+                <button type="button" class="close text-white" onclick="limpiarForm()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="formChangeProgram">
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-sm table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-12">Área de Teseo®</div>
+                                                <div class="col-12"><span id="edit-areaTeseo">5556565</span></div>
+                                            </div>
+                                        </td>
+                                        <td><input type="number" class="form-control" step="0.01" min="0" name="" id=""></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-12">Yield</div>
+                                                <div class="col-12"><span id="edit-yield">5556565</span></div>
+                                            </div>
+                                        </td>
+                                        <td><input type="number" class="form-control" step="0.01" min="0" name="" id=""></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-12">12:00</div>
+                                                <div class="col-12"><span id="edit-12">5556565</span></div>
+                                            </div>
+                                        </td>
+                                        <td><input type="number" class="form-control" step="1" min="0" name="" id=""></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-12">03:00</div>
+                                                <div class="col-12"><span id="edit-03">5556565</span></div>
+                                            </div>
+                                        </td>
+                                        <td><input type="number" class="form-control" step="1" min="0" name="" id=""></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-12">06:00</div>
+                                                <div class="col-12"><span id="edit-06">5556565</span></div>
+                                            </div>
+                                        </td>
+                                        <td><input type="number" class="form-control" step="1" min="0" name="" id=""></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-12">09:00</div>
+                                                <div class="col-12"><span id="edit-09">5556565</span></div>
+                                            </div>
+                                        </td>
+                                        <td><input type="number" class="form-control" step="1" min="0" name="" id=""></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="form-label" for="motivo">Motivo (opcional)</label>
+                            <textarea name="motivo" class="form-control" id="motivo" rows="5"></textarea>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="limpiarForm()" class="btn btn-light" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-success">Enviar Solicitud</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- FIN DE MODAL DE EDICION DE LOTES -->
 <script>
-    
     $(function() {
         $('[data-toggle="popover"]').popover({
             trigger: 'focus',
