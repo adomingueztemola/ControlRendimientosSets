@@ -67,5 +67,5 @@ $idNivel=$_SESSION['SGGidAreaMenu'];*/
 
    }
    run
-   setInterval(run, 5000);
+   setInterval(run, 725);
  </script>
