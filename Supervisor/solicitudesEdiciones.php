@@ -67,7 +67,7 @@ $space = 1;
                                                         <tr>
                                                             <td>Fecha de Envío</td>
                                                             <td><input type="date" id="fechaEnvio" class="form-control" disabled></td>
-                                                            <td rowspan="6">
+                                                            <td rowspan="5">
                                                                 <span><b>Motivo:</b></span>
                                                                 <span id="motivo"></span>
                                                             </td>
@@ -103,6 +103,20 @@ $space = 1;
                                                         <tr>
                                                             <td colspan="2" class="text-center">
                                                                 <h4>Movimiento de Piezas del Lote</h4>
+                                                            </td>
+                                                            <td>
+                                                                <div class="form-check form-check-inline">
+                                                                    <div class="custom-control custom-radio">
+                                                                        <input type="radio" class="custom-control-input" id="customControlValidation2" name="radio-stacked">
+                                                                        <label class="custom-control-label" for="customControlValidation2">Scrap</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-check form-check-inline">
+                                                                    <div class="custom-control custom-radio">
+                                                                        <input type="radio" class="custom-control-input" id="customControlValidation2" name="radio-stacked">
+                                                                        <label class="custom-control-label" for="customControlValidation2">Empaque</label>
+                                                                    </div>
+                                                                </div>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -161,7 +175,7 @@ $space = 1;
                                             <div class="col-8"></div>
                                             <div class="col-4">
                                                 <div id="bloqueo-btn-1" style="display:none">
-                                                    <button class="btn btn-TWM btn-lg" type="button" disabled="">
+                                                    <button class="btn btn-TWM btn-md" type="button" disabled="">
                                                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                                         Espere...
                                                     </button>
@@ -300,6 +314,8 @@ $space = 1;
 
     function rechazarSolicitud() {
         id = $("#id").val()
+        nextTab = $("#v-pills-" + id + "-tab").next("a")
+        console.log(nextTab.length);
         $.ajax({
             url: '../Controller/solicitudesEdicion.php?op=rechazarsolicitud',
             data: {
@@ -311,9 +327,16 @@ $space = 1;
                 if (resp[0] == 1) {
                     notificaSuc(resp[1])
                     bloqueoBtn("bloqueo-btn-1", 2)
-                    nextTab=$("#v-pills-"+id+"-tab").next("a")
-                    arrayTitle= nextTab.attr("id").split(',');
-                    $("#v-pills-"+id+"-tab").remove()
+                    nextTab = $("#v-pills-" + id + "-tab").next("a")
+                    if (nextTab.length == 0) {
+                        nextTab = $("#v-pills-" + id + "-tab").prev("a")
+
+                    } else {
+                        nextTab = $("#v-pills-" + id + "-tab").next("a")
+
+                    }
+                    arrayTitle = nextTab.attr("id").split('-');
+                    $("#v-pills-" + id + "-tab").remove()
                     nextTab.addClass('active');
                     getInfoSolic(arrayTitle[2])
 
