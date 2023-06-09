@@ -88,7 +88,7 @@ $Data = Excepciones::validaConsulta($Data);
             </div>';
                 $popover = "data-container='body' data-toggle='popover' data-html='true' data-title='CONVERSIÓN DE DM<sup>2</sup> A FT<sup>2</sup>' data-placement='top' 
                 data-content='$input'";
-                $btnEdicion = "<button class='btn btn-xs btn-outline-dark' data-toggle='modal' data-target='#edicionModal'><i class='fas fa-pencil-alt'></i></button>";
+                $btnEdicion = "<button class='btn btn-xs btn-outline-dark' data-toggle='modal' data-target='#edicionModal' onclick='getEnvioSolicitud({$value['id']})'><i class='fas fa-pencil-alt'></i></button>";
                 $lblLiberacion = $value["regOkNok"] == '1' ?
                     "{$value["fFechaRegTeseo"]}" :
                     "<div id='bloqueo-btn-{$value['id']}' style='display: none;'>
@@ -197,9 +197,9 @@ $Data = Excepciones::validaConsulta($Data);
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="formChangeProgram">
+            <form id="formSolicitudEdicion">
                 <div class="modal-body">
-
+                    <input type="hidden" name="id" id="id">
                     <div class="row">
                         <div class="col-md-12">
                             <table class="table table-sm table-bordered">
@@ -208,55 +208,55 @@ $Data = Excepciones::validaConsulta($Data);
                                         <td>
                                             <div class="row">
                                                 <div class="col-12">Área de Teseo®</div>
-                                                <div class="col-12"><span id="edit-areaTeseo">5556565</span></div>
+                                                <div class="col-12"><span class="text-info" id="edit-areaTeseo"></span></div>
                                             </div>
                                         </td>
-                                        <td><input type="number" class="form-control" step="0.01" min="0" name="" id=""></td>
+                                        <td><input type="number" class="form-control focusCampo" step="0.01" min="0" name="areaTeseo" id="areaTeseo"></td>
                                     </tr>
                                     <tr>
                                         <td>
                                             <div class="row">
                                                 <div class="col-12">Yield</div>
-                                                <div class="col-12"><span id="edit-yield">5556565</span></div>
+                                                <div class="col-12"><span class="text-info" id="edit-yield"></span></div>
                                             </div>
                                         </td>
-                                        <td><input type="number" class="form-control" step="0.01" min="0" name="" id=""></td>
+                                        <td><input type="number" class="form-control focusCampo" step="0.01" min="0" name="yield" id="yield"></td>
                                     </tr>
                                     <tr>
                                         <td>
                                             <div class="row">
                                                 <div class="col-12">12:00</div>
-                                                <div class="col-12"><span id="edit-12">5556565</span></div>
+                                                <div class="col-12"><span class="text-info" id="edit-12"></span></div>
                                             </div>
                                         </td>
-                                        <td><input type="number" class="form-control" step="1" min="0" name="" id=""></td>
+                                        <td><input type="number" class="form-control focusCampo" step="1" min="0" name="_12" id="_12"></td>
                                     </tr>
                                     <tr>
                                         <td>
                                             <div class="row">
                                                 <div class="col-12">03:00</div>
-                                                <div class="col-12"><span id="edit-03">5556565</span></div>
+                                                <div class="col-12"><span class="text-info" id="edit-03"></span></div>
                                             </div>
                                         </td>
-                                        <td><input type="number" class="form-control" step="1" min="0" name="" id=""></td>
+                                        <td><input type="number" class="form-control focusCampo" step="1" min="0" name="_3" id="_3"></td>
                                     </tr>
                                     <tr>
                                         <td>
                                             <div class="row">
                                                 <div class="col-12">06:00</div>
-                                                <div class="col-12"><span id="edit-06">5556565</span></div>
+                                                <div class="col-12"><span class="text-info" id="edit-06"></span></div>
                                             </div>
                                         </td>
-                                        <td><input type="number" class="form-control" step="1" min="0" name="" id=""></td>
+                                        <td><input type="number" class="form-control focusCampo" step="1" min="0" name="_6" id="_6"></td>
                                     </tr>
                                     <tr>
                                         <td>
                                             <div class="row">
                                                 <div class="col-12">09:00</div>
-                                                <div class="col-12"><span id="edit-09">5556565</span></div>
+                                                <div class="col-12"><span class="text-info" id="edit-09"></span></div>
                                             </div>
                                         </td>
-                                        <td><input type="number" class="form-control" step="1" min="0" name="" id=""></td>
+                                        <td><input type="number" class="form-control focusCampo" step="1" min="0" name="_9" id="_9"></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -279,6 +279,8 @@ $Data = Excepciones::validaConsulta($Data);
     </div>
 </div>
 <!-- FIN DE MODAL DE EDICION DE LOTES -->
+<script src="../assets/scripts/clearDataSinSelect.js"></script>
+
 <script>
     $(function() {
         $('[data-toggle="popover"]').popover({
@@ -478,4 +480,74 @@ $Data = Excepciones::validaConsulta($Data);
         $("#areaFt" + id).val(converse)
         cambiarTeseo(id, $("#areaFt" + id), 2)
     }
+
+    function getEnvioSolicitud(id) {
+        $.ajax({
+            url: '../Controller/rendimiento.php?op=getdetallelote',
+            data: {
+                id: id
+            },
+            type: 'POST',
+            async: false,
+            dataType: "json",
+            success: function(respuesta) {
+                if (!respuesta.length) {
+                    areaFinal= (respuesta.areaFinal== null?'0.0':Number(respuesta.areaFinal));
+                    yieldFinal= (respuesta.yieldInicialTeseo== null?'0.0':Number(respuesta.yieldInicialTeseo));
+                    _12Teseo= (respuesta._12Teseo== null?'0.0':Number(respuesta._12Teseo));
+                    _3Teseo= (respuesta._3Teseo== null?'0.0':Number(respuesta._3Teseo));
+                    _6Teseo= (respuesta._6Teseo== null?'0.0':Number(respuesta._6Teseo));
+                    _9Teseo= (respuesta._9Teseo== null?'0.0':Number(respuesta._9Teseo));
+                    $("#edit-areaTeseo").text(areaFinal.toLocaleString('es-MX'))
+                    $("#edit-yield").text(yieldFinal.toLocaleString('es-MX')+"%")
+                    $("#edit-12").text(_12Teseo.toLocaleString('es-MX'))
+                    $("#edit-03").text(_3Teseo.toLocaleString('es-MX'))
+                    $("#edit-06").text(_6Teseo.toLocaleString('es-MX'))
+                    $("#edit-09").text(_9Teseo.toLocaleString('es-MX'))
+
+                    $("#id").val(id)
+                    $("#areaTeseo").val(areaFinal)
+                    $("#yield").val(yieldFinal)
+                    $("#_12").val(_12Teseo)
+                    $("#_3").val(_3Teseo)
+                    $("#_6").val(_6Teseo)
+                    $("#_9").val(_9Teseo)
+
+                } else {}
+            },
+
+
+        });
+    }
+    $("#formSolicitudEdicion").submit(function(e) {
+        e.preventDefault();
+        formData = $(this).serialize();
+        $.ajax({
+            url: '../Controller/rendimiento.php?op=solicitudedicionteseo',
+            data: formData,
+            type: 'POST',
+            success: function(json) {
+                resp = json.split('|')
+                if (resp[0] == 1) {
+                    notificaSuc(resp[1])
+                    setTimeout(() => {
+                        bloqueoBtn("bloqueo-btn-1", 2)
+                        update()
+                        $('#formSolicitudEdicion').find('input,textarea, button, select').attr('disabled', 'disabled');
+                    }, 1000);
+
+                } else if (resp[0] == 0) {
+                    notificaBad(resp[1])
+                    bloqueoBtn("bloqueo-btn-1", 2)
+
+
+                }
+            },
+            beforeSend: function() {
+                bloqueoBtn("bloqueo-btn-1", 1)
+            }
+
+        });
+    });
+
 </script>

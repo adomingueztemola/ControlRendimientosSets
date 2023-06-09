@@ -135,4 +135,54 @@ class Solicitud extends ConexionBD
         WHERE e.estado='1'";
         return $this->ejecutarQuery($sql, "consulta de bandeja de solicitudes", true);
     }
+    // funciones de la version 2.0 
+    public function getSolicitudesEdicion()
+    {
+        $sql = "SELECT 
+        e.*,
+        CONCAT(su.nombre,' ',su.apellidos) AS n_usuario,
+        DATE_FORMAT(e.fechaEnvio,'%d/%m/%Y') AS f_fechaEnvio,
+        r.loteTemola, cp.nombre AS nPrograma
+        FROM edicionesteseo e
+        INNER JOIN segusuarios su ON e.idUserEnvio=su.id
+        INNER JOIN rendimientos r ON e.idLote=r.id
+        INNER JOIN catprogramas cp ON r.idCatPrograma=cp.id
+        WHERE e.estado='1'";
+        return $this->consultarQuery($sql, "consulta de bandeja de solicitudes");
+    }
+
+    public function getDetSolicitud($id)
+    {
+        $sql = "SELECT 
+        e.*,
+        CONCAT(su.nombre,' ',su.apellidos) AS n_usuario,
+        DATE_FORMAT(e.fechaEnvio,'%d/%m/%Y') AS f_fechaEnvio,
+        r.loteTemola, cp.nombre AS nPrograma,
+        r._12Teseo AS _12TeseoLte,
+        r._3Teseo AS _3TeseoLte,
+        r._6Teseo AS _6TeseoLte,
+        r._9Teseo AS _9TeseoLte,
+        r.areaFinal AS areaFinalLte,
+        r.yieldInicialTeseo AS yieldInicialTeseoLte,
+        IF(e._12Teseo < r._12Teseo,r._12OKAct-(r._12Teseo-e._12Teseo),e._12Teseo-r._12Teseo)AS dif_12,
+        IF(e._3Teseo < r._3Teseo,r._3OKAct-(r._3Teseo-e._3Teseo),e._3Teseo-r._3Teseo)AS dif_3,
+        IF(e._6Teseo < r._6Teseo,r._6OKAct-(r._6Teseo-e._6Teseo),e._6Teseo-r._6Teseo)AS dif_6,
+        IF(e._9Teseo < r._9Teseo,r._9OKAct-(r._9Teseo-e._9Teseo),e._9Teseo-r._9Teseo)AS dif_9,
+        r.estado
+        FROM edicionesteseo e
+        INNER JOIN segusuarios su ON e.idUserEnvio=su.id
+        INNER JOIN rendimientos r ON e.idLote=r.id
+        INNER JOIN catprogramas cp ON r.idCatPrograma=cp.id
+        WHERE e.id='$id'";
+        return $this->consultarQuery($sql, "consulta detalle de solicitud", false);
+    }
+
+    public function rechazarSolicitudTeseo($id){
+        $idUserReg= $this->idUserReg;
+        $sql="UPDATE edicionesteseo
+        SET estado='0', fechaAceptacion= NOW(),
+        idUserAcepto='$idUserReg'
+        WHERE id='$id'";
+        return $this->runQuery($sql, "rechazar solicitud de Teseo");
+    }
 }

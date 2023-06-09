@@ -21,6 +21,19 @@ if ($debug == 1) {
 }
 
 switch ($_GET["op"]) {
+    case "getsolicitudesteseo":
+        $Data = $obj_solicitudes->getSolicitudesEdicion();
+        $Data = Excepciones::validaConsulta($Data);
+        $json_string = json_encode($Data);
+        echo $json_string;
+        break;
+    case "getdetsolicitud":
+        $id = (isset($_POST['id'])) ? trim($_POST['id']) : '';
+        $Data = $obj_solicitudes->getDetSolicitud($id);
+        $Data = Excepciones::validaConsulta($Data);
+        $json_string = json_encode($Data);
+        echo $json_string;
+        break;
     case "enviarsolicitud":
         $idRendimiento = (isset($_POST['idRendimiento'])) ? trim($_POST['idRendimiento']) : '';
         $descripcionSolicitud = (isset($_POST['descripcionSolicitud'])) ? trim($_POST['descripcionSolicitud']) : '';
@@ -42,14 +55,14 @@ switch ($_GET["op"]) {
         try {
             Excepciones::validaMsjError($datos);
         } catch (Exception $e) {
-             $obj_solicitudes->errorBD($e->getMessage(), 1);
+            $obj_solicitudes->errorBD($e->getMessage(), 1);
         }
 
         $datos = $obj_solicitudes->actualizarSolicRendi($idRendimiento);
         try {
             Excepciones::validaMsjError($datos);
         } catch (Exception $e) {
-             $obj_solicitudes->errorBD($e->getMessage(), 1);
+            $obj_solicitudes->errorBD($e->getMessage(), 1);
         }
 
         $obj_solicitudes->insertarCommit();
@@ -70,7 +83,7 @@ switch ($_GET["op"]) {
         try {
             Excepciones::validaMsjError($datos);
         } catch (Exception $e) {
-             $obj_solicitudes->errorBD($e->getMessage(), 1);
+            $obj_solicitudes->errorBD($e->getMessage(), 1);
         }
         echo '1|La solicitud de edición se ha aceptado correctamente.';
         break;
@@ -89,7 +102,7 @@ switch ($_GET["op"]) {
         try {
             Excepciones::validaMsjError($datos);
         } catch (Exception $e) {
-             $obj_solicitudes->errorBD($e->getMessage(), 1);
+            $obj_solicitudes->errorBD($e->getMessage(), 1);
         }
         echo '1|La solicitud de edición se ha rechazado correctamente.';
         break;
@@ -128,5 +141,20 @@ switch ($_GET["op"]) {
         }
         $obj_solicitudes->insertarCommit();
         echo '1|La solicitud de edición se ha rechazado correctamente.';
+        break;
+    case "rechazarsolicitud":
+        $id = (isset($_POST['id'])) ? trim($_POST['id']) : '';
+        #VALIDACION DE DATOS
+        Excepciones::validaLlenadoDatos(array(
+            " Lote" => $id,
+        ), $obj_solicitudes);
+        $datos = $obj_solicitudes->rechazarSolicitudTeseo($id);
+        try {
+            Excepciones::validaMsjError($datos);
+        } catch (Exception $e) {
+            $obj_solicitudes->errorBD($e->getMessage(), 0);
+        }
+        echo '1|Solicitud Rechazada Correctamente.';
+
         break;
 }
