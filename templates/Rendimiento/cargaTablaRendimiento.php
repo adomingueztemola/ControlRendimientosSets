@@ -6,7 +6,6 @@ require_once('../../include/connect_mvc.php');
 include("../../Models/Mdl_ConexionBD.php");
 include("../../Models/Mdl_Rendimiento.php");
 include('../../assets/scripts/cadenas.php');
-include("../../Models/Mdl_Solicitudes.php");
 
 $debug = 0;
 $idUser = $_SESSION['CREident'];

@@ -88,7 +88,9 @@ $Data = Excepciones::validaConsulta($Data);
             </div>';
                 $popover = "data-container='body' data-toggle='popover' data-html='true' data-title='CONVERSIÓN DE DM<sup>2</sup> A FT<sup>2</sup>' data-placement='top' 
                 data-content='$input'";
-                $btnEdicion = "<button class='btn btn-xs btn-outline-dark' data-toggle='modal' data-target='#edicionModal' onclick='getEnvioSolicitud({$value['id']})'><i class='fas fa-pencil-alt'></i></button>";
+                $btnEdicion = $value["regTeseo"] == '1' ?
+                    "<button class='btn btn-xs btn-outline-dark' data-toggle='modal' data-target='#edicionModal' onclick='getEnvioSolicitud({$value['id']})'><i class='fas fa-pencil-alt'></i></button>" :
+                    "";
                 $lblLiberacion = $value["regOkNok"] == '1' ?
                     "{$value["fFechaRegTeseo"]}" :
                     "<div id='bloqueo-btn-{$value['id']}' style='display: none;'>
@@ -190,7 +192,7 @@ $Data = Excepciones::validaConsulta($Data);
 <!-- INICIAL DE MODAL DE EDICION DE LOTES -->
 <div class="modal fade" id="edicionModal" role="dialog" aria-labelledby="reasignarModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content conteoModal-block">
+        <div class="modal-content solicModal-block">
             <div class="modal-header bg-TWM text-white">
                 <h5 class="modal-title" id="reasignarModalLabel">Solicitud de Edición de Datos Teseo</h5>
                 <button type="button" class="close text-white" onclick="limpiarForm()" data-dismiss="modal" aria-label="Close">
@@ -492,18 +494,19 @@ $Data = Excepciones::validaConsulta($Data);
             dataType: "json",
             success: function(respuesta) {
                 if (!respuesta.length) {
-                    areaFinal= (respuesta.areaFinal== null?'0.0':Number(respuesta.areaFinal));
-                    yieldFinal= (respuesta.yieldInicialTeseo== null?'0.0':Number(respuesta.yieldInicialTeseo));
-                    _12Teseo= (respuesta._12Teseo== null?'0.0':Number(respuesta._12Teseo));
-                    _3Teseo= (respuesta._3Teseo== null?'0.0':Number(respuesta._3Teseo));
-                    _6Teseo= (respuesta._6Teseo== null?'0.0':Number(respuesta._6Teseo));
-                    _9Teseo= (respuesta._9Teseo== null?'0.0':Number(respuesta._9Teseo));
+                    areaFinal = (respuesta.areaFinal == null ? '0.0' : Number(respuesta.areaFinal));
+                    yieldFinal = (respuesta.yieldInicialTeseo == null ? '0.0' : Number(respuesta.yieldInicialTeseo));
+                    _12Teseo = (respuesta._12Teseo == null ? '0.0' : Number(respuesta._12Teseo));
+                    _3Teseo = (respuesta._3Teseo == null ? '0.0' : Number(respuesta._3Teseo));
+                    _6Teseo = (respuesta._6Teseo == null ? '0.0' : Number(respuesta._6Teseo));
+                    _9Teseo = (respuesta._9Teseo == null ? '0.0' : Number(respuesta._9Teseo));
                     $("#edit-areaTeseo").text(areaFinal.toLocaleString('es-MX'))
-                    $("#edit-yield").text(yieldFinal.toLocaleString('es-MX')+"%")
+                    $("#edit-yield").text(yieldFinal.toLocaleString('es-MX') + "%")
                     $("#edit-12").text(_12Teseo.toLocaleString('es-MX'))
                     $("#edit-03").text(_3Teseo.toLocaleString('es-MX'))
                     $("#edit-06").text(_6Teseo.toLocaleString('es-MX'))
                     $("#edit-09").text(_9Teseo.toLocaleString('es-MX'))
+                    $("#motivo").val("")
 
                     $("#id").val(id)
                     $("#areaTeseo").val(areaFinal)
@@ -531,23 +534,26 @@ $Data = Excepciones::validaConsulta($Data);
                 if (resp[0] == 1) {
                     notificaSuc(resp[1])
                     setTimeout(() => {
-                        bloqueoBtn("bloqueo-btn-1", 2)
+                        bloqueoModal(e, "solicModal-block", 2)
+                        $('#edicionModal').modal('hide')
+                        $('#formSolicitudEdicion').find('input,textarea, button, select').removeAttr('disabled');
                         update()
-                        $('#formSolicitudEdicion').find('input,textarea, button, select').attr('disabled', 'disabled');
                     }, 1000);
 
                 } else if (resp[0] == 0) {
                     notificaBad(resp[1])
-                    bloqueoBtn("bloqueo-btn-1", 2)
+                    bloqueoModal(e, "solicModal-block", 2)
+                    $('#formSolicitudEdicion').find('input,textarea, button, select').removeAttr('disabled');
 
 
                 }
             },
             beforeSend: function() {
-                bloqueoBtn("bloqueo-btn-1", 1)
+                bloqueoModal(e, "solicModal-block", 1)
+                $('#formSolicitudEdicion').find('input,textarea, button, select').attr('disabled', 'disabled');
+
             }
 
         });
     });
-
 </script>

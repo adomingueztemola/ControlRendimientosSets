@@ -2,10 +2,7 @@
 session_start();
 define('INCLUDE_CHECK', 1);
 require_once "../include/connect_mvc.php";
-include('../Models/Mdl_ConexionBD.php');
 include('../Models/Mdl_Static.php');
-include('../Models/Mdl_Excepciones.php');
-include('../Models/Mdl_Solicitudes.php');
 
 $debug = 0;
 $idUser = $_SESSION['CREident'];
@@ -156,5 +153,156 @@ switch ($_GET["op"]) {
         }
         echo '1|Solicitud Rechazada Correctamente.';
 
+        break;
+    case "aceptarsolicitud":
+        $id = (isset($_POST['id'])) ? trim($_POST['id']) : '';
+        $tipo = (isset($_POST['tipo'])) ? trim($_POST['tipo']) : '';
+        $destino = (isset($_POST['destino'])) ? trim($_POST['destino']) : '';
+
+        #VALIDACION DE DATOS
+        Excepciones::validaLlenadoDatos(array(
+            " Solicitud" => $id,
+            " Tipo" => $tipo
+        ), $obj_solicitudes);
+        $Data = $obj_solicitudes->getDetSolicitud($id);
+        $Data = Excepciones::validaConsulta($Data);
+        $obj_solicitudes->beginTransaction();
+        #TIPOS DE EDICIONES
+        switch ($tipo) {
+            case '1':
+                # modificar datos solo de areas 
+                $datos = $obj_solicitudes->setLoteTeseo($id);
+                try {
+                    Excepciones::validaMsjError($datos);
+                } catch (Exception $e) {
+                    $obj_solicitudes->errorBD($e->getMessage(), 1);
+                }
+                $datos = $obj_solicitudes->calcularRendimiento(0, false, $Data['idLote']);
+                try {
+                    Excepciones::validaMsjError($datos);
+                } catch (Exception $e) {
+                    $obj_solicitudes->errorBD($e->getMessage(), 1);
+                }
+                break;
+            case '2':
+                # movimiento positivo de las piezas de lote en proceso de empaque
+                $datos = $obj_solicitudes->sumPzasOK(
+                    $Data['idLote'],
+                    $Data['dif_12'],
+                    $Data['dif_3'],
+                    $Data['dif_6'],
+                    $Data['dif_9']
+                );
+                try {
+                    Excepciones::validaMsjError($datos);
+                } catch (Exception $e) {
+                    $obj_solicitudes->errorBD($e->getMessage(), 1);
+                }
+
+                $datos = $obj_solicitudes->setLoteTeseo($id);
+                try {
+                    Excepciones::validaMsjError($datos);
+                } catch (Exception $e) {
+                    $obj_solicitudes->errorBD($e->getMessage(), 1);
+                }
+                $datos = $obj_solicitudes->setPzasLoteTeseo($id);
+                try {
+                    Excepciones::validaMsjError($datos);
+                } catch (Exception $e) {
+                    $obj_solicitudes->errorBD($e->getMessage(), 1);
+                }
+                $datos = $obj_solicitudes->calcularRendimiento(0, false, $Data['idLote']);
+                try {
+                    Excepciones::validaMsjError($datos);
+                } catch (Exception $e) {
+                    $obj_solicitudes->errorBD($e->getMessage(), 1);
+                }
+                break;
+            case "3":
+                # movimiento positivo de las piezas de lote en proceso de empaque finalizado
+                Excepciones::validaLlenadoDatos(array(
+                    " Destino" => $destino
+                ), $obj_solicitudes);
+
+
+                if ($destino == '1') {
+                    //Sumar Dif. a Scrap 
+                    $datos = $obj_solicitudes->sumScrap(
+                        $Data['idLote'],
+                        $Data['sum_12'],
+                        $Data['sum_3'],
+                        $Data['sum_6'],
+                        $Data['sum_9']
+                    );
+                    try {
+                        Excepciones::validaMsjError($datos);
+                    } catch (Exception $e) {
+                        $obj_solicitudes->errorBD($e->getMessage(), 1);
+                    }
+                } else if ($destino == '2') {
+                    //Sumar Dif. a Pzas OK
+                    $datos = $obj_solicitudes->sumPzasOK(
+                        $Data['idLote'],
+                        $Data['dif_12'],
+                        $Data['dif_3'],
+                        $Data['dif_6'],
+                        $Data['dif_9']
+                    );
+                    try {
+                        Excepciones::validaMsjError($datos);
+                    } catch (Exception $e) {
+                        $obj_solicitudes->errorBD($e->getMessage(), 1);
+                    }
+                    $datos = Funciones::cambiarEstatus("rendimientos", "0", "regEmpaque", $Data['idLote'],  $obj_solicitudes->getConexion(), $debug);
+                    try {
+                        Excepciones::validaMsjError($datos);
+                    } catch (Exception $e) {
+                        $obj_proceso->errorBD($e->getMessage(), 1);
+                    }
+                }
+                $datos = $obj_solicitudes->setPzasLoteTeseo($id);
+                try {
+                    Excepciones::validaMsjError($datos);
+                } catch (Exception $e) {
+                    $obj_solicitudes->errorBD($e->getMessage(), 1);
+                }
+
+                $datos = $obj_solicitudes->setLoteTeseo($id);
+                try {
+                    Excepciones::validaMsjError($datos);
+                } catch (Exception $e) {
+                    $obj_solicitudes->errorBD($e->getMessage(), 1);
+                }
+                break;
+            case "4":
+                $datos = $obj_solicitudes->sumPzasOK(
+                    $Data['idLote'],
+                    $Data['dif_12'],
+                    $Data['dif_3'],
+                    $Data['dif_6'],
+                    $Data['dif_9']
+                );
+                try {
+                    Excepciones::validaMsjError($datos);
+                } catch (Exception $e) {
+                    $obj_solicitudes->errorBD($e->getMessage(), 1);
+                }
+                $datos = $obj_solicitudes->setPzasLoteTeseo($id);
+                try {
+                    Excepciones::validaMsjError($datos);
+                } catch (Exception $e) {
+                    $obj_solicitudes->errorBD($e->getMessage(), 1);
+                }
+
+                $datos = $obj_solicitudes->setLoteTeseo($id);
+                try {
+                    Excepciones::validaMsjError($datos);
+                } catch (Exception $e) {
+                    $obj_solicitudes->errorBD($e->getMessage(), 1);
+                }
+                break;
+        }
+        $obj_solicitudes->insertarCommit();
+        echo '1|Solicitud Aceptada Correctamente.';
         break;
 }

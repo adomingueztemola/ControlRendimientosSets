@@ -43,153 +43,156 @@ $space = 1;
                                 </div>
                             </div>
                             <div class="col-lg-8 col-xl-9">
-                                <div class="tab-content" id="v-pills-tabContent">
-                                    <input type="hidden" name="id" id="id">
-                                    <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">.
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <table class="table table-sm table-bordered">
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>Lote a Modificar</td>
-                                                            <td>
-                                                                <div class="row">
-                                                                    <div class="col-10">
-                                                                        <input type="text" id="lote" class="form-control" disabled>
+                                <form id="form-solicitud">
+                                    <div class="tab-content" id="v-pills-tabContent">
+                                        <input type="hidden" name="id" id="id">
+                                        <input type="hidden" name="tipo" id="tipo">
+                                        <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">.
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <table class="table table-sm table-bordered">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>Lote a Modificar</td>
+                                                                <td>
+                                                                    <div class="row">
+                                                                        <div class="col-10">
+                                                                            <input type="text" id="lote" class="form-control" disabled>
+                                                                        </div>
+                                                                        <div class="col-1 mt-2">
+                                                                            <span id="estatus-lote"></span>
+                                                                        </div>
                                                                     </div>
-                                                                    <div class="col-1 mt-2">
-                                                                        <span id="estatus-lote"></span>
+                                                                </td>
+                                                                <td><input type="text" id="programa" class="form-control" disabled></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Fecha de Envío</td>
+                                                                <td><input type="datetime-local" id="fechaEnvio" class="form-control" disabled></td>
+                                                                <td rowspan="5">
+                                                                    <span><b>Motivo:</b></span>
+                                                                    <span id="motivo"></span>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Usuario</td>
+                                                                <td><input type="text" id="nUsuario" class="form-control" disabled></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="2" class="text-center">
+                                                                    <h4>Información sobre áreas del lote</h4>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="row">
+                                                                        <div class="col-12">Área de Teseo®</div>
+                                                                        <div class="col-12"><span class="text-info" id="edit-areaTeseo"></span></div>
                                                                     </div>
-                                                                </div>
-                                                            </td>
-                                                            <td><input type="text" id="programa" class="form-control" disabled></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Fecha de Envío</td>
-                                                            <td><input type="date" id="fechaEnvio" class="form-control" disabled></td>
-                                                            <td rowspan="5">
-                                                                <span><b>Motivo:</b></span>
-                                                                <span id="motivo"></span>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Usuario</td>
-                                                            <td><input type="text" id="nUsuario" class="form-control" disabled></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td colspan="2" class="text-center">
-                                                                <h4>Información sobre áreas del lote</h4>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <div class="row">
-                                                                    <div class="col-12">Área de Teseo®</div>
-                                                                    <div class="col-12"><span class="text-info" id="edit-areaTeseo"></span></div>
-                                                                </div>
 
-                                                            </td>
-                                                            <td><input type="text" id="areaTeseo" class="form-control" disabled></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <div class="row">
-                                                                    <div class="col-12">Yield</div>
-                                                                    <div class="col-12"><span class="text-info" id="edit-yield"></span></div>
-                                                                </div>
-                                                            </td>
-                                                            <td><input type="text" id="yield" class="form-control" disabled></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td colspan="2" class="text-center">
-                                                                <h4>Movimiento de Piezas del Lote</h4>
-                                                            </td>
-                                                            <td>
-                                                                <div class="form-check form-check-inline">
-                                                                    <div class="custom-control custom-radio">
-                                                                        <input type="radio" class="custom-control-input" id="customControlValidation2" name="radio-stacked">
-                                                                        <label class="custom-control-label" for="customControlValidation2">Scrap</label>
+                                                                </td>
+                                                                <td><input type="text" id="areaTeseo" class="form-control" disabled></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="row">
+                                                                        <div class="col-12">Yield</div>
+                                                                        <div class="col-12"><span class="text-info" id="edit-yield"></span></div>
                                                                     </div>
-                                                                </div>
-                                                                <div class="form-check form-check-inline">
-                                                                    <div class="custom-control custom-radio">
-                                                                        <input type="radio" class="custom-control-input" id="customControlValidation2" name="radio-stacked">
-                                                                        <label class="custom-control-label" for="customControlValidation2">Empaque</label>
+                                                                </td>
+                                                                <td><input type="text" id="yield" class="form-control" disabled></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="2" class="text-center mov-pzas">
+                                                                    <h4>Movimiento de Piezas del Lote</h4>
+                                                                </td>
+                                                                <td class="mov-pzas">
+                                                                    <div class="form-check form-check-inline">
+                                                                        <div class="custom-control custom-radio">
+                                                                            <input type="radio" class="custom-control-input" value="1" id="radio-scrap" name="destino">
+                                                                            <label class="custom-control-label" for="radio-scrap">Scrap</label>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <div class="row">
-                                                                    <div class="col-12">12:00</div>
-                                                                    <div class="col-12"><span class="text-info" id="edit-12"></span></div>
-                                                                </div>
-                                                            </td>
-                                                            <td><input type="number" id="_12" class="form-control" disabled></td>
+                                                                    <div class="form-check form-check-inline">
+                                                                        <div class="custom-control custom-radio">
+                                                                            <input type="radio" class="custom-control-input" value="2" id="radio-empaque" name="destino">
+                                                                            <label class="custom-control-label" for="radio-empaque">Empaque</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="row">
+                                                                        <div class="col-12">12:00</div>
+                                                                        <div class="col-12"><span class="text-info" id="edit-12"></span></div>
+                                                                    </div>
+                                                                </td>
+                                                                <td><input type="number" id="_12" class="form-control" disabled></td>
 
-                                                            <td><input type="number" id="_12Dif" class="form-control" disabled></td>
-                                                        </tr>
+                                                                <td><input type="number" id="_12Dif" class="form-control" disabled></td>
+                                                            </tr>
 
-                                                        <tr>
-                                                            <td>
-                                                                <div class="row">
-                                                                    <div class="col-12">03:00</div>
-                                                                    <div class="col-12"><span class="text-info" id="edit-03"></span></div>
-                                                                </div>
-                                                            </td>
-                                                            <td><input type="number" id="_3" class="form-control" disabled></td>
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="row">
+                                                                        <div class="col-12">03:00</div>
+                                                                        <div class="col-12"><span class="text-info" id="edit-03"></span></div>
+                                                                    </div>
+                                                                </td>
+                                                                <td><input type="number" id="_3" class="form-control" disabled></td>
 
-                                                            <td><input type="number" id="_3Dif" class="form-control" disabled></td>
-                                                        </tr>
+                                                                <td><input type="number" id="_3Dif" class="form-control" disabled></td>
+                                                            </tr>
 
-                                                        <tr>
-                                                            <td>
-                                                                <div class="row">
-                                                                    <div class="col-12">06:00</div>
-                                                                    <div class="col-12"><span class="text-info" id="edit-06"></span></div>
-                                                                </div>
-                                                            </td>
-                                                            <td><input type="number" id="_6" class="form-control" disabled></td>
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="row">
+                                                                        <div class="col-12">06:00</div>
+                                                                        <div class="col-12"><span class="text-info" id="edit-06"></span></div>
+                                                                    </div>
+                                                                </td>
+                                                                <td><input type="number" id="_6" class="form-control" disabled></td>
 
-                                                            <td><input type="number" id="_6Dif" class="form-control" disabled></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <div class="row">
-                                                                    <div class="col-12">09:00</div>
-                                                                    <div class="col-12"><span class="text-info" id="edit-09"></span></div>
-                                                                </div>
-                                                            </td>
-                                                            <td><input type="number" id="_9" class="form-control" disabled></td>
+                                                                <td><input type="number" id="_6Dif" class="form-control" disabled></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="row">
+                                                                        <div class="col-12">09:00</div>
+                                                                        <div class="col-12"><span class="text-info" id="edit-09"></span></div>
+                                                                    </div>
+                                                                </td>
+                                                                <td><input type="number" id="_9" class="form-control" disabled></td>
 
-                                                            <td><input type="number" id="_9Dif" class="form-control" disabled></td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
+                                                                <td><input type="number" id="_9Dif" class="form-control" disabled></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div id="div-logs"></div>
+                                            <hr>
+                                            <div class="row">
+                                                <div class="col-8"></div>
+                                                <div class="col-4">
+                                                    <div id="bloqueo-btn-1" style="display:none">
+                                                        <button class="btn btn-TWM btn-md" type="button" disabled="">
+                                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                            Espere...
+                                                        </button>
+
+                                                    </div>
+                                                    <div id="desbloqueo-btn-1">
+                                                        <button class="btn btn-danger btn-md" type="button" onclick="rechazarSolicitud()">Rechazar</button>
+                                                        <button id="btn-aceptar" type="submit" class="btn btn-success btn-md">Aceptar</button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
 
-                                        <hr>
-                                        <div class="row">
-                                            <div class="col-8"></div>
-                                            <div class="col-4">
-                                                <div id="bloqueo-btn-1" style="display:none">
-                                                    <button class="btn btn-TWM btn-md" type="button" disabled="">
-                                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                                        Espere...
-                                                    </button>
-
-                                                </div>
-                                                <div id="desbloqueo-btn-1">
-                                                    <button class="btn btn-danger btn-md" onclick="rechazarSolicitud()">Rechazar</button>
-                                                    <button id="btn-aceptar" class="btn btn-success btn-md">Aceptar</button>
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
-
-                                </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -246,15 +249,18 @@ $space = 1;
                 $("#id").val(respuesta.id)
 
                 switch (respuesta.estado) {
-                    case '2':
-                        $("#estatus-lote").html("<i class='fas fa-unlock-alt text-success'></i>")
-                        break;
-                    case '4':
+                    case '1':
                         $("#estatus-lote").html("<i class='fas fa-lock text-danger'></i>")
+                        $(".mov-pzas").prop("hidden", false)
+
+                        break;
+                    default:
+                        $("#estatus-lote").html("<i class='fas fa-unlock-alt text-success'></i>")
+                        $(".mov-pzas").prop("hidden", true)
                         break;
                 }
                 $("#programa").val(respuesta.nPrograma)
-                $("#fechaEnvio").val(respuesta.fechaEnvio)
+                $("#fechaEnvio").val(respuesta.inp_fechaEnvio)
                 $("#nUsuario").val(respuesta.n_usuario)
                 $("#areaTeseo").val(respuesta.areaFinal)
                 $("#yield").val(respuesta.yieldFinalReal)
@@ -284,9 +290,43 @@ $space = 1;
 
                 if (result_12 && result_3 && result_6 && result_9) {
                     $("#btn-aceptar").prop("hidden", false)
+                    $("#div-logs").html('')
+
                 } else {
                     $("#btn-aceptar").prop("hidden", true)
+                    $("#div-logs").html(`<div class="alert alert-danger" role="alert">
+                       Existen cajas almacenadas con el descuento de piezas a realizar, depure el inventario para continuar.
+                        </div>`);
+                }
+                //tipos 
+                if (respuesta.sum_9 == 0 && respuesta.sum_6 == 0 && respuesta.sum_12 == 0 && respuesta.sum_3 == 0) {
+                    $("#tipo").val("1")
+                } else if (
+                    respuesta.sum_9 > 0 &&
+                    respuesta.sum_6 > 0 &&
+                    respuesta.sum_12 > 0 &&
+                    respuesta.sum_3 > 0 &&
+                    respuesta.estado != '1') {
+                    $("#tipo").val("2")
+                }else if (
+                    respuesta.sum_9 > 0 &&
+                    respuesta.sum_6 > 0 &&
+                    respuesta.sum_12 > 0 &&
+                    respuesta.sum_3 > 0 &&
+                    respuesta.estado == '1') {
+                    $("#tipo").val("3")
+                }else if (
+                    respuesta.sum_9 < 0 &&
+                    respuesta.sum_6 < 0 &&
+                    respuesta.sum_12 < 0 &&
+                    respuesta.sum_3 < 0 &&
 
+                    respuesta.dif_9 > 0 &&
+                    respuesta.dif_6 > 0 &&
+                    respuesta.dif_12 > 0 &&
+                    respuesta.dif_3 > 0
+                    ) {
+                    $("#tipo").val("4")
                 }
 
             },
@@ -312,10 +352,22 @@ $space = 1;
 
     }
 
+    function nextTab(idTab) {
+        if (idTab.length == 0) {
+            idTab = $("#v-pills-" + id + "-tab").prev("a")
+
+        } else {
+            idTab = $("#v-pills-" + id + "-tab").next("a")
+
+        }
+        arrayTitle = idTab.attr("id").split('-');
+        $("#v-pills-" + id + "-tab").remove()
+        idTab.addClass('active');
+        getInfoSolic(arrayTitle[2])
+    }
+
     function rechazarSolicitud() {
         id = $("#id").val()
-        nextTab = $("#v-pills-" + id + "-tab").next("a")
-        console.log(nextTab.length);
         $.ajax({
             url: '../Controller/solicitudesEdicion.php?op=rechazarsolicitud',
             data: {
@@ -327,18 +379,9 @@ $space = 1;
                 if (resp[0] == 1) {
                     notificaSuc(resp[1])
                     bloqueoBtn("bloqueo-btn-1", 2)
-                    nextTab = $("#v-pills-" + id + "-tab").next("a")
-                    if (nextTab.length == 0) {
-                        nextTab = $("#v-pills-" + id + "-tab").prev("a")
+                    idTab = $("#v-pills-" + id + "-tab").next("a")
+                    nextTab(idTab)
 
-                    } else {
-                        nextTab = $("#v-pills-" + id + "-tab").next("a")
-
-                    }
-                    arrayTitle = nextTab.attr("id").split('-');
-                    $("#v-pills-" + id + "-tab").remove()
-                    nextTab.addClass('active');
-                    getInfoSolic(arrayTitle[2])
 
                 } else {
                     notificaBad(resp[1])
@@ -354,4 +397,33 @@ $space = 1;
 
         });
     }
+
+
+    //formulario de aceptacion de solicitud
+    $("#form-solicitud").submit(function(e) {
+        e.preventDefault();
+        formData = $(this).serialize();
+        $.ajax({
+            url: '../Controller/solicitudesEdicion.php?op=aceptarsolicitud',
+            data: formData,
+            type: 'POST',
+            success: function(json) {
+                resp = json.split('|')
+                if (resp[0] == 1) {
+                    notificaSuc(resp[1])
+                    id = $("#id").val()
+                    idTab = $("#v-pills-" + id + "-tab").next("a")
+                    nextTab(idTab)
+                    bloqueoBtn("bloqueo-btn-1", 2)
+                } else if (resp[0] == 0) {
+                    notificaBad(resp[1])
+                    bloqueoBtn("bloqueo-btn-1", 2)
+                }
+            },
+            beforeSend: function() {
+                bloqueoBtn("bloqueo-btn-1", 1)
+            }
+
+        });
+    });
 </script>

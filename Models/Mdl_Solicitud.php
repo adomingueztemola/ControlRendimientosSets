@@ -1,5 +1,5 @@
 <?php
-class Solicitud extends ConexionBD
+class Solicitud extends Rendimiento
 {
     protected $debug;
     private $idUserReg;
@@ -147,7 +147,8 @@ class Solicitud extends ConexionBD
         INNER JOIN segusuarios su ON e.idUserEnvio=su.id
         INNER JOIN rendimientos r ON e.idLote=r.id
         INNER JOIN catprogramas cp ON r.idCatPrograma=cp.id
-        WHERE e.estado='1'";
+        WHERE e.estado='1'
+        ORDER BY e.fechaEnvio";
         return $this->consultarQuery($sql, "consulta de bandeja de solicitudes");
     }
 
@@ -157,6 +158,8 @@ class Solicitud extends ConexionBD
         e.*,
         CONCAT(su.nombre,' ',su.apellidos) AS n_usuario,
         DATE_FORMAT(e.fechaEnvio,'%d/%m/%Y') AS f_fechaEnvio,
+        DATE_FORMAT(e.fechaEnvio,'%Y-%m-%dT%H:%i') AS inp_fechaEnvio,
+        r.regEmpaque AS estado,
         r.loteTemola, cp.nombre AS nPrograma,
         r._12Teseo AS _12TeseoLte,
         r._3Teseo AS _3TeseoLte,
@@ -164,11 +167,15 @@ class Solicitud extends ConexionBD
         r._9Teseo AS _9TeseoLte,
         r.areaFinal AS areaFinalLte,
         r.yieldInicialTeseo AS yieldInicialTeseoLte,
-        IF(e._12Teseo < r._12Teseo,r._12OKAct-(r._12Teseo-e._12Teseo),e._12Teseo-r._12Teseo)AS dif_12,
-        IF(e._3Teseo < r._3Teseo,r._3OKAct-(r._3Teseo-e._3Teseo),e._3Teseo-r._3Teseo)AS dif_3,
-        IF(e._6Teseo < r._6Teseo,r._6OKAct-(r._6Teseo-e._6Teseo),e._6Teseo-r._6Teseo)AS dif_6,
-        IF(e._9Teseo < r._9Teseo,r._9OKAct-(r._9Teseo-e._9Teseo),e._9Teseo-r._9Teseo)AS dif_9,
-        r.estado
+        IF(e._12Teseo < r._12Teseo,r._12OKAct-(r._12Teseo-e._12Teseo),r._12OKAct+(e._12Teseo-r._12Teseo))AS dif_12,
+        IF(e._3Teseo < r._3Teseo,r._3OKAct-(r._3Teseo-e._3Teseo),r._3OKAct+(e._3Teseo-r._3Teseo))AS dif_3,
+        IF(e._6Teseo < r._6Teseo,r._6OKAct-(r._6Teseo-e._6Teseo),r._6OKAct+(e._6Teseo-r._6Teseo))AS dif_6,
+        IF(e._9Teseo < r._9Teseo,r._9OKAct-(r._9Teseo-e._9Teseo),r._9OKAct+(e._9Teseo-r._9Teseo))AS dif_9,
+
+        IFNULL(e._12Teseo,0)-IFNULL(r._12Teseo,0) AS sum_12,
+        IFNULL(e._3Teseo,0)-IFNULL(r._3Teseo,0) AS sum_3,
+        IFNULL(e._6Teseo,0)-IFNULL(r._6Teseo,0) AS sum_6,
+        IFNULL(e._9Teseo,0)-IFNULL(r._9Teseo,0) AS sum_9
         FROM edicionesteseo e
         INNER JOIN segusuarios su ON e.idUserEnvio=su.id
         INNER JOIN rendimientos r ON e.idLote=r.id
@@ -184,5 +191,65 @@ class Solicitud extends ConexionBD
         idUserAcepto='$idUserReg'
         WHERE id='$id'";
         return $this->runQuery($sql, "rechazar solicitud de Teseo");
+    }
+
+    public function setLoteTeseo($id){
+        $idUserReg= $this->idUserReg;
+        $sql="UPDATE edicionesteseo e
+        INNER JOIN rendimientos r ON r.id=e.idLote
+        SET 
+        r.yieldInicialTeseo=e.yieldFinalReal,
+        r.areaFinal=e.areaFinal,
+        e.idUserAcepto='$idUserReg',
+        e.fechaAceptacion=NOW(),
+        e.estado='2'
+        WHERE e.id='$id'";
+        return $this->runQuery($sql, "cambio de datos de solicitud de Teseo");
+    }
+
+    public function setPzasLoteTeseo($id){
+        $sql="UPDATE edicionesteseo e
+        INNER JOIN rendimientos r ON r.id=e.idLote
+        SET 
+        r._12Teseo=e._12Teseo,
+        r._3Teseo=e._3Teseo,
+        r._6Teseo=e._6Teseo,
+        r._9Teseo=e._9Teseo,
+        r._9Teseo=e._9Teseo,
+        r.setsCortadosTeseo=e.setsCortadosTeseo,
+        r.pzasCortadasTeseo=e.pzasCortadasTeseo,
+        r._12OK=e._12Teseo,
+        r._3OK=e._3Teseo,
+        r._6OK=e._6Teseo,
+        r._9OK=e._9Teseo,
+        r.pzasOk=e.pzasCortadasTeseo
+        WHERE e.id='$id'";
+        return $this->runQuery($sql, "cambio de piezas de solicitud de Teseo");
+    }
+
+    public function sumPzasOK($idLote, $dif_12, $dif_3,
+    $dif_6, $dif_9){
+        $sql="UPDATE rendimientos r
+        SET 
+        r._12OKAct=IFNULL('$dif_12', 0),
+        r._3OKAct=IFNULL('$dif_3', 0),
+        r._6OKAct=IFNULL('$dif_6', 0),
+        r._9OKAct=IFNULL('$dif_9', 0)
+        WHERE r.id='$idLote'";
+        return $this->runQuery($sql, "agregar piezas de solicitud de Teseo");
+    }
+
+    public function sumScrap(
+        $idLote, $dif_12, $dif_3,
+        $dif_6, $dif_9
+    ){
+        $sql="UPDATE inventariorechazado r
+        SET 
+        r._12=IFNULL( r._12,0)+IFNULL('$dif_12', 0),
+        r._3=IFNULL( r._3,0)+IFNULL('$dif_3', 0),
+        r._6=IFNULL( r._6,0)+IFNULL('$dif_6', 0),
+        r._9=IFNULL( r._9,0)+IFNULL('$dif_9', 0)
+        WHERE idRendimiento='$idLote'";
+        return $this->runQuery($sql, "agregar piezas a Scrap de solicitud de Teseo");
     }
 }
