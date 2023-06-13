@@ -155,7 +155,7 @@ $Data = Excepciones::validaConsulta($Data);
 
                 if ($row != $value['id']) {
                     $rowData .= "<tr class='$remarkTable'>
-                    <td class='text-white' >{$value['id']} </td>
+                    <td  style='color: transparent;' >{$value['id']} </td>
                     <td>{$iconReprog}</td>
                     <td>{$btnEdicion} </td>
                     <td>{$value['loteTemola']}</td>
@@ -174,7 +174,7 @@ $Data = Excepciones::validaConsulta($Data);
                 </tr>";
                 } else {
                     $dataedit = "<tr class='$remarkTable'>
-                    <td class='text-white'>{$value['id']}</td>
+                    <td  style='color: transparent;'>{$value['id']}</td>
                     <td>{$iconReprog}</td>
                     <td>{$btnEdicion} </td>
                     <td>{$value['loteTemola']}</td>
