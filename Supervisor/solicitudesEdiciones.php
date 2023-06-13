@@ -37,6 +37,12 @@ $space = 1;
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
+                            <div class="col-md-11"></div>
+                            <div class="col-md-1 text-right mb-2">
+                                <button class="btn button btn-rounded btn-sm btn-light" onclick="getData()" title="Actualizar Contenido"> <i class="fas fa-history"></i></button>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-lg-4 col-xl-3">
                                 <!-- Nav tabs -->
                                 <div class="nav flex-column nav-pills" id="v-pills-solicitudes" role="tablist" aria-orientation="vertical">
@@ -47,7 +53,7 @@ $space = 1;
                                     <div class="tab-content" id="v-pills-tabContent">
                                         <input type="hidden" name="id" id="id">
                                         <input type="hidden" name="tipo" id="tipo">
-                                        <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">.
+                                        <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
                                             <div class="row">
                                                 <div class="col-12">
                                                     <table class="table table-sm table-bordered">
@@ -103,9 +109,10 @@ $space = 1;
                                                                 <td><input type="text" id="yield" class="form-control" disabled></td>
                                                             </tr>
                                                             <tr>
-                                                                <td colspan="2" class="text-center mov-pzas">
+                                                                <td colspan="2" class="text-center">
                                                                     <h4>Movimiento de Piezas del Lote</h4>
                                                                 </td>
+
                                                                 <td class="mov-pzas">
                                                                     <div class="form-check form-check-inline">
                                                                         <div class="custom-control custom-radio">
@@ -120,6 +127,12 @@ $space = 1;
                                                                         </div>
                                                                     </div>
                                                                 </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Tipo/Reg. Anterior</th>
+                                                                <th>Reg. Nuevo</th>
+                                                                <th>Stock Modific.</th>
+
                                                             </tr>
                                                             <tr>
                                                                 <td>
@@ -195,6 +208,13 @@ $space = 1;
                                 </form>
                             </div>
                         </div>
+                        <div class="row" hidden id="alert-solic">
+                            <div class="col-md-12">
+                                <div class="alert alert-success" role="alert">
+                                    Sin solicitudes pendientes por el momento...
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -211,7 +231,9 @@ $space = 1;
 <script>
     getData()
 
+
     function getData() {
+        $("#v-pills-solicitudes").html("")
         $.ajax({
             url: '../Controller/solicitudesEdicion.php?op=getsolicitudesteseo',
             type: 'POST',
@@ -220,22 +242,32 @@ $space = 1;
             success: function(respuesta) {
                 count = 1;
                 identAct = 0;
-                respuesta.forEach(element => {
-                    active = count == 1 ? "active" : "";
-                    identAct = count == 1 ? element.id : identAct;
-                    $("#v-pills-solicitudes").append(`<a class="nav-link ${active}" id="v-pills-${element.id}-tab" 
+                if (respuesta.length) {
+                    respuesta.forEach(element => {
+                        active = count == 1 ? "active" : "";
+                        identAct = count == 1 ? element.id : identAct;
+                        $("#v-pills-solicitudes").append(`<a class="nav-link ${active}" id="v-pills-${element.id}-tab" 
                     data-toggle="pill" onclick="getInfoSolic(${element.id})" href="#v-pills-home" role="tab" 
-                    aria-controls="v-pills-${element.id}" aria-selected="true">${element.f_fechaEnvio}: ${element.loteTemola}</a>`)
-                    count++;
-                });
-                getInfoSolic(identAct)
-            },
+                    aria-controls="v-pills-${element.id}" aria-selected="true">${element.f_fechaEnvio}: Folio Lote-${element.loteTemola}</a>`)
+                        count++;
+                    });
+                    $("#v-pills-home").prop("hidden", false)
+                    $("#alert-solic").prop("hidden", true)
+
+                    getInfoSolic(identAct)
+                } else {
+                    $("#v-pills-home").prop("hidden", true)
+                    $("#alert-solic").prop("hidden", false)
+
+                }
+            }
 
 
         });
     }
 
     function getInfoSolic(id) {
+        $("#tipo").val("")
         $.ajax({
             url: '../Controller/solicitudesEdicion.php?op=getdetsolicitud',
             type: 'POST',
@@ -250,12 +282,12 @@ $space = 1;
 
                 switch (respuesta.estado) {
                     case '1':
-                        $("#estatus-lote").html("<i class='fas fa-lock text-danger'></i>")
+                        $("#estatus-lote").html("<i data-toggle='tooltip' data-placement='top' title='Empacado' class='fas fa-lock text-danger'></i>")
                         $(".mov-pzas").prop("hidden", false)
 
                         break;
                     default:
-                        $("#estatus-lote").html("<i class='fas fa-unlock-alt text-success'></i>")
+                        $("#estatus-lote").html("<i data-toggle='tooltip' data-placement='top' title='En Proceso de Empaque' class='fas fa-unlock-alt text-success'></i>")
                         $(".mov-pzas").prop("hidden", true)
                         break;
                 }
@@ -279,8 +311,8 @@ $space = 1;
                 $("#_9").val(respuesta._9Teseo)
                 $("#_9Dif").val(respuesta.dif_9)
                 result_9 = validaDif($("#_9Dif"))
-
-                $("#motivo").text(respuesta.motivo)
+                motivo = respuesta.motivo == "" ? "Sin Motivo Registrado ..." : respuesta.motivo;
+                $("#motivo").text(motivo)
                 $("#edit-09").text(Number(respuesta._9TeseoLte).toLocaleString('es-MX'))
                 $("#edit-03").text(Number(respuesta._3TeseoLte).toLocaleString('es-MX'))
                 $("#edit-12").text(Number(respuesta._12TeseoLte).toLocaleString('es-MX'))
@@ -300,35 +332,43 @@ $space = 1;
                 }
                 //tipos 
                 if (respuesta.sum_9 == 0 && respuesta.sum_6 == 0 && respuesta.sum_12 == 0 && respuesta.sum_3 == 0) {
+                    //CASO 1: SOLO MOVIMIENTO DE DATOS DE AREA ...
                     $("#tipo").val("1")
                 } else if (
-                    respuesta.sum_9 > 0 &&
-                    respuesta.sum_6 > 0 &&
-                    respuesta.sum_12 > 0 &&
-                    respuesta.sum_3 > 0 &&
-                    respuesta.estado != '1') {
+                    (respuesta.sum_9 > 0 ||
+                        respuesta.sum_6 > 0 ||
+                        respuesta.sum_12 > 0 ||
+                        respuesta.sum_3 > 0) &&
+                    (respuesta.estado != '1' || respuesta.estado == null)) {
+                    //CASO 2: MOVIMIENTO + DE PIEZAS DE LOTE NO EMPACADO ...
                     $("#tipo").val("2")
-                }else if (
-                    respuesta.sum_9 > 0 &&
-                    respuesta.sum_6 > 0 &&
-                    respuesta.sum_12 > 0 &&
-                    respuesta.sum_3 > 0 &&
+                } else if (
+                    (respuesta.sum_9 > 0 ||
+                        respuesta.sum_6 > 0 ||
+                        respuesta.sum_12 > 0 ||
+                        respuesta.sum_3 > 0) &&
                     respuesta.estado == '1') {
+                    //CASO 3: MOVIMIENTO + DE PIEZAS DE LOTE EMPACADO ...
+
                     $("#tipo").val("3")
-                }else if (
+                } else if (
                     respuesta.sum_9 < 0 &&
                     respuesta.sum_6 < 0 &&
                     respuesta.sum_12 < 0 &&
                     respuesta.sum_3 < 0 &&
 
-                    respuesta.dif_9 > 0 &&
-                    respuesta.dif_6 > 0 &&
-                    respuesta.dif_12 > 0 &&
-                    respuesta.dif_3 > 0
-                    ) {
+                    respuesta.dif_9 >= 0 &&
+                    respuesta.dif_6 >= 0 &&
+                    respuesta.dif_12 >= 0 &&
+                    respuesta.dif_3 >= 0
+                ) {
+                    //CASO 4: MOVIMIENTO - DE PIEZAS DE LOTE NO EMPACADO, PIEZAS DISPONIBLES ...
+
                     $("#tipo").val("4")
                 }
-
+                $(function() {
+                    $('[data-toggle="tooltip"]').tooltip()
+                })
             },
 
 

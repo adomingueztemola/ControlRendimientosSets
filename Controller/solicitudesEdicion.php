@@ -3,6 +3,7 @@ session_start();
 define('INCLUDE_CHECK', 1);
 require_once "../include/connect_mvc.php";
 include('../Models/Mdl_Static.php');
+include('../assets/scripts/cadenas.php');
 
 $debug = 0;
 $idUser = $_SESSION['CREident'];
@@ -23,6 +24,60 @@ switch ($_GET["op"]) {
         $Data = Excepciones::validaConsulta($Data);
         $json_string = json_encode($Data);
         echo $json_string;
+        break;
+    case "gethistsolicitud":
+        $date_start = isset($_POST['date_start']) ? $_POST['date_start'] : '';
+        $date_end = isset($_POST['date_end']) ? $_POST['date_end'] : '';
+        $programa = isset($_POST['programa']) ? $_POST['programa'] : '';
+
+        $filtradoPrograma = $programa != '' ? 'r.idCatPrograma=' . $programa . '' : '1=1';
+        if ($date_start != "" and $date_end != "") {
+            $filtradoFecha = "DATE_FORMAT(e.fechaEnvio, '%Y-%m-%d') BETWEEN '$date_start' AND '$date_end'";
+        } else {
+            $filtradoFecha = "1=1";
+        }
+
+        $Data = $obj_solicitudes->getSolicitudesEdicion(true, $filtradoFecha, $filtradoPrograma);
+        $Data = Excepciones::validaConsulta($Data);
+        $response = array();
+        $count = 1;
+        foreach ($Data as $value) {
+            $_12Teseo = $value['_12Teseo'] == '' ? '0' : formatoMil($value['_12Teseo'], 0);
+            $_3Teseo = $value['_3Teseo'] == '' ? '0' : formatoMil($value['_3Teseo'], 0);
+            $_6Teseo = $value['_6Teseo'] == '' ? '0' : formatoMil($value['_6Teseo'], 0);
+            $_9Teseo = $value['_9Teseo'] == '' ? '0' : formatoMil($value['_9Teseo'], 0);
+            $pzasCortadasTeseo = $value['pzasCortadasTeseo'] == '' ? '0' : formatoMil($value['pzasCortadasTeseo'], 0);
+
+            $yieldFinalReal = $value['yieldFinalReal'] == '' ? '0' : formatoMil($value['yieldFinalReal'], 2);
+            $areaFinal = $value['areaFinal'] == '' ? '0' : formatoMil($value['areaFinal'], 2);
+            $motivo=$value['motivo'] == '' ? 'N/A' : $value['motivo'];
+            $motivo=
+            array_push($response, [
+                $count,
+                $value['loteTemola'],
+                $value['nPrograma'],
+                $_12Teseo,
+                $_3Teseo, 
+                $_6Teseo, 
+                $_9Teseo,
+                $pzasCortadasTeseo,
+                $yieldFinalReal."%",
+                $areaFinal,
+                $value["n_usuario"],
+                $value["f_fechaEnvio"],
+                $value["n_usuarioAtend"],
+                $value["f_fechaAceptacion"],
+                $value['estado'],
+                $value['motivo']
+            ]);
+            $count++;
+        }
+
+        //Creamos el JSON
+        $response = array("data" => $response);
+        $json_string = json_encode($response);
+        echo $json_string;
+
         break;
     case "getdetsolicitud":
         $id = (isset($_POST['id'])) ? trim($_POST['id']) : '';
@@ -287,6 +342,7 @@ switch ($_GET["op"]) {
                 } catch (Exception $e) {
                     $obj_solicitudes->errorBD($e->getMessage(), 1);
                 }
+
                 $datos = $obj_solicitudes->setPzasLoteTeseo($id);
                 try {
                     Excepciones::validaMsjError($datos);
@@ -300,9 +356,32 @@ switch ($_GET["op"]) {
                 } catch (Exception $e) {
                     $obj_solicitudes->errorBD($e->getMessage(), 1);
                 }
+                //OBSERVAR SI LAS PIEZAS QUEDARAN EN CERO
+                if (
+                    $Data['dif_12'] == 0 and
+                    $Data['dif_3'] == 0 and
+                    $Data['dif_6'] == 0 and
+                    $Data['dif_9'] == 0
+                ) {
+                    $datos = $obj_solicitudes->guardarTotal($Data['idLote']);
+                    try {
+                        Excepciones::validaMsjError($datos);
+                    } catch (Exception $e) {
+                        $obj_solicitudes->errorBD($e->getMessage(), 1);
+                    }
+                }
                 break;
         }
         $obj_solicitudes->insertarCommit();
         echo '1|Solicitud Aceptada Correctamente.';
+        break;
+    case "getedicionesxlote":
+        $id = (isset($_POST['id'])) ? trim($_POST['id']) : '';
+        $Data= $obj_solicitudes->getEdicionesXLote($id);
+        $Data= Excepciones::validaConsulta($Data);
+       
+        $json_string = json_encode($Data);
+        echo $json_string;
+
         break;
 }

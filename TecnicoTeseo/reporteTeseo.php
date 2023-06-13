@@ -89,7 +89,7 @@ $obj_materia = new MateriaPrima($debug, $idUser);
                                     <div class="col-md-7">
                                     </div>
                                     <div class="col-md-1 text-right">
-                                        <button class="btn button btn-rounded btn-sm btn-light" onclick="update()" title="Actualizar Historial"> <i class="fas fa-history"></i></button>
+                                        <button class="btn button btn-rounded btn-sm btn-light" onclick="updatePantalla()" title="Actualizar Historial"> <i class="fas fa-history"></i></button>
                                     </div>
                                 </div>
 
@@ -168,7 +168,7 @@ $obj_materia = new MateriaPrima($debug, $idUser);
 <script src="../assets/scripts/selectFiltros.js"></script>
 
 <script>
-    update()
+    updatePantalla()
 
     jQuery('#date-range').datepicker({
         toggleActive: true,
@@ -180,7 +180,7 @@ $obj_materia = new MateriaPrima($debug, $idUser);
 
     });
     /*********** ACTUALIZA LISTA DE LOTES***************/
-    function update() {
+    function updatePantalla() {
         cargaContenido("content-lotes", "../templates/Rendimiento/cargaReporteLotesCapturaTeseo.php", '1')
 
     }
@@ -229,8 +229,8 @@ $obj_materia = new MateriaPrima($debug, $idUser);
                     clearForm("formChangeProgram")
                     $("#reasignarModal").modal('hide');
                     setTimeout(() => {
-                        update()
-                    }, 1000);
+                        updatePantalla()
+                    }, 2000);
 
 
                 } else if (resp[0] == 0) {

@@ -136,19 +136,24 @@ class Solicitud extends Rendimiento
         return $this->ejecutarQuery($sql, "consulta de bandeja de solicitudes", true);
     }
     // funciones de la version 2.0 
-    public function getSolicitudesEdicion()
+    public function getSolicitudesEdicion($_finalizadas= false, $filtradoFecha="1=1", $filtradoPrograma="1=1")
     {
+        $filtradoEstado= $_finalizadas?"e.estado!='1'":"e.estado='1'";
         $sql = "SELECT 
         e.*,
         CONCAT(su.nombre,' ',su.apellidos) AS n_usuario,
+        CONCAT(ua.nombre,' ',ua.apellidos) AS n_usuarioAtend,
         DATE_FORMAT(e.fechaEnvio,'%d/%m/%Y') AS f_fechaEnvio,
+        DATE_FORMAT(e.fechaAceptacion,'%d/%m/%Y') AS f_fechaAceptacion,
         r.loteTemola, cp.nombre AS nPrograma
         FROM edicionesteseo e
         INNER JOIN segusuarios su ON e.idUserEnvio=su.id
+        LEFT JOIN segusuarios ua ON e.idUserAcepto=ua.id
+
         INNER JOIN rendimientos r ON e.idLote=r.id
         INNER JOIN catprogramas cp ON r.idCatPrograma=cp.id
-        WHERE e.estado='1'
-        ORDER BY e.fechaEnvio";
+        WHERE  $filtradoEstado AND $filtradoFecha AND $filtradoPrograma
+        ORDER BY e.fechaEnvio DESC";
         return $this->consultarQuery($sql, "consulta de bandeja de solicitudes");
     }
 
@@ -184,18 +189,20 @@ class Solicitud extends Rendimiento
         return $this->consultarQuery($sql, "consulta detalle de solicitud", false);
     }
 
-    public function rechazarSolicitudTeseo($id){
-        $idUserReg= $this->idUserReg;
-        $sql="UPDATE edicionesteseo
+    public function rechazarSolicitudTeseo($id)
+    {
+        $idUserReg = $this->idUserReg;
+        $sql = "UPDATE edicionesteseo
         SET estado='0', fechaAceptacion= NOW(),
         idUserAcepto='$idUserReg'
         WHERE id='$id'";
         return $this->runQuery($sql, "rechazar solicitud de Teseo");
     }
 
-    public function setLoteTeseo($id){
-        $idUserReg= $this->idUserReg;
-        $sql="UPDATE edicionesteseo e
+    public function setLoteTeseo($id)
+    {
+        $idUserReg = $this->idUserReg;
+        $sql = "UPDATE edicionesteseo e
         INNER JOIN rendimientos r ON r.id=e.idLote
         SET 
         r.yieldInicialTeseo=e.yieldFinalReal,
@@ -207,8 +214,9 @@ class Solicitud extends Rendimiento
         return $this->runQuery($sql, "cambio de datos de solicitud de Teseo");
     }
 
-    public function setPzasLoteTeseo($id){
-        $sql="UPDATE edicionesteseo e
+    public function setPzasLoteTeseo($id)
+    {
+        $sql = "UPDATE edicionesteseo e
         INNER JOIN rendimientos r ON r.id=e.idLote
         SET 
         r._12Teseo=e._12Teseo,
@@ -227,9 +235,14 @@ class Solicitud extends Rendimiento
         return $this->runQuery($sql, "cambio de piezas de solicitud de Teseo");
     }
 
-    public function sumPzasOK($idLote, $dif_12, $dif_3,
-    $dif_6, $dif_9){
-        $sql="UPDATE rendimientos r
+    public function sumPzasOK(
+        $idLote,
+        $dif_12,
+        $dif_3,
+        $dif_6,
+        $dif_9
+    ) {
+        $sql = "UPDATE rendimientos r
         SET 
         r._12OKAct=IFNULL('$dif_12', 0),
         r._3OKAct=IFNULL('$dif_3', 0),
@@ -240,10 +253,13 @@ class Solicitud extends Rendimiento
     }
 
     public function sumScrap(
-        $idLote, $dif_12, $dif_3,
-        $dif_6, $dif_9
-    ){
-        $sql="UPDATE inventariorechazado r
+        $idLote,
+        $dif_12,
+        $dif_3,
+        $dif_6,
+        $dif_9
+    ) {
+        $sql = "UPDATE inventariorechazado r
         SET 
         r._12=IFNULL( r._12,0)+IFNULL('$dif_12', 0),
         r._3=IFNULL( r._3,0)+IFNULL('$dif_3', 0),
@@ -251,5 +267,45 @@ class Solicitud extends Rendimiento
         r._9=IFNULL( r._9,0)+IFNULL('$dif_9', 0)
         WHERE idRendimiento='$idLote'";
         return $this->runQuery($sql, "agregar piezas a Scrap de solicitud de Teseo");
+    }
+
+    public function guardarTotal($idLote)
+    {
+        $sql = "UPDATE rendimientos r
+        		INNER JOIN config_inventarios conf ON conf.estado = '1'
+                INNER JOIN vw_detalladocaja t ON r.id=t.idLote
+                SET r.totalEmp=t.totalEmp, r.unidadesEmpacadas=t.pzasEmp, r.regEmpaque='1',
+                r._12OKAct= IFNULL(r._12OK,0)-(IFNULL(t.sumNorm12,0)+IFNULL(t.scrap12,0)),
+                r._3OKAct= IFNULL(r._3OK,0)-(IFNULL(t.sumNorm3,0)+IFNULL(t.scrap3,0)), 
+                r._6OKAct= IFNULL(r._6OK,0)-(IFNULL(t.sumNorm6,0)+IFNULL(t.scrap6,0)), 
+                r._9OKAct= IFNULL(r._9OK,0)-(IFNULL(t.sumNorm9,0)+IFNULL(t.scrap9,0)),
+                r.setsEmpacados= t.totalEmp/conf.pzasEnSets,
+                r.setsRechazados= IFNULL(r.setsRechazados, 0)+(IFNULL(t.totalScrap,0)/conf.pzasEnSets),
+                r.pzasSetsRechazadas= (IFNULL(r.pzasSetsRechazadas, 0)+IFNULL(t.totalScrap,0)),
+                r.porcSetsRechazoInicial= ((IFNULL(r.setsRechazados, 0)+(IFNULL(t.totalScrap,0)/conf.pzasEnSets))/r.setsCortadosTeseo)*100,
+                r.porcFinalRechazo= ((IFNULL(r.setsRechazados, 0)+(IFNULL(t.totalScrap,0)/conf.pzasEnSets))/r.setsCortadosTeseo)*100,
+                r.totalRech= IFNULL(t.totalScrap,0)
+
+                WHERE r.id='$idLote'";
+        return $this->runQuery($sql, "registro de Totales");
+    }
+
+    public function getEdicionesXLote($id){
+        $sql = "SELECT 
+        e.*,
+        CONCAT(su.nombre,' ',su.apellidos) AS n_usuario,
+        CONCAT(ua.nombre,' ',ua.apellidos) AS n_usuarioAtend,
+        DATE_FORMAT(e.fechaEnvio,'%d/%m/%Y %H:%i') AS f_fechaEnvio,
+        DATE_FORMAT(e.fechaAceptacion,'%d/%m/%Y  %H:%i') AS f_fechaAceptacion,
+        r.loteTemola, cp.nombre AS nPrograma
+        FROM edicionesteseo e
+        INNER JOIN segusuarios su ON e.idUserEnvio=su.id
+        LEFT JOIN segusuarios ua ON e.idUserAcepto=ua.id
+
+        INNER JOIN rendimientos r ON e.idLote=r.id
+        INNER JOIN catprogramas cp ON r.idCatPrograma=cp.id
+        WHERE  e.idLote='$id'
+        ORDER BY e.fechaEnvio DESC";
+        return  $this->consultarQuery($sql, "consultar Solicitudes del Lote");
     }
 }

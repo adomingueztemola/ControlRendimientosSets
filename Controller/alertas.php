@@ -47,4 +47,10 @@ switch ($_GET["op"]) {
         $datos = !is_array($datos) ? 'Error!' : $datos['total'];
         echo "1|{$datos}|ventasprogramadas.php";
         break;
+    case "solicitudesteseo":
+        $datos = $obj_alertas->getSolicitudesTeseo();
+        $datos = Excepciones::validaConsulta($datos);
+        $datos = !is_array($datos) ? 'Error!' : $datos['total'];
+        echo "1|{$datos}|solicitudesEdiciones.php";
+        break;
 }

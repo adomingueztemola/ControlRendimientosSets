@@ -49,4 +49,11 @@ class Alerta extends ConexionBD
         WHERE v.estado='3' ";
         return  $this->consultarQuery($sql, "consultar Ventas Abastecidas.", false);
     }
+
+    public function getSolicitudesTeseo(){
+        $sql = "SELECT COUNT(r.id) AS total
+        FROM edicionesteseo r 
+        WHERE  r.estado='1'";
+        return  $this->consultarQuery($sql, "consultar Lotes por Capturar", false);
+    }
 }
