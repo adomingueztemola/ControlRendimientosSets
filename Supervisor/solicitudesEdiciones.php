@@ -393,17 +393,23 @@ $space = 1;
     }
 
     function nextTab(idTab) {
-        if (idTab.length == 0) {
+        if (idTab.length == 0) { //si el next es igual a cero prev
             idTab = $("#v-pills-" + id + "-tab").prev("a")
 
-        } else {
+        } else  {
             idTab = $("#v-pills-" + id + "-tab").next("a")
 
+        } 
+
+        if(idTab.length == 0) {
+            getData()
+            return 0
+        }else{
+            arrayTitle = idTab.attr("id").split('-');
+            $("#v-pills-" + id + "-tab").remove()
+            idTab.addClass('active');
+            getInfoSolic(arrayTitle[2])
         }
-        arrayTitle = idTab.attr("id").split('-');
-        $("#v-pills-" + id + "-tab").remove()
-        idTab.addClass('active');
-        getInfoSolic(arrayTitle[2])
     }
 
     function rechazarSolicitud() {
