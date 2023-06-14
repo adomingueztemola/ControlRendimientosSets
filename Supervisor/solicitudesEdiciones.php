@@ -283,6 +283,10 @@ $space = 1;
                 switch (respuesta.estado) {
                     case '1':
                         $("#estatus-lote").html("<i data-toggle='tooltip' data-placement='top' title='Empacado' class='fas fa-lock text-danger'></i>")
+                        if(respuesta.sum_9 > 0 ||
+                        respuesta.sum_6 > 0 ||
+                        respuesta.sum_12 > 0 ||
+                        respuesta.sum_3 > 0)
                         $(".mov-pzas").prop("hidden", false)
 
                         break;
