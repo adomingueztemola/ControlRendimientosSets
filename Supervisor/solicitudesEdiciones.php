@@ -286,8 +286,13 @@ $space = 1;
                         if(respuesta.sum_9 > 0 ||
                         respuesta.sum_6 > 0 ||
                         respuesta.sum_12 > 0 ||
-                        respuesta.sum_3 > 0)
-                        $(".mov-pzas").prop("hidden", false)
+                        respuesta.sum_3 > 0){
+                            $(".mov-pzas").prop("hidden", false)
+
+                        }else{
+                            $(".mov-pzas").prop("hidden", true)
+
+                        }
 
                         break;
                     default:
