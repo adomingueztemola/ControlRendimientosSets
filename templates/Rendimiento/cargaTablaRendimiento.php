@@ -177,7 +177,7 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
                                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                     <label for="pesoRaspadoWB">Recorte Crust %</label>
                                     <div class="input-group mb-3">
-                                        <input class="form-control  Validate" type="number" step="0.01" readonly name="recorteCrust" value="<?= $porcRecorteCrust ?>" id="recorteCrust"></input>
+                                        <input class="form-control  Validate" type="number" step="0.01" readonly name="recorteCrust" value="" id="recorteCrust"></input>
                                         <div class="input-group-append">
                                             <span class="input-group-text">%</span>
                                         </div>
@@ -197,7 +197,7 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
                             <div class="row">
                                 <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
                                     <div class="input-group mb-3">
-                                        <input class="form-control Validate focusCampo" type="number" step="0.01" name="humedad" value="<?= $humedad ?>" onchange="guardarValor('humedad', this)" id="humedad"></input>
+                                        <input class="form-control Validate focusCampo" type="number" step="0.01" name="humedad" value="" onchange="guardarValor('humedad', this)" id="humedad"></input>
                                         <div class="input-group-append">
                                             <span class="input-group-text">%</span>
                                         </div>
@@ -216,7 +216,7 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
                         <td>
                             <div class="row">
                                 <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
-                                    <input class="form-control Validate Positivos focusCampo" type="number" step="0.01" name="areaCrust" value="<?= $areaCrust ?>" id="areaCrust" onchange="guardarValor('areacrust', this)"></input>
+                                    <input class="form-control Validate Positivos focusCampo" type="number" step="0.01" name="areaCrust" value="" id="areaCrust" onchange="guardarValor('areacrust', this)"></input>
                                 </div>
                                 <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" hidden id="success-areacrust">
                                     <i class="fas fa-check text-success"></i>
@@ -250,7 +250,7 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
                                     </div>
                                 </div>
                                 <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
-                                    <input class="form-control  Validate" type="number" step="0.01" readonly name="recorteAcabado" value="<?= $recorteAcabado ?>" id="recorteAcabado"></input>
+                                    <input class="form-control  Validate" type="number" step="0.01" readonly name="recorteAcabado" value="" id="recorteAcabado"></input>
                                 </div>
                                 <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" hidden id="success-recorteacabado">
                                     <i class="fas fa-check text-success"></i>
@@ -266,7 +266,7 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
                         <td>
                             <div class="row">
                                 <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
-                                    <input class="form-control Validate focusCampo" type="number" step="0.01" name="quiebre" id="quiebre" value="<?= $quiebre ?>" onchange="guardarValor('quiebre', this)"></input>
+                                    <input class="form-control Validate focusCampo" type="number" step="0.01" name="quiebre" id="quiebre" value="" onchange="guardarValor('quiebre', this)"></input>
                                 </div>
                                 <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" hidden id="success-quiebre">
                                     <i class="fas fa-check text-success"></i>
@@ -281,7 +281,7 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
                         <td>
                             <div class="row">
                                 <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
-                                    <input class="form-control Validate focusCampo" type="number" step="0.01" name="suavidad" id="suavidad" value="<?= $suavidad ?>" onchange="guardarValor('suavidad', this)"></input>
+                                    <input class="form-control Validate focusCampo" type="number" step="0.01" name="suavidad" id="suavidad" value="" onchange="guardarValor('suavidad', this)"></input>
                                 </div>
                                 <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" hidden id="success-suavidad">
                                     <i class="fas fa-check text-success"></i>

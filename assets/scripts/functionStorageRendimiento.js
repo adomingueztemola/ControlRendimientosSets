@@ -68,7 +68,15 @@ function validaCamposLlenos() {
       $(this).addClass("border");
       $(this).addClass("border-danger");
       log_result = false;
-    } else if (
+    }else if (Number($(this).val()) == "0" && str_id == "areaCrust") {
+      $(this).addClass("border");
+      $(this).addClass("border-danger");
+      log_result = false;
+    } else if (Number($(this).val()) == "0" && str_id == "areaWBRecibida") {
+      $(this).addClass("border");
+      $(this).addClass("border-danger");
+      log_result = false;
+    }  else if (
       str_id == "comentariosrechazo" &&
       $("#piezasRechazadas").val() > 0 &&
       $(this).val() != ""
