@@ -50,13 +50,23 @@ $obj_rendimiento = new Rendimiento($debug, $idUser);
 $Data = $obj_rendimiento->getLotesXCapturarTeseo($filtradoFecha, $filtradoProceso, $filtradoMateria, $filtradoPrograma, $filtradoEstatus);
 $Data = Excepciones::validaConsulta($Data);
 ?>
+<style>
+    td.details-control {
+        background: url('../assets/images/details_open.png') no-repeat center center;
+        cursor: pointer;
+    }
+
+    tr.details td.details-control {
+        background: url('../assets/images/details_close.png') no-repeat center center;
+    }
+</style>
 <div class="table-responsive">
     <table class="table table-sm" id="table-reportelote">
         <thead>
             <tr>
                 <th>#</th>
                 <th>R.P.</th>
-                <th>Fecha de Engrase</th>
+                <th>Edición</th>
                 <th>Lote</th>
                 <th class="table-info">Total de Hides</th>
                 <th>Programa</th>
@@ -76,8 +86,8 @@ $Data = Excepciones::validaConsulta($Data);
         <tbody>
             <?php
             $count = 1;
-            $dataedit="";
-            $rowData="";
+            $dataedit = "";
+            $rowData = "";
             foreach ($Data as $key => $value) {
                 $remarkTable = ($row != '' and $value['id'] == $row) ? 'table-secondary' : '';
                 $input = '<div class="input-group mb-3">
@@ -88,7 +98,9 @@ $Data = Excepciones::validaConsulta($Data);
             </div>';
                 $popover = "data-container='body' data-toggle='popover' data-html='true' data-title='CONVERSIÓN DE DM<sup>2</sup> A FT<sup>2</sup>' data-placement='top' 
                 data-content='$input'";
-
+                $btnEdicion = $value["regTeseo"] == '1' ?
+                    "<button class='btn btn-xs btn-outline-dark' data-toggle='modal' data-target='#edicionModal' onclick='getEnvioSolicitud({$value['id']})'><i class='fas fa-pencil-alt'></i></button>" :
+                    "";
                 $lblLiberacion = $value["regOkNok"] == '1' ?
                     "{$value["fFechaRegTeseo"]}" :
                     "<div id='bloqueo-btn-{$value['id']}' style='display: none;'>
@@ -140,12 +152,12 @@ $Data = Excepciones::validaConsulta($Data);
 
                 $iconReprog = $value["reprogramado"] == '1' ? '<i class="fas fa-recycle text-success"></i>' : '';
                 $totalHides = formatoMil($value["total_s"] * 2, 0);
-              
+
                 if ($row != $value['id']) {
-                    $rowData.= "<tr class='$remarkTable'>
-                    <td>{$count}</td>
+                    $rowData .= "<tr class='$remarkTable'>
+                    <td  style='color: transparent;' >{$value['id']} </td>
                     <td>{$iconReprog}</td>
-                    <td>{$value['fFechaEngrase']}</td>
+                    <td>{$btnEdicion} </td>
                     <td>{$value['loteTemola']}</td>
                     <td class='table-info'>{$totalHides}</td>
                     <td>{$value['nPrograma']}</td>
@@ -161,10 +173,10 @@ $Data = Excepciones::validaConsulta($Data);
 
                 </tr>";
                 } else {
-                    $dataedit="<tr class='$remarkTable'>
-                    <td>{$count}</td>
+                    $dataedit = "<tr class='$remarkTable'>
+                    <td  style='color: transparent;'>{$value['id']}</td>
                     <td>{$iconReprog}</td>
-                    <td>{$value['fFechaEngrase']}</td>
+                    <td>{$btnEdicion} </td>
                     <td>{$value['loteTemola']}</td>
                     <td class='table-info'>{$totalHides}</td>
                     <td>{$value['nPrograma']}</td>
@@ -182,13 +194,106 @@ $Data = Excepciones::validaConsulta($Data);
                 }
                 $count++;
             }
-            echo $dataedit.$rowData;
+            echo $dataedit . $rowData;
             ?>
         </tbody>
     </table>
 </div>
+<!-- INICIAL DE MODAL DE EDICION DE LOTES -->
+<div class="modal fade" id="edicionModal" role="dialog" aria-labelledby="reasignarModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content solicModal-block">
+            <div class="modal-header bg-TWM text-white">
+                <h5 class="modal-title" id="reasignarModalLabel">Solicitud de Edición de Datos Teseo</h5>
+                <button type="button" class="close text-white" onclick="limpiarForm()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="formSolicitudEdicion">
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="id">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-sm table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-12">Área de Teseo®</div>
+                                                <div class="col-12"><span class="text-info" id="edit-areaTeseo"></span></div>
+                                            </div>
+                                        </td>
+                                        <td><input type="number" class="form-control focusCampo" step="0.01" min="0" name="areaTeseo" id="areaTeseo"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-12">Yield</div>
+                                                <div class="col-12"><span class="text-info" id="edit-yield"></span></div>
+                                            </div>
+                                        </td>
+                                        <td><input type="number" class="form-control focusCampo" step="0.01" min="0" name="yield" id="yield"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-12">12:00</div>
+                                                <div class="col-12"><span class="text-info" id="edit-12"></span></div>
+                                            </div>
+                                        </td>
+                                        <td><input type="number" class="form-control focusCampo" step="1" min="0" name="_12" id="_12"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-12">03:00</div>
+                                                <div class="col-12"><span class="text-info" id="edit-03"></span></div>
+                                            </div>
+                                        </td>
+                                        <td><input type="number" class="form-control focusCampo" step="1" min="0" name="_3" id="_3"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-12">06:00</div>
+                                                <div class="col-12"><span class="text-info" id="edit-06"></span></div>
+                                            </div>
+                                        </td>
+                                        <td><input type="number" class="form-control focusCampo" step="1" min="0" name="_6" id="_6"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-12">09:00</div>
+                                                <div class="col-12"><span class="text-info" id="edit-09"></span></div>
+                                            </div>
+                                        </td>
+                                        <td><input type="number" class="form-control focusCampo" step="1" min="0" name="_9" id="_9"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="form-label" for="motivo">Motivo (opcional)</label>
+                            <textarea name="motivo" class="form-control" id="motivo" rows="5"></textarea>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="limpiarForm()" class="btn btn-light" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-success">Enviar Solicitud</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- FIN DE MODAL DE EDICION DE LOTES -->
+<script src="../assets/scripts/clearDataSinSelect.js"></script>
+
 <script>
-    
     $(function() {
         $('[data-toggle="popover"]').popover({
             trigger: 'focus',
@@ -205,7 +310,7 @@ $Data = Excepciones::validaConsulta($Data);
         });
 
     }
-    $("#table-reportelote").DataTable({
+    var dt = $("#table-reportelote").DataTable({
         "fnDrawCallback": function(oSettings) {
             $('[data-toggle="popover"]').popover({
                 html: true,
@@ -213,9 +318,12 @@ $Data = Excepciones::validaConsulta($Data);
             });
         },
         dom: 'Bfrltip',
-        "columnDefs": [{
-                "width": "10px",
-                "targets": 0
+        "aoColumnDefs": [{
+                targets: 0,
+                class: 'details-control',
+                orderable: false,
+                //  data: null,
+                //defaultContent: '',
             },
             {
                 "width": "10px",
@@ -266,6 +374,172 @@ $Data = Excepciones::validaConsulta($Data);
 
         }]
     });
+    // Array to track the ids of the details displayed rows
+    var detailRows = [];
+    $('#table-reportelote tbody').on('click', 'tr td.details-control', function() {
+
+        var tr = $(this).closest('tr');
+        var row = dt.row(tr);
+        var idx = detailRows.indexOf(tr.attr('id'));
+
+        if (row.child.isShown()) {
+            tr.removeClass('details');
+            row.child.hide();
+
+            // Remove from the 'open' array
+            detailRows.splice(idx, 1);
+        } else {
+            tr.addClass('details');
+            row.child(format(row.data())).show();
+            $("#reporte-reportelote").DataTable({
+                dom: 'Bfrltip',
+                "aaSorting": [],
+                buttons: [{
+                    extend: 'copy',
+                    text: 'Copiar Formato',
+                    exportOptions: {
+
+                    },
+                    footer: true
+                }, {
+                    extend: 'excel',
+                    text: 'Excel',
+                    exportOptions: {
+
+                    },
+                    footer: true
+
+                }, {
+                    extend: 'pdf',
+                    text: 'Archivo PDF',
+                    exportOptions: {
+
+                    },
+                    orientation: "landscape",
+                    footer: true
+
+                }, {
+                    extend: 'print',
+                    text: 'Imprimir',
+                    exportOptions: {
+
+                    },
+                    footer: true
+
+                }]
+
+            })
+            $('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel').addClass('btn btn-TWM mr-1');
+            // Add to the 'open' array
+            if (idx === -1) {
+                detailRows.push(tr.attr('id'));
+            }
+        }
+    });
+
+    function format(d) {
+        tabla = "";
+        $.ajax({
+            url: '../Controller/solicitudesEdicion.php?op=getedicionesxlote',
+            data: {
+                id: d[0]
+            },
+            type: 'POST',
+            async: false,
+            dataType: "json",
+            success: function(respuesta) {
+                tabla = `
+                <div class="row">
+                <div class="col-12">
+                <table class="table table-striped table-bordered table-sm display nowrap" id="reporte-medicion">
+                    <thead>
+                        <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Lote</th>
+                        <th scope="col">Programa</th>
+                        <th scope="col">12:00</th>
+                        <th scope="col">03:00</th>
+                        <th scope="col">06:00</th>
+                        <th scope="col">09:00</th>
+                        <th scope="col">Total Piezas</th>
+                        <th scope="col">Yield</th>
+                        <th scope="col">Área de Teseo®</th>
+                        <th scope="col">Usuario Envío</th>
+                        <th scope="col">Fecha de Envío</th>
+                        <th scope="col">Fecha de Atención</th>
+                        <th scope="col">Usuario Atendió</th>
+                        <th scope="col">Estatus</th>
+
+                        <th scope="col">Motivo</th>
+
+
+                        </tr>
+                    </thead>
+                    <tbody>`;
+                if (!respuesta.length) {
+                    tabla += `
+                        <tr>
+                            <td colspan='16'>Sin registro de ediciones en el lote</td>
+                        </tr>
+                    `
+                } else {
+                    count = 1;
+                    respuesta.forEach(element => {
+                        console.log(element);
+
+                        _12Teseo = Number(element._12Teseo).toLocaleString('es-MX')
+                        _3Teseo = Number(element._3Teseo).toLocaleString('es-MX')
+                        _6Teseo = Number(element._6Teseo).toLocaleString('es-MX')
+                        _9Teseo = Number(element._9Teseo).toLocaleString('es-MX')
+                        pzasCortadasTeseo = Number(element.pzasCortadasTeseo).toLocaleString('es-MX')
+                        yieldFinalReal = Number(element.yieldFinalReal).toLocaleString('es-MX')
+                        areaFinal = Number(element.areaFinal).toLocaleString('es-MX')
+                        estado = "";
+                        switch (element.estado) {
+                            case '2':
+                                estado = '<i class="fas fa-check text-success"></i>Aceptada'
+                                break;
+                            case '0':
+                                estado = '<i class="fas fa-times text-danger"></i>Cancelada'
+                                break;
+                            case '1':
+                                estado = '<i class=" fas fa-envelope text-info"></i>Enviada'
+                                break;
+                            default:
+                                estado = 'N/A'
+                                break;
+                        }
+                        tabla += `
+                        <tr>
+                            <td>${count}</td>
+                            <td>${element.loteTemola}</td>
+                            <td>${element.nPrograma}</td>
+                            <td>${ _12Teseo}</td>
+                            <td>${ _3Teseo}</td>
+                            <td>${ _6Teseo}</td>
+                            <td>${ _9Teseo}</td>
+                            <td>${pzasCortadasTeseo}</td>
+                            <td>${yieldFinalReal}</td>
+                            <td>${areaFinal}</td>
+                            <td>${element.n_usuario}</td>
+                            <td>${element.f_fechaEnvio}</td>
+                            <td>${element.n_usuarioAtend== null?'N/A':element.n_usuarioAtend}</td>
+                            <td>${element.f_fechaAceptacion== null?'N/A':element.f_fechaAceptacion}</td>
+
+                            <td>${estado}</td>
+                            <td>${element.motivo== null?'N/A':element.motivo}</td>
+
+                        </tr> `;
+                        count++;
+                    });
+                }
+
+            },
+
+
+        });
+        return tabla + "</tbody></table></div></div>";
+    }
     $('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel').addClass('btn btn-TWM mr-1');
 
     function cambiarTeseo(id, input, option) {
@@ -387,4 +661,78 @@ $Data = Excepciones::validaConsulta($Data);
         $("#areaFt" + id).val(converse)
         cambiarTeseo(id, $("#areaFt" + id), 2)
     }
+
+    function getEnvioSolicitud(id) {
+        $.ajax({
+            url: '../Controller/rendimiento.php?op=getdetallelote',
+            data: {
+                id: id
+            },
+            type: 'POST',
+            async: false,
+            dataType: "json",
+            success: function(respuesta) {
+                if (!respuesta.length) {
+                    areaFinal = (respuesta.areaFinal == null ? '0.0' : Number(respuesta.areaFinal));
+                    yieldFinal = (respuesta.yieldInicialTeseo == null ? '0.0' : Number(respuesta.yieldInicialTeseo));
+                    _12Teseo = (respuesta._12Teseo == null ? '0.0' : Number(respuesta._12Teseo));
+                    _3Teseo = (respuesta._3Teseo == null ? '0.0' : Number(respuesta._3Teseo));
+                    _6Teseo = (respuesta._6Teseo == null ? '0.0' : Number(respuesta._6Teseo));
+                    _9Teseo = (respuesta._9Teseo == null ? '0.0' : Number(respuesta._9Teseo));
+                    $("#edit-areaTeseo").text(areaFinal.toLocaleString('es-MX'))
+                    $("#edit-yield").text(yieldFinal.toLocaleString('es-MX') + "%")
+                    $("#edit-12").text(_12Teseo.toLocaleString('es-MX'))
+                    $("#edit-03").text(_3Teseo.toLocaleString('es-MX'))
+                    $("#edit-06").text(_6Teseo.toLocaleString('es-MX'))
+                    $("#edit-09").text(_9Teseo.toLocaleString('es-MX'))
+                    $("#motivo").val("")
+
+                    $("#id").val(id)
+                    $("#areaTeseo").val(areaFinal)
+                    $("#yield").val(yieldFinal)
+                    $("#_12").val(_12Teseo)
+                    $("#_3").val(_3Teseo)
+                    $("#_6").val(_6Teseo)
+                    $("#_9").val(_9Teseo)
+
+                } else {}
+            },
+
+
+        });
+    }
+    $("#formSolicitudEdicion").submit(function(e) {
+        e.preventDefault();
+        formData = $(this).serialize();
+        $.ajax({
+            url: '../Controller/rendimiento.php?op=solicitudedicionteseo',
+            data: formData,
+            type: 'POST',
+            success: function(json) {
+                resp = json.split('|')
+                if (resp[0] == 1) {
+                    notificaSuc(resp[1])
+                    bloqueoModal(e, "solicModal-block", 2)
+                    $('#edicionModal').modal('hide')
+                    $('#formSolicitudEdicion').find('input,textarea, button, select').removeAttr('disabled');
+                    setTimeout(() => {
+                        updatePantalla()
+                    }, 1000);
+
+                } else if (resp[0] == 0) {
+                    notificaBad(resp[1])
+                    bloqueoModal(e, "solicModal-block", 2)
+                    $('#formSolicitudEdicion').find('input,textarea, button, select').removeAttr('disabled');
+
+
+                }
+            },
+            beforeSend: function() {
+                bloqueoModal(e, "solicModal-block", 1)
+                $('#formSolicitudEdicion').find('input,textarea, button, select').attr('disabled', 'disabled');
+
+            }
+
+        });
+    });
 </script>

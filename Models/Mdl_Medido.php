@@ -247,4 +247,6 @@ class Medido extends ConexionBD
         return  $this->consultarQuery($sql, "consultar Detalle del Lote", false);
     }
 
+ 
+
 } 

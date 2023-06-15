@@ -1455,7 +1455,16 @@ class Rendimiento extends ConexionBD
         comentariosRechazo='',
         piezasRechazadas='0'
         WHERE r.id='$idRendimiento'";
-        return  $this->runQuery($sql, "");
+        return  $this->runQuery($sql, "resetear datos de lotes");
+    }
+    public function insertarSolicitudTeseo($id, $areaTeseo, $yield, $_12, $_3, $_6, $_9, 
+    $pzasCortadasTeseo,$setsCortadosTeseo, $motivo){
+        $idUserReg= $this->idUserReg;
+        $sql = "INSERT INTO edicionesteseo (idLote, _12Teseo, _3Teseo, _6Teseo, _9Teseo, yieldFinalReal,
+                setsCortadosTeseo, pzasCortadasTeseo, areaFinal, fechaEnvio, idUserEnvio, motivo, estado)
+                VALUES ('$id', '$_12', '$_3', '$_6', '$_9','$yield', '$setsCortadosTeseo', 
+                '$pzasCortadasTeseo', '$areaTeseo', NOW(), '$idUserReg', '$motivo', '1' )";
+        return  $this->runQuery($sql, "envio de solicitud de edicion de datos");
     }
     /*************************************** 
      * CALCULO OPERACIONAL
@@ -1483,4 +1492,5 @@ class Rendimiento extends ConexionBD
         // return date('Y-m-d', $monday);
         return $fecha;
     }
+
 }
