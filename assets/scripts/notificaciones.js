@@ -19,8 +19,8 @@ function conn() {
   ];
   var jsonSup = [
     {
-      label: "Lotes por Capturar para Venta",
-      codigo: "capturalotessup",
+      label: "Solicitudes de Cambios Teseo",
+      codigo: "solicitudesteseo",
     },
 
   ];

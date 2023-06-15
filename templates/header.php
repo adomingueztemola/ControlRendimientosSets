@@ -19,9 +19,11 @@ $str_space = str_repeat("../", $space);
     <link rel="stylesheet" href="<?= $str_space ?>assets/libs/select2/dist/css/select2.css">
 
     <link href="<?= $str_space ?>dist/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="<?= $str_space ?>assets/offline-theme-chrome-indicator.css">
 
     <link id="effect" rel="stylesheet" type="text/css" media="all" href="<?= $str_space ?>assets/menu/webslidemenu/dropdown-effects/fade-down.css" />
     <link rel="stylesheet" type="text/css" media="all" href="<?= $str_space ?>assets/menu/webslidemenu/webslidemenu-TWM.css" />
     <link id="theme" rel="stylesheet" type="text/css" media="all" href="<?= $str_space ?>assets/menu/webslidemenu/color-skins/grd-TWM.css" />
     <link rel="stylesheet" type="text/css" href="<?= $str_space ?>assets/libs/toastr/build/toastr.css">
+   
 </head>

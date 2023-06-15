@@ -57,6 +57,8 @@ $id = !empty($_POST['id']) ? $_POST['id'] : "";
     $('#tbody-lados').find('.accordionPaq').remove()
 
     function creacionPaquete() {
+        $count = 1;
+
         $.ajax({
             url: '../Controller/medicion.php?op=getladosxlote',
             data: {

@@ -308,6 +308,12 @@ switch ($_GET["op"]) {
         } catch (Exception $e) {
             $obj_rendimiento->errorBD($e->getMessage(), 1);
         }
+        $datos = $obj_rendimiento->calcularRendimiento('0', false, $id);
+        try {
+            Excepciones::validaMsjError($datos);
+        } catch (Exception $e) {
+            $obj_rendimiento->errorBD($e->getMessage(), 1);
+        }
         $obj_rendimiento->insertarCommit();
         echo '1|El Pre-Registro de Rendimiento se ha eliminado Correctamente.';
         break;
@@ -430,7 +436,7 @@ switch ($_GET["op"]) {
             $ErrorLog .= ' intentalo de nuevo.';
             $obj_rendimiento->errorBD($ErrorLog, 0);
         }
-        $value=$value/2;
+        $value = $value / 2;
         $DatosAbiertos = $obj_rendimiento->getRendimientoAbierto();
         $datos = Funciones::edicionBasica("rendimientos", "piezasRechazadas", $value, "id", $DatosAbiertos[0]['id'], $obj_rendimiento->getConexion(), $debug);
         try {
@@ -449,7 +455,7 @@ switch ($_GET["op"]) {
             $ErrorLog .= ' intentalo de nuevo.';
             $obj_rendimiento->errorBD($ErrorLog, 0);
         }
-        $value=$value/2;
+        $value = $value / 2;
 
         $DatosAbiertos = $obj_rendimiento->getRendimientoAbierto();
         $datos = Funciones::edicionBasica("rendimientos", "cuerosReasig", $value, "id", $DatosAbiertos[0]['id'], $obj_rendimiento->getConexion(), $debug);
@@ -918,7 +924,9 @@ switch ($_GET["op"]) {
             $obj_rendimiento->errorBD($ErrorLog, 0);
         }
         $DatosAbiertos = $obj_rendimiento->getRendimientoAbierto();
-        $datos = Funciones::edicionBasica("rendimientos", "recorteAcabado", $value, "id", $DatosAbiertos[0]['id'], $obj_rendimiento->getConexion(), $debug);
+        $recorteAcabado = $DatosAbiertos[0]['recorteAcabado'] == '' ? '0' : $DatosAbiertos[0]['recorteAcabado'];
+        $suma = $recorteAcabado + $value;
+        $datos = Funciones::edicionBasica("rendimientos", "recorteAcabado", $suma, "id", $DatosAbiertos[0]['id'], $obj_rendimiento->getConexion(), $debug);
         try {
             Excepciones::validaMsjError($datos);
         } catch (Exception $e) {
@@ -1048,12 +1056,21 @@ switch ($_GET["op"]) {
             $obj_rendimiento->errorBD($ErrorLog, 0);
         }
         $DatosAbiertos = $obj_rendimiento->getRendimientoAbierto();
+        $obj_rendimiento->beginTransaction();
         $datos = Funciones::edicionBasica("rendimientos", "semanaProduccion", $WeekYear[1], "id", $DatosAbiertos[0]['id'], $obj_rendimiento->getConexion(), $debug);
         try {
             Excepciones::validaMsjError($datos);
         } catch (Exception $e) {
-            $obj_materias->errorBD($e->getMessage(), 1);
+            $obj_rendimiento->errorBD($e->getMessage(), 1);
         }
+        $datos = Funciones::edicionBasica("rendimientos", "yearWeek", $WeekYear[0], "id", $DatosAbiertos[0]['id'], $obj_rendimiento->getConexion(), $debug);
+        try {
+            Excepciones::validaMsjError($datos);
+        } catch (Exception $e) {
+            $obj_rendimiento->errorBD($e->getMessage(), 1);
+        }
+        $obj_rendimiento->insertarCommit();
+
         echo '1| Registro de Semana de Producción.';
 
         break;
@@ -1171,5 +1188,70 @@ switch ($_GET["op"]) {
             $obj_rendimiento->errorBD($e->getMessage(), 1);
         }
         echo '1|Sets Recuperados fueron Recalculados Correctamente.';*/
+        break;
+    case "getloteabierto":
+        $Data = $obj_rendimiento->getRendimientoAbierto();
+        $Data = Excepciones::validaConsulta($Data);
+        $json_string = json_encode($Data[0]);
+        echo $json_string;
+        break;
+    case "resetdatoslote":
+        $DatosAbiertos = $obj_rendimiento->getRendimientoAbierto();
+        $DatosAbiertos = Excepciones::validaConsulta($DatosAbiertos);
+        $id = $DatosAbiertos[0]['id'];
+        $obj_rendimiento->beginTransaction();
+
+        $datos = $obj_rendimiento->resetDatosLote();
+        try {
+            Excepciones::validaMsjError($datos);
+        } catch (Exception $e) {
+            $obj_rendimiento->errorBD($e->getMessage(), 1);
+        }
+        $datos = $obj_rendimiento->calcularRendimiento('0');
+        try {
+            Excepciones::validaMsjError($datos);
+        } catch (Exception $e) {
+            $obj_rendimiento->errorBD($e->getMessage(), 1);
+        }
+        $obj_rendimiento->insertarCommit();
+        echo '1|Reseteo de Lote Correcto.';
+        break;
+    case "getdetallelote":
+        $id = (!empty($_POST['id'])) ? trim($_POST['id']) : '';
+        $Data = $obj_rendimiento->getDetRendimientos($id);
+        $Data = Excepciones::validaConsulta($Data);
+        $json_string = json_encode($Data[0]);
+        echo $json_string;
+        break;
+    case "solicitudedicionteseo":
+        $id = (!empty($_POST['id'])) ? trim($_POST['id']) : '';
+        $areaTeseo = (!empty($_POST['areaTeseo'])) ? trim($_POST['areaTeseo']) : '';
+        $yield = (!empty($_POST['yield'])) ? trim($_POST['yield']) : '';
+        $_12 = (!empty($_POST['_12'])) ? trim($_POST['_12']) : '';
+        $_3 = (!empty($_POST['_3'])) ? trim($_POST['_3']) : '';
+        $_6 = (!empty($_POST['_6'])) ? trim($_POST['_6']) : '';
+        $_9 = (!empty($_POST['_9'])) ? trim($_POST['_9']) : '';
+        $motivo = (!empty($_POST['motivo'])) ? trim($_POST['motivo']) : '';
+        #VALIDACION DE DATOS
+        Excepciones::validaLlenadoDatos(array(
+            " Lote" => $id,
+            " Área Teseo" => $areaTeseo,
+            " Yield" => $yield,
+            " 12:00" => $_12,
+            " 03:00" => $_3,
+            " 06:00" => $_6,
+            " 09:00" => $_9
+        ), $obj_rendimiento);
+        $setsCortadasTeseo=($_12+$_3+$_6+ $_9)/4;
+        $pzasCortadasTeseo=$_12+$_3+$_6+ $_9;
+        #REGISTRO DE RENDIMIENTO
+        $datos = $obj_rendimiento->insertarSolicitudTeseo($id, $areaTeseo, $yield, $_12, $_3, $_6, $_9, $pzasCortadasTeseo, $setsCortadasTeseo, $motivo);
+        try {
+            Excepciones::validaMsjError($datos);
+        } catch (Exception $e) {
+            $obj_rendimiento->errorBD($e->getMessage(), 1);
+        }
+        echo '1|Solicitud Enviada Correctamente.';
+
         break;
 }

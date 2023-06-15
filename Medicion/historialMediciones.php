@@ -73,13 +73,6 @@ $space = 1;
                     </div>
 
                 </div>
-
-                <div class="col-lg-12 col-md-12 col-sm-12">
-                    <div class=" offset-lg-11">
-                        <button class="btn btn-TWM" type="button" data-toggle="modal" data-target=".modalcarga">Carga Excel</button>
-                    </div>
-                </div>
-                <br>
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="card border">
@@ -101,60 +94,7 @@ $space = 1;
 
                 </div>
 
-                <div class="modal fade modalcarga" id="modalcarga" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modaldecarga" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-
-                        <div class="modal-content blockModal">
-                            <div class="modal-header bg-TWM">
-                                <h5 class="modal-title text-white">Carga de Reporte de Teseo en Excel</h5>
-                                <button type="button" class="close text-white" data-dismiss="modal" aria-label="close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <form id="formcarga">
-                                <div class="modal-body">
-                                    <div class="row">
-                                        <div class="col-lg-3 col-md-3 col-xs-3 col-sm-3">
-                                            <label for="folioLote" class="form-label required">Folio de Lote </label>
-                                            <input type="text" id="folioLote" name="folioLote" autocomplete="off" required class="form-control select2Form">
-                                        </div>
-                                        <div class="col-lg-3 col-md-3 col-xs-3 col-sm-3">
-                                            <label for="grosor" class="form-label required">Grosor </label>
-                                            <select class="form-control GrosorFilter select2Form" required style="width:100%" name="grosor" id="grosorReporte">
-                                            </select>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 col-xs-6 col-sm-6">
-                                            <label for="programaReporte" class="form-label required">Programa</label>
-                                            <select class="form-control ProgramaMedidoFilter select2Form" required style="width:100%" name="programa" id="programaReporte">
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="row m-1">
-                                        <div class="col-md-8">
-                                            <label>Pegue los datos de Excel aquí:</label>
-                                            <button type="button" onclick="limpiarReporte()" class="btn btn-xs btn-danger">Limpiar</button>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <textarea id="excel_data" class="form-control"></textarea><br>
-                                            <input type="button" onclick="javascript:generateTable()" value="Generar tabla" />
-                                        </div>
-                                    </div>
-                                    <br>
-                                    <p>Los datos de la tabla aparecerán a continuación.</p>
-                                    <hr>
-                                    <div id="excel_table"></div>
-                                    <input type="hidden" name="reporte" id="reporte">
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" onclick="limpiarFormCarga()" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
-                                    <button type="submit" id="btn-save" disabled class="btn btn-success">Guardar</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+                
             </div>
 
         </div>
@@ -167,7 +107,7 @@ $space = 1;
 
 
 <?= $info->creaFooter(); ?>
-<?php include("../templates/libsJS.php"); ?>
+<?php include("../templates/libsJSMedidor.php"); ?>
 
 <script src="../assets/extra-libs/datatables.net/js/jquery.dataTables.min-ESP.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js"></script>
@@ -196,40 +136,9 @@ $space = 1;
 
 
     });
-
-    $("#formcarga").submit(function(e) {
-        e.preventDefault();
-        formData = $(this).serialize();
-        $.ajax({
-            type: 'POST',
-            url: '../Controller/medicion.php?op=agregarreporte',
-            data: formData,
-            success: function(respuesta) {
-                var resp = respuesta.split('|');
-                if (resp[0] == 1) {
-                    notificaSuc(resp[1])
-                    bloqueoModal(e, "blockModal", 2)
-                    $('#modalcarga').modal('hide');
-                    setTimeout(() => {
-                        update()
-                    }, 1000);
-                    limpiarFormCarga()
-                } else {
-                    notificaBad(resp[1])
-                    bloqueoModal(e, "blockModal", 2)
-
-                }
-            },
-            beforeSend: function() {
-                bloqueoModal(e, "blockModal", 1)
-            }
-        });
-
-    })
-
     /*********** ACTUALIZA LISTA DE LOTES***************/
     function update() {
-        cargaContenido("content-lotes", "../templates/Medicion/medicion.php", '1')
+        cargaContenido("content-lotes", "../templates/Medicion/historialMediciones.php", '1')
 
     }
 
@@ -238,7 +147,7 @@ $space = 1;
         e.preventDefault();
         formData = $(this).serialize();
         $.ajax({
-            url: '../templates/Medicion/medicion.php',
+            url: '../templates/Medicion/historialMediciones.php',
             data: formData,
             type: 'POST',
             success: function(respuesta) {

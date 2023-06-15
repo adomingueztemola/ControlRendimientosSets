@@ -170,7 +170,8 @@ class Empaque extends ConexionBD
         rendimientos r
         LEFT JOIN vw_detalladocaja d ON d.idLote=r.id
         WHERE 
-        r.regOkNok='1' AND r.estado='2'
+        r.regOkNok='1' 
+        /*AND r.estado<>'4'*/
         AND (r.regEmpaque!='1' OR regEmpaque IS NULL )
         AND (d.idLote IS NULL OR d.pzasEmp<r.pzasCortadasTeseo) 
         
@@ -409,7 +410,11 @@ class Empaque extends ConexionBD
         $sql = "UPDATE rendimientos r
                 INNER JOIN detcajas d ON r.id=d.idLote
                 SET r._12OKAct=IFNULL(r._12OKAct,0)-IFNULL(d._12,0), r._3OKAct=IFNULL(r._3OKAct,0)-IFNULL(d._3,0),
-                r._6OKAct=IFNULL(r._6OKAct,0)-IFNULL(d._6,0),  r._9OKAct=IFNULL(r._9OKAct,0)-IFNULL(d._9,0)
+                r._6OKAct=IFNULL(r._6OKAct,0)-IFNULL(d._6,0),  r._9OKAct=IFNULL(r._9OKAct,0)-IFNULL(d._9,0),
+                r.totalEmp=IFNULL(r.totalEmp,0)+IFNULL(d._12,0)+IFNULL(d._3,0)+IFNULL(d._6,0)+IFNULL(d._9,0),
+                r.unidadesEmpacadas=IFNULL(r.unidadesEmpacadas,0)+IFNULL(d._12,0)+IFNULL(d._3,0)+IFNULL(d._6,0)+IFNULL(d._9,0),
+                r.setsEmpacados=(IFNULL(r.totalEmp,0)+IFNULL(d._12,0)+IFNULL(d._3,0)+IFNULL(d._6,0)+IFNULL(d._9,0))/4
+
                 WHERE d.id='$idDetCaja'";
         return $this->runQuery($sql, "actualizar uso de Piezas OK");
     }
@@ -535,7 +540,14 @@ class Empaque extends ConexionBD
     ///MUESTRA LOS DATOS DE DETALLADO DE CAJA: EXCEPCION CON EL TRIGGER DE LA APLICACION
     public function getDetallado($idLote)
     {
-        $sql = "SELECT * FROM vw_detalladocaja WHERE idLote='$idLote'";
+        $sql = "SELECT v1.*, IFNULL(v2.total_12,0) AS total_12_RW,  
+        IFNULL(v2.total_3,0) AS total_3_RW,
+        IFNULL(v2.total_6,0) AS total_6_RW,
+        IFNULL(v2.total_9,0) AS total_9_RW,
+        IFNULL(v2.total,0) AS total_RW
+        FROM vw_detalladocaja v1
+        LEFT JOIN vw_detalladorecuperacion v2 ON v1.idLote=v2.idLote
+        WHERE v1.idLote='$idLote'";
         return  $this->consultarQuery($sql, "", false);
     }
 
@@ -552,13 +564,27 @@ class Empaque extends ConexionBD
         $scrap3 = $Data['scrap3'] == '' ? '0' : trim($Data['scrap3']);
         $scrap6 = $Data['scrap6'] == '' ? '0' : trim($Data['scrap6']);
         $scrap9 = $Data['scrap9'] == '' ? '0' : trim($Data['scrap9']);
+        $totalScrap=$scrap12+$scrap3+$scrap6+$scrap9;
+
+        $total_12_RW = $Data['total_12_RW'] == '' ? '0' : trim($Data['total_12_RW']);
+        $total_3_RW = $Data['total_3_RW'] == '' ? '0' : trim($Data['total_3_RW']);
+        $total_6_RW = $Data['total_6_RW'] == '' ? '0' : trim($Data['total_6_RW']);
+        $total_9_RW = $Data['total_9_RW'] == '' ? '0' : trim($Data['total_9_RW']);
+        $totalRW=$Data['total_RW'] == '' ? '0' : trim($Data['total_RW']);
+
+        $_12Act= $scrap12-$total_12_RW;
+        $_3Act= $scrap3-$total_3_RW;
+        $_6Act= $scrap6-$total_6_RW;
+        $_9Act= $scrap9-$total_9_RW;
+
+        $totalAct= $totalScrap-$totalRW;
 
         $sql = "UPDATE inventariorechazado i
-        SET i.pzasTotales= IFNULL(i.pzasTotales,0)+IFNULL('$scrap12',0)+IFNULL('$scrap3',0)+IFNULL('$scrap6',0)+IFNULL('$scrap9',0),
-        i._12=IFNULL(i._12,0)+IFNULL('$scrap12',0), i._3=IFNULL(i._3,0)+IFNULL('$scrap3',0), i._6=IFNULL(i._6,0)+IFNULL('$scrap6',0), 
-        i._9=IFNULL(i._9,0)+IFNULL('$scrap9',0) 
+        SET i.pzasTotales= '$totalAct',
+        i._12='$_12Act', i._3='$_3Act', i._6='$_6Act', 
+        i._9='$_9Act'
         WHERE i.idRendimiento='$idLote'";
-        return  $this->runQuery($sql, "traspaso a inventario");
+        return  $this->runQuery($sql, "traspaso a inventario rechazado");
     }
     ///AGREGAR INVENTARIO DE RECHAZO & PZAS DE SCRAP COMO INICIALES
     public function agregarStkPzasScrap($idLote)

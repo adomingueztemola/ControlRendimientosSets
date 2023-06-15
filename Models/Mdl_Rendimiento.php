@@ -77,12 +77,13 @@ class Rendimiento extends ConexionBD
     {
         $filtradoID = $busqId == '' ? '1=1' : "r.loteTemola LIKE '%$busqId%'";
 
-        $sql = "SELECT r.*, cp.nombre AS nPrograma
+        $sql = "SELECT r.*, cp.nombre AS nPrograma,
+        IF(r.regEmpaque ='1' OR r.tipoProceso='2','text-success','text-secondary') AS color
         FROM rendimientos r
         INNER JOIN catprogramas cp ON r.idCatPrograma=cp.id
         WHERE $filtradoID AND 
-        ((r.regEmpaque ='1' AND r.regTeseo ='1' AND 
-         r.regOkNok ='1') OR tipoProceso='2') AND
+        -- ((r.regEmpaque ='1' AND r.regTeseo ='1' AND 
+        --  r.regOkNok ='1') OR tipoProceso='2') AND
          r.estado ='2'
         ORDER BY cp.nombre, CAST(r.loteTemola AS UNSIGNED)";
         return  $this->consultarQuery($sql, "consultar lotes");
@@ -1174,7 +1175,7 @@ class Rendimiento extends ConexionBD
     //REPORTE DE METROS CUADRADOS ETIQUETAS
     public function getM2Etiquetas($tipo_materiaPrima, $filtradoAnio = "1=1")
     {
-        $filtradoTipo="cm.tipo='$tipo_materiaPrima'";
+        $filtradoTipo = "cm.tipo='$tipo_materiaPrima'";
         $sql = "SELECT r.semanaProduccion, IFNULL(SUM(r.areaFinal),0) AS totalProducido, 
             IFNULL(SUM(r.areaWB),0) AS totalWB, 
           IFNULL( SUM( r.total_s ), 0 ) AS total_s,
@@ -1434,6 +1435,37 @@ class Rendimiento extends ConexionBD
         return  $this->consultarQuery($sql, "consultar Tendencias");
     }
 
+    public function resetDatosLote($_abierto=true)
+    {
+        if ($_abierto) {
+            $datosAbierto = $this->getRendimientoAbierto();
+            $idRendimiento = $datosAbierto[0]['id'];
+        }
+        $sql = "UPDATE rendimientos r 
+        SET fechaEmpaque='', semanaProduccion='',
+        areaWB='0', piezasRechazadas='0', 
+        piezasRecuperadas='0',
+        porcRecorteWB='0',
+        porcRecorteCrust='0',
+        humedad='0',
+        areaCrust='0',
+        recorteAcabado='0',
+        quiebre='0',
+        suavidad='0',
+        comentariosRechazo='',
+        piezasRechazadas='0'
+        WHERE r.id='$idRendimiento'";
+        return  $this->runQuery($sql, "resetear datos de lotes");
+    }
+    public function insertarSolicitudTeseo($id, $areaTeseo, $yield, $_12, $_3, $_6, $_9, 
+    $pzasCortadasTeseo,$setsCortadosTeseo, $motivo){
+        $idUserReg= $this->idUserReg;
+        $sql = "INSERT INTO edicionesteseo (idLote, _12Teseo, _3Teseo, _6Teseo, _9Teseo, yieldFinalReal,
+                setsCortadosTeseo, pzasCortadasTeseo, areaFinal, fechaEnvio, idUserEnvio, motivo, estado)
+                VALUES ('$id', '$_12', '$_3', '$_6', '$_9','$yield', '$setsCortadosTeseo', 
+                '$pzasCortadasTeseo', '$areaTeseo', NOW(), '$idUserReg', '$motivo', '1' )";
+        return  $this->runQuery($sql, "envio de solicitud de edicion de datos");
+    }
     /*************************************** 
      * CALCULO OPERACIONAL
      ***************************************/
@@ -1460,4 +1492,5 @@ class Rendimiento extends ConexionBD
         // return date('Y-m-d', $monday);
         return $fecha;
     }
+
 }

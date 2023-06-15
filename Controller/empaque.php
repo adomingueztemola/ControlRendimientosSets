@@ -371,6 +371,7 @@ switch ($_GET["op"]) {
         $pzas_03_rem = $remanente == '1' ? $pzas_03 : '0';
         $pzas_06_rem = $remanente == '1' ? $pzas_06 : '0';
         $pzas_09_rem = $remanente == '1' ? $pzas_09 : '0';
+        $jsonMixCaja = "";
 
         #VALIDACION DE DATOS
         Excepciones::validaLlenadoDatos(array(
@@ -403,6 +404,7 @@ switch ($_GET["op"]) {
         if ($tipoLote == '1') {
             $Data = $obj_empaque->getDatosTeseo($lote);
             $Data = Excepciones::validaConsulta($Data);
+            $regDatos=$Data['regDatos'];
             if ($Data['pzasOk'] == $Data['pzasEmp'] + $total) {
                 $cierre = '1';
             }
@@ -490,6 +492,15 @@ switch ($_GET["op"]) {
             } catch (Exception $e) {
                 $obj_empaque->errorBD($e->getMessage(), 1);
             }
+            if ($regDatos == '1') {
+                //AJUSTAR STOCK DE EMPAQUE EN CASO QUE YA SE HAYA CREAODO EL REGISTRO DE DATOS 
+                $datos = $obj_empaque->actualizarStckEmpaque($idNew);
+                try {
+                    Excepciones::validaMsjError($datos);
+                } catch (Exception $e) {
+                    $obj_empaque->errorBD($e->getMessage(), 1);
+                }
+            }
         }
         //USA REMANENTE PARA QUE YA NO PUEDA SER USADOS
         if ($tipoLote == '2') {
@@ -552,7 +563,7 @@ switch ($_GET["op"]) {
                 } catch (Exception $e) {
                     $obj_empaque->errorBD($e->getMessage(), 1);
                 }
-            }else if($lote0 == '1'){
+            } else if ($lote0 == '1') {
                 $datos = $obj_empaque->actualizarUnidadesLote0($idNew);
                 try {
                     Excepciones::validaMsjError($datos);
@@ -811,14 +822,14 @@ switch ($_GET["op"]) {
         } catch (Exception $e) {
             $obj_empaque->errorBD($e->getMessage(), 1);
         }
-        if($lote0=='1'){
+        if ($lote0 == '1') {
             $datos = $obj_empaque->aumentarPzasLote0($numCaja, $idEmpaque, $lote0);
             try {
                 Excepciones::validaMsjError($datos);
             } catch (Exception $e) {
                 $obj_empaque->errorBD($e->getMessage(), 1);
             }
-        }else{
+        } else {
             $datos = $obj_empaque->disminuirPzasLote0($numCaja, $idEmpaque, $lote0);
             try {
                 Excepciones::validaMsjError($datos);

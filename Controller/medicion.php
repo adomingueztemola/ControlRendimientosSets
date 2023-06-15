@@ -372,4 +372,45 @@ switch ($_GET["op"]) {
         $json_string = json_encode($Data);
         echo $json_string;
         break;
+    case "gethistemedicion":
+        $date_start = isset($_POST['date_start']) ? $_POST['date_start'] : '';
+        $date_end = isset($_POST['date_end']) ? $_POST['date_end'] : '';
+        $programa = isset($_POST['programa']) ? $_POST['programa'] : '';
+
+        $filtradoPrograma = $programa != '' ? 'l.idCatPrograma=' . $programa . '' : '1=1';
+        if ($date_start != "" and $date_end != "") {
+            $filtradoFecha = "DATE_FORMAT(l.fechaReg, '%Y-%m-%d') BETWEEN '$date_start' AND '$date_end'";
+        } else {
+            $filtradoFecha = "1=1";
+        }
+
+        $Data = $obj_medido->getReporteMedicion($filtradoFecha,  $filtradoPrograma);
+        $Data = Excepciones::validaConsulta($Data);
+        $response = array();
+        $count = 1;
+        foreach ($Data as $value) {
+            $ladosTotales = $value['ladosTotales'] == '' ? '0' : $value['ladosTotales'];
+            $areaTotalDM = $value['areaTotalDM'] == '' ? '0' : formatoMil($value['areaTotalDM'], 12);
+            $areaTotalFT = $value['areaTotalFT'] == '' ? '0' : formatoMil($value['areaTotalFT'], 12);
+            $areaTotalRd = $value['areaTotalRd'] == '' ? '0' : formatoMil($value['areaTotalRd'], 2);
+            $dif = formatoMil($value['areaTotalRd'] - $value['areaTotalFT'], 2);
+            array_push($response, [
+                $value['id'],
+                $value['loteTemola'],
+                $value['nPrograma'],
+                $value['nGrosor'],
+                $ladosTotales,
+                $areaTotalDM,
+                $areaTotalFT,
+                $areaTotalRd,
+                $dif
+            ]);
+            $count++;
+        }
+
+        //Creamos el JSON
+        $response = array("data" => $response);
+        $json_string = json_encode($response);
+        echo $json_string;
+        break;
 }
