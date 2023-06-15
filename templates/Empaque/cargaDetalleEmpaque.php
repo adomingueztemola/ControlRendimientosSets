@@ -44,8 +44,8 @@ if (count($DataDetallado) <= 0) {
 
     </div>
 </div>
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+<div class="row" >
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="overflow-y: scroll;  height:500px;">
         <div class="table-responsive-sm">
             <table class="table table-sm table-bordered table-striped" id="datos<?= $id ?>">
                 <thead>
