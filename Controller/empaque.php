@@ -404,7 +404,7 @@ switch ($_GET["op"]) {
         if ($tipoLote == '1') {
             $Data = $obj_empaque->getDatosTeseo($lote);
             $Data = Excepciones::validaConsulta($Data);
-            $regDatos=$Data['regDatos'];
+            $regDatos = $Data['regDatos'];
             if ($Data['pzasOk'] == $Data['pzasEmp'] + $total) {
                 $cierre = '1';
             }
@@ -815,6 +815,7 @@ switch ($_GET["op"]) {
             " Empaque" => $idEmpaque
 
         ), $obj_empaque);
+        $obj_empaque->beginTransaction();
         //cambiar caja a caja lote 0
         $datos = $obj_empaque->actualizarLote0EnCaja($numCaja, $idEmpaque, $lote0);
         try {
@@ -837,6 +838,147 @@ switch ($_GET["op"]) {
                 $obj_empaque->errorBD($e->getMessage(), 1);
             }
         }
+        $obj_empaque->insertarCommit();
         echo "1|Cambio Correcto de Origen de Caja.";
+        break;
+    case "eliminarcaja":
+        $numCaja = (isset($_POST['numCaja'])) ? trim($_POST['numCaja']) : '';
+        $idError = (isset($_POST['idError'])) ? trim($_POST['idError']) : '0';
+        $idEmpaque = (isset($_POST['idEmpaque'])) ? trim($_POST['idEmpaque']) : '';
+        #VALIDACION DE DATOS
+        Excepciones::validaLlenadoDatos(array(
+            " Num. Caja" => $numCaja,
+            " Error" => $idError,
+            " Empaque" => $idEmpaque
+
+        ), $obj_empaque);
+        //CONSULTAR REGISTROS QUE CONFORMAN LAS CAJAS
+        $DetCaja = $obj_empaque->getDetCaja($idEmpaque, $numCaja);
+        $DetCaja = Excepciones::validaConsulta($DetCaja);
+        $obj_empaque->beginTransaction();
+        foreach ($DetCaja as $value) {
+            //RECORRE EL CONTENIDO DE LA CAJA
+            switch ($value['tipo']) {
+                case '1':
+                    # PIEZAS DE UN SOLO LOTE
+                    /*1- PASAR PZAS A PZAS ACTUALES  */
+                    /*2- QUITAR PIEZAS DE TOTAL DE EMPAQUE DE LOTE   */
+                    /*3- QUITAR PIEZAS DE INVENTARIO DE LOTE   */
+                    /*4- ABRIR REGISTRO DE EMPAQUE EN EL LOTE */
+                    $datos = $obj_empaque->traspasarPzasCjaLote($value['id']);
+                    try {
+                        Excepciones::validaMsjError($datos);
+                    } catch (Exception $e) {
+                        $obj_empaque->errorBD($e->getMessage(), 1);
+                    }
+
+                    break;
+                case '2':
+                    # PIEZAS DE UN REMANENTE
+                    /*1- PASAR PZAS A PZAS A REMANENTE DE LOTE  */
+                    /*2- QUITAR PIEZAS DE TOTAL DE EMPAQUE DE LOTE   */
+                    /*3- QUITAR PIEZAS DE INVENTARIO DE LOTE   */
+                    /*4- ABRIR USO DE REMANENTE EN EL LOTE */
+                    $datos = $obj_empaque->traspasarPzasRemLote($value['id']);
+                    try {
+                        Excepciones::validaMsjError($datos);
+                    } catch (Exception $e) {
+                        $obj_empaque->errorBD($e->getMessage(), 1);
+                    }
+                    break;
+                case '3':
+                    # PIEZAS DE RECUPERACION
+                    /*1- PASAR PZAS A PZAS A INVENTARIO DE RECUPERACION DE LOTE  */
+                    /*2- QUITAR PIEZAS DE TOTAL DE EMPAQUE DE LOTE   */
+                    /*3- QUITAR PIEZAS DE INVENTARIO DE LOTE   */
+                    /*4- ABRIR USO DE REMANENTE EN EL LOTE */
+                    $datos = $obj_empaque->traspasarPzasRecuLote($value['id']);
+                    try {
+                        Excepciones::validaMsjError($datos);
+                    } catch (Exception $e) {
+                        $obj_empaque->errorBD($e->getMessage(), 1);
+                    }
+                    break;
+                default:
+                    # PIEZAS DE UN SOLO LOTE
+
+                    break;
+            }
+            /*5- RECALCULAR LOTE  */
+            $datos = $obj_empaque->calcularRendimiento($value['idLote']);
+            try {
+                Excepciones::validaMsjError($datos);
+            } catch (Exception $e) {
+                $obj_empaque->errorBD($e->getMessage(), 1);
+            }
+        }
+        /*6- DEPURACION DE REGISTRO  */
+        $datos = $obj_empaque->registroDepuracion($idEmpaque, $numCaja, $idError);
+        try {
+            Excepciones::validaMsjError($datos);
+        } catch (Exception $e) {
+            $obj_empaque->errorBD($e->getMessage(), 1);
+        }
+        /*6- Reconteo de Cajas  */
+        $datos = $obj_empaque->reconteoCajas($idEmpaque, $numCaja);
+        try {
+            Excepciones::validaMsjError($datos);
+        } catch (Exception $e) {
+            $obj_empaque->errorBD($e->getMessage(), 1);
+        }
+        $obj_empaque->insertarCommit();
+        echo "1|Eliminar Caja de Empaque Correcta.";
+        break;
+    case "gethistdepuracion":
+        $date_start = isset($_POST['date_start']) ? $_POST['date_start'] : '';
+        $date_end = isset($_POST['date_end']) ? $_POST['date_end'] : '';
+        $programa = isset($_POST['programa']) ? $_POST['programa'] : '';
+
+        $filtradoPrograma = $programa != '' ? 'r.idCatPrograma=' . $programa . '' : '1=1';
+        if ($date_start != "" and $date_end != "") {
+            $filtradoFecha = "DATE_FORMAT(e.fechaEnvio, '%Y-%m-%d') BETWEEN '$date_start' AND '$date_end'";
+        } else {
+            $filtradoFecha = "1=1";
+        }
+        $Data = $obj_empaque->getCajasDepuradas();
+        $Data = Excepciones::validaConsulta($Data);
+        $response = array();
+        $count = 1;
+        foreach ($Data as $value) {
+            $_12Teseo = $value['_12Teseo'] == '' ? '0' : formatoMil($value['_12Teseo'], 0);
+            $_3Teseo = $value['_3Teseo'] == '' ? '0' : formatoMil($value['_3Teseo'], 0);
+            $_6Teseo = $value['_6Teseo'] == '' ? '0' : formatoMil($value['_6Teseo'], 0);
+            $_9Teseo = $value['_9Teseo'] == '' ? '0' : formatoMil($value['_9Teseo'], 0);
+            $pzasCortadasTeseo = $value['pzasCortadasTeseo'] == '' ? '0' : formatoMil($value['pzasCortadasTeseo'], 0);
+
+            $yieldFinalReal = $value['yieldFinalReal'] == '' ? '0' : formatoMil($value['yieldFinalReal'], 2);
+            $areaFinal = $value['areaFinal'] == '' ? '0' : formatoMil($value['areaFinal'], 2);
+            $motivo=$value['motivo'] == '' ? 'N/A' : $value['motivo'];
+            $motivo=
+            array_push($response, [
+                $count,
+                $value['loteTemola'],
+                $value['nPrograma'],
+                $_12Teseo,
+                $_3Teseo, 
+                $_6Teseo, 
+                $_9Teseo,
+                $pzasCortadasTeseo,
+                $yieldFinalReal."%",
+                $areaFinal,
+                $value["n_usuario"],
+                $value["f_fechaEnvio"],
+                $value["n_usuarioAtend"],
+                $value["f_fechaAceptacion"],
+                $value['estado'],
+                $value['motivo']
+            ]);
+            $count++;
+        }
+
+        //Creamos el JSON
+        $response = array("data" => $response);
+        $json_string = json_encode($response);
+        echo $json_string;
         break;
 }

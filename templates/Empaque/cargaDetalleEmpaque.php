@@ -102,13 +102,16 @@ if (count($DataDetallado) <= 0) {
                             <div class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
                                 {$value['numCaja']}
                             </div>
+                            <div class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                            <button onclick='eliminarCaja(\"{$value['numCaja']}\",\"{$value['idEmpaque']}\")' class='btn btn-danger btn-xs'><i class='fas fa-trash-alt'></i></button>
+                            </div>
                             <div class='col-lg-3 col-md-3 col-sm-3 col-xs-3'>
                             $inputLote0
                             </div>
                             <div class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
                             $lblLabel
                             </div>
-                            <div class='col-lg-5 col-md-5 col-sm-5 col-xs-5'>
+                            <div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'>
                             $iconSales
                             </div>
                         </div>       
@@ -380,7 +383,39 @@ if (count($DataDetallado) <= 0) {
 
         });
     });
+    //Eliminar caja 
+    function eliminarCaja(numCaja, idEmpaque){
+        jsonOptions={"1":"ERROR DE CAPTURA","2":"INVENTARIO OBSOLETO", "3":"ERROR DE SISTEMA"}
+        Swal.fire({
+            title: 'MOTIVO DE ELIMINACION',
+            input: 'select',
+            inputOptions: jsonOptions,
+            showCancelButton: true,
+            confirmButtonText: 'Eliminar',
+            showLoaderOnConfirm: true,
+            allowOutsideClick: true,
+            preConfirm: (login) => {
+                $.ajax({
+                    url: '../Controller/empaque.php?op=eliminarcaja',
+                    data: {"idError":login,
+                           "numCaja":numCaja,
+                           "idEmpaque":idEmpaque},
+                    type: 'POST',
+                    success: function(lbljson) {
+                        resplbl = lbljson.split('|')
+                        if (resplbl[0] == 1) {
+                            notificaSuc(resplbl[1])
+                            cargaContent(<?= $id ?>);
+                        } else {
+                            notificaBad(resplbl[1])
 
+                        }
+                    }
+                })
+
+            }
+        })
+    }
 
 
 
