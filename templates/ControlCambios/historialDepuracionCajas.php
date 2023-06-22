@@ -68,30 +68,7 @@ $date_end = $date_end != "" ? date("Y-m-d", strtotime(str_replace("/", "-", $dat
             }
         },
         "aaSorting": [],
-        'aoColumnDefs': [{
-                'targets': 14,
-                "bSortable": false,
-                'searchable': false,
-                "bSearchable": false,
-                'orderable': false,
-                'className': 'dt-body-center',
-                'render': function(data, type, full, meta) {
-                    // checked = array[1] == '0' ? '' : 'checked';
-                    switch (data) {
-                        case '2':
-                            return '<i class="fas fa-check text-success"></i>Aceptada'
-                            break;
-                        case '0':
-                            return '<i class="fas fa-times text-danger"></i>Cancelada'
-                            break;
-                        default:
-                            return 'N/A'
-                            break;
-                    }
-                }
-            }
-
-        ],
+       
 
 
     })

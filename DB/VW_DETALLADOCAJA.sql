@@ -21,4 +21,5 @@ r._9OK-SUM(case when d.tipo = 1  then d._9 else 0 end) as scrap9,
 totalScrap
 FROM detcajas d
 INNER JOIN rendimientos r ON d.idLote=r.id
+WHERE (d.estado<>'0' OR d.estado IS NULL)
 GROUP BY d.idLote

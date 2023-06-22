@@ -168,7 +168,7 @@ $obj_marcado = new MarcadoAMano($debug, $idUser);
         e.preventDefault();
         formData = $(this).serialize();
         $.ajax({
-            url: '../templates/ControlCambios/historialSolicitudes.php',
+            url: '../templates/ControlCambios/historialDepuracionCajas.php',
             data: formData,
             type: 'POST',
             success: function(respuesta) {

@@ -211,7 +211,8 @@ class Empaque extends ConexionBD
     /// CONSULTA DETALLADO DE EMPAQUE
     public function getDetalladoCajas($idEmpaque)
     {
-        $sql = "SELECT d.*, r.loteTemola, lbl.loteTemola AS lblLote FROM detcajas d
+        $sql = "SELECT d.*, r.loteTemola, lbl.loteTemola AS lblLote 
+        FROM detcajas d
         INNER JOIN rendimientos r ON d.idLote=r.id
         LEFT JOIN rendimientos lbl ON d.idLoteLbl=lbl.id
         WHERE d.idEmpaque='$idEmpaque' AND d.remanente='0' AND (d.estado<>'0' OR d.estado IS NULL)
@@ -352,7 +353,7 @@ class Empaque extends ConexionBD
         SET 
         r.totalEmp= IFNULL(r.totalEmp,0)+ IFNULL(d.total,0),
         r.setsEmpacados=(IFNULL(r.totalEmp,0)+ IFNULL(d.total,0))/conf.pzasEnSets
-        WHERE d.id='$idDetCaja' AND r.regEmpaque='1'";
+        WHERE d.id='$idDetCaja'";
         return $this->runQuery($sql, "actualizar Registro de Piezas en Lote");
     }
     ///ACTUALIZACION DE UNIDADES  DE EMPAQUE EN REGISTRO DE LOTE
@@ -409,9 +410,9 @@ class Empaque extends ConexionBD
                 INNER JOIN detcajas d ON r.id=d.idLote
                 SET r._12OKAct=IFNULL(r._12OKAct,0)-IFNULL(d._12,0), r._3OKAct=IFNULL(r._3OKAct,0)-IFNULL(d._3,0),
                 r._6OKAct=IFNULL(r._6OKAct,0)-IFNULL(d._6,0),  r._9OKAct=IFNULL(r._9OKAct,0)-IFNULL(d._9,0),
-                r.totalEmp=IFNULL(r.totalEmp,0)+IFNULL(d._12,0)+IFNULL(d._3,0)+IFNULL(d._6,0)+IFNULL(d._9,0),
-                r.unidadesEmpacadas=IFNULL(r.unidadesEmpacadas,0)+IFNULL(d._12,0)+IFNULL(d._3,0)+IFNULL(d._6,0)+IFNULL(d._9,0),
-                r.setsEmpacados=(IFNULL(r.totalEmp,0)+IFNULL(d._12,0)+IFNULL(d._3,0)+IFNULL(d._6,0)+IFNULL(d._9,0))/4
+                r.totalEmp=IFNULL(r.totalEmp,0)+IFNULL(d.total,0),
+                r.unidadesEmpacadas=IFNULL(r.unidadesEmpacadas,0)+IFNULL(d.total,0),
+                r.setsEmpacados=(IFNULL(r.totalEmp,0)+IFNULL(d.total,0))/4
 
                 WHERE d.id='$idDetCaja'";
         return $this->runQuery($sql, "actualizar uso de Piezas OK");
@@ -457,8 +458,9 @@ class Empaque extends ConexionBD
           d.id='$id' AND b.total=r.total";*/
         $sql = "UPDATE detcajas d 
           INNER JOIN (SELECT idLote, SUM(total) total FROM detcajas
-                      WHERE tipo='2' GROUP BY idLote) r ON r.idLote=d.idLote
-           SET d.usoRemanente='1'
+                      WHERE tipo='2' AND (estado<>'0' OR estado IS NULL) GROUP BY idLote
+                      ) r ON r.idLote=d.idLote
+           SET d.usoRemanente='1' 
            WHERE d.idLote='$id' AND  d.remanente='1' AND d.total = r.total";
         return $this->runQuery($sql, "actualizar uso de remanente");
     }
@@ -490,7 +492,8 @@ class Empaque extends ConexionBD
         $sql = "SELECT d.*, r.loteTemola, r.estado, r.regEmpaque 
                 FROM detcajas d 
                 INNER JOIN rendimientos r ON d.idLote=r.id
-                WHERE  d.idEmpaque='$idEmpaque' AND numCaja='$numCaja'";
+                WHERE  d.idEmpaque='$idEmpaque' AND numCaja='$numCaja'
+                AND (d.estado<>'0' OR d.estado IS NULL)";
         return  $this->consultarQuery($sql, " Detallado de Caja del Mix");
     }
     /*********************************************
@@ -570,7 +573,7 @@ class Empaque extends ConexionBD
         $total_6_RW = $Data['total_6_RW'] == '' ? '0' : trim($Data['total_6_RW']);
         $total_9_RW = $Data['total_9_RW'] == '' ? '0' : trim($Data['total_9_RW']);
         $totalRW = $Data['total_RW'] == '' ? '0' : trim($Data['total_RW']);
-
+  
         $_12Act = $scrap12 - $total_12_RW;
         $_3Act = $scrap3 - $total_3_RW;
         $_6Act = $scrap6 - $total_6_RW;
@@ -865,23 +868,25 @@ class Empaque extends ConexionBD
         return $this->runQuery($sql, "traspaso de Caja de Recuperación a Piezas Disponibles");
     }
 
-    public function registroDepuracion($idEmpaque, $numCaja, $idError){
-        $sql="UPDATE detcajas d
+    public function registroDepuracion($idEmpaque, $numCaja, $idError)
+    {
+        $sql = "UPDATE detcajas d
         SET d.estado='0', d.idErrorLog='$idError'
         WHERE d.numCaja='$numCaja' AND d.idEmpaque='$idEmpaque'";
         return $this->runQuery($sql, "baja de caja en el empaque");
-
     }
 
-    public function reconteoCajas($idEmpaque, $numCaja){
-        $sql="UPDATE detcajas d
+    public function reconteoCajas($idEmpaque, $numCaja)
+    {
+        $sql = "UPDATE detcajas d
         SET d.numCaja=d.numCaja-'1'
         WHERE d.numCaja>'$numCaja' AND d.idEmpaque='$idEmpaque'";
-        return $this->runQuery($sql, "reconteoCajas");
+        return $this->runQuery($sql, "reconteo Cajas");
     }
 
-    public function getCajasDepuradas(){
-        $sql="SELECT r.loteTemola, dc.numCaja, dc.tipo, dc._12,
+    public function getCajasDepuradas($filtradoPrograma='1=1', $filtradoFecha='1=1')
+    {
+        $sql = "SELECT r.loteTemola, dc.numCaja, dc.tipo, dc._12,
         dc._3, dc._6, dc._9, dc.total, e.fecha, DATE_FORMAT(e.fecha,'%d/%m/%Y') AS f_fechaEmpaque,
         DATE_FORMAT(dc.fechaDep,'%d/%m/%Y %H:%i') AS f_fechaDepuracion,
         CONCAT(su.nombre, ' ', su.apellidos) AS nUsuarioDep,
@@ -892,16 +897,23 @@ class Empaque extends ConexionBD
                 'INVENTARIO OBSOLETO'
             WHEN '3' THEN
                 'ERROR DE SISTEMA'
+        END AS nError, cp.nombre AS nPrograma,
+        CASE dc.tipo
+            WHEN '1' THEN
+                'EMPAQUE EN LINEA'
+            WHEN '2' THEN
+                'REMANENTES'
+            WHEN '3' THEN
+                'RECUPERACIÓN'
         END AS nTipo
         
         FROM detcajas dc
         INNER JOIN rendimientos r ON dc.idLote=r.id
+        INNER JOIN catprogramas cp ON r.idCatPrograma=cp.id
         INNER JOIN empaques e ON dc.idEmpaque=e.id
         LEFT JOIN segusuarios su ON dc.idUserDep=su.id
-        WHERE dc.estado='0'
+        WHERE dc.estado='0' AND $filtradoFecha AND $filtradoPrograma
         ORDER BY  dc.idEmpaque, dc.numCaja";
+        return $this->consultarQuery($sql, "cajas depuradas");
     }
-    
-
-   
 }

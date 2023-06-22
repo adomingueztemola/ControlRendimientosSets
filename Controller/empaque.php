@@ -405,7 +405,15 @@ switch ($_GET["op"]) {
             $Data = $obj_empaque->getDatosTeseo($lote);
             $Data = Excepciones::validaConsulta($Data);
             $regDatos = $Data['regDatos'];
+            //SI EL LOTE CIERRA EN SU TOTALIDAD DE PIEZAS
             if ($Data['pzasOk'] == $Data['pzasEmp'] + $total) {
+                $cierre = '1';
+            }
+            //SI EL LOTE QUEDA VACIO POR QUE ES UN ADJUNTO DE PIEZAS
+            if (($Data['_12OKAct'] - $pzas_12==0) &&
+            ($Data['_3OKAct'] - $pzas_03==0) &&
+            ($Data['_6OKAct'] - $pzas_06==0) &&
+            ($Data['_9OKAct'] - $pzas_09==0)) {
                 $cierre = '1';
             }
             if ($remanente == '1') {
@@ -936,42 +944,35 @@ switch ($_GET["op"]) {
 
         $filtradoPrograma = $programa != '' ? 'r.idCatPrograma=' . $programa . '' : '1=1';
         if ($date_start != "" and $date_end != "") {
-            $filtradoFecha = "DATE_FORMAT(e.fechaEnvio, '%Y-%m-%d') BETWEEN '$date_start' AND '$date_end'";
+            $filtradoFecha = "DATE_FORMAT(e.fecha, '%Y-%m-%d') BETWEEN '$date_start' AND '$date_end'";
         } else {
             $filtradoFecha = "1=1";
         }
-        $Data = $obj_empaque->getCajasDepuradas();
+        $Data = $obj_empaque->getCajasDepuradas($filtradoPrograma, $filtradoFecha);
         $Data = Excepciones::validaConsulta($Data);
         $response = array();
         $count = 1;
         foreach ($Data as $value) {
-            $_12Teseo = $value['_12Teseo'] == '' ? '0' : formatoMil($value['_12Teseo'], 0);
-            $_3Teseo = $value['_3Teseo'] == '' ? '0' : formatoMil($value['_3Teseo'], 0);
-            $_6Teseo = $value['_6Teseo'] == '' ? '0' : formatoMil($value['_6Teseo'], 0);
-            $_9Teseo = $value['_9Teseo'] == '' ? '0' : formatoMil($value['_9Teseo'], 0);
-            $pzasCortadasTeseo = $value['pzasCortadasTeseo'] == '' ? '0' : formatoMil($value['pzasCortadasTeseo'], 0);
-
-            $yieldFinalReal = $value['yieldFinalReal'] == '' ? '0' : formatoMil($value['yieldFinalReal'], 2);
-            $areaFinal = $value['areaFinal'] == '' ? '0' : formatoMil($value['areaFinal'], 2);
-            $motivo=$value['motivo'] == '' ? 'N/A' : $value['motivo'];
-            $motivo=
+            $_12 = $value['_12'] == '' ? '0' : formatoMil($value['_12'], 0);
+            $_3 = $value['_3'] == '' ? '0' : formatoMil($value['_3'], 0);
+            $_6 = $value['_6'] == '' ? '0' : formatoMil($value['_6'], 0);
+            $_9 = $value['_9'] == '' ? '0' : formatoMil($value['_9'], 0);
+            $total = $value['total'] == '' ? '0' : formatoMil($value['total'], 0);
             array_push($response, [
                 $count,
                 $value['loteTemola'],
                 $value['nPrograma'],
-                $_12Teseo,
-                $_3Teseo, 
-                $_6Teseo, 
-                $_9Teseo,
-                $pzasCortadasTeseo,
-                $yieldFinalReal."%",
-                $areaFinal,
-                $value["n_usuario"],
-                $value["f_fechaEnvio"],
-                $value["n_usuarioAtend"],
-                $value["f_fechaAceptacion"],
-                $value['estado'],
-                $value['motivo']
+                $value['f_fechaEmpaque'],
+                $value['numCaja'],
+                $value['nTipo'],
+                $_12,
+                $_3,
+                $_6,
+                $_9,
+                $total,
+                $value['f_fechaDepuracion'],
+                $value['nUsuarioDep'],
+                $value['nError']
             ]);
             $count++;
         }
