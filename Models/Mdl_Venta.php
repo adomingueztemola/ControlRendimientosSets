@@ -177,7 +177,7 @@ class Venta extends ConexionBD
                 INNER JOIN catprogramas cp ON r.idCatPrograma=cp.id
                 GROUP BY dv.idVenta)abs ON abs.idVenta=v.id 
         WHERE v.idUserReg='$idUserReg' AND v.estado='1'";
-        return  $this->consultarQuery($sql, "consultar Requerimientos en Ventas", false);
+        return  $this->consultarQuery($sql, "Requerimientos en Ventas", false);
     }
 
     public function validarDistribuicionLotes()
@@ -465,10 +465,10 @@ class Venta extends ConexionBD
                 FROM detcajas d 
                 INNER JOIN rendimientos r ON d.idLote=r.id 
                 WHERE (d.remanente!='1' OR d.remanente IS NULL) AND ((d.vendida!='1' OR d.vendida IS NULL) OR (d.idVenta='$idVenta')) 
-                AND r.estado='4' AND $filtradoInterno
+                AND r.estado='4' AND $filtradoInterno AND (d.estado<>'0' OR d.estado IS NULL)
                 GROUP BY d.idEmpaque, d.numCaja ORDER BY d.idLote) d
             INNER JOIN empaques e ON d.idEmpaque=e.id
-            WHERE d.idLote='$idLote' AND 
+            WHERE d.idLote='$idLote' AND  
             ((d.vendida!='1' OR d.vendida IS NULL) OR (d.idVenta='$idVenta'))
             AND $filtradoTotal
             GROUP BY d.idEmpaque, d.numCaja";

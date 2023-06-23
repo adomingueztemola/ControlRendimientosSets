@@ -44,7 +44,7 @@ if (count($DataDetallado) <= 0) {
 
     </div>
 </div>
-<div class="row" >
+<div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="overflow-y: scroll;  height:500px;">
         <div class="table-responsive-sm">
             <table class="table table-sm table-bordered table-striped" id="datos<?= $id ?>">
@@ -64,8 +64,8 @@ if (count($DataDetallado) <= 0) {
                     $pzasXCaja = 0;
                     $contadorLote = 0;
                     foreach ($DataDetallado as $value) {
-                        $colorTable = ($value['tipo'] == '3' AND $value['lote0']!='1')? 'table-warning' : '';
-                        $colorTable = ($value['tipo'] == '3' AND $value['lote0']=='1') ? 'table-danger' : $colorTable;
+                        $colorTable = ($value['tipo'] == '3' and $value['lote0'] != '1') ? 'table-warning' : '';
+                        $colorTable = ($value['tipo'] == '3' and $value['lote0'] == '1') ? 'table-danger' : $colorTable;
 
                         $checkedLote0 = $value['lote0'] == '1' ? 'checked' : '';
                         $checkedInterno = $value['interna'] == '1' ? 'checked' : '';
@@ -73,7 +73,7 @@ if (count($DataDetallado) <= 0) {
                         $lblLabel = $value["lblLote"] != '' ? "<i class='fas fa-ticket-alt'></i> {$value["lblLote"]}" : '';
                         $iconSales = $value['vendida'] == '1' ? '<i class="fas fa-shopping-cart"></i> Vendida ' . $lblInterno : "<input type='checkbox' $checkedInterno class='' onclick='cambiaCajaInterna(this,{$value['numCaja']}, {$value['idEmpaque']})' id='interno{$value['id']}' value='1' name='interno{$value['id']}'>
                         <label class='' for='interno'>Interna</label>";
-                        $inputLote0= $value['tipo']=='3'?"<input type='checkbox' $checkedLote0 class='' onclick='cambiaLote0(this,{$value['numCaja']}, {$value['idEmpaque']})' id='lote0{$value['id']}' value='1' name='lote0{$value['id']}'><label class='text-danger' for='lote0{$value['id']}'>Lote 0</label>":"";
+                        $inputLote0 = $value['tipo'] == '3' ? "<input type='checkbox' $checkedLote0 class='' onclick='cambiaLote0(this,{$value['numCaja']}, {$value['idEmpaque']})' id='lote0{$value['id']}' value='1' name='lote0{$value['id']}'><label class='text-danger' for='lote0{$value['id']}'>Lote 0</label>" : "";
                         if ($cajaAnt != $value['numCaja']) {
                             if ($contadorLote > 0 and $contadorLote < 3) {
                                 echo "<tr><td colspan='5' class='text-center noSearch'></td></tr>";
@@ -103,7 +103,14 @@ if (count($DataDetallado) <= 0) {
                                 {$value['numCaja']}
                             </div>
                             <div class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
-                            <button onclick='eliminarCaja(\"{$value['numCaja']}\",\"{$value['idEmpaque']}\")' class='btn btn-danger btn-xs'><i class='fas fa-trash-alt'></i></button>
+                                <div id='bloqueo-btn-{$value['numCaja']}-{$value['idEmpaque']}' style='display:none'>
+                                    <button class='btn btn-danger btn-xs' type='button' disabled=''>
+                                        <span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span>
+                                    </button>
+                                </div>
+                                <div id='desbloqueo-btn-{$value['numCaja']}-{$value['idEmpaque']}'>
+                                    <button onclick='eliminarCaja(\"{$value['numCaja']}\",\"{$value['idEmpaque']}\")' class='btn btn-danger btn-xs'><i class='fas fa-trash-alt'></i></button>
+                                </div>
                             </div>
                             <div class='col-lg-3 col-md-3 col-sm-3 col-xs-3'>
                             $inputLote0
@@ -384,8 +391,12 @@ if (count($DataDetallado) <= 0) {
         });
     });
     //Eliminar caja 
-    function eliminarCaja(numCaja, idEmpaque){
-        jsonOptions={"1":"ERROR DE CAPTURA","2":"INVENTARIO OBSOLETO", "3":"ERROR DE SISTEMA"}
+    function eliminarCaja(numCaja, idEmpaque) {
+        jsonOptions = {
+            "1": "ERROR DE CAPTURA",
+            "2": "INVENTARIO OBSOLETO",
+            "3": "ERROR DE SISTEMA"
+        }
         Swal.fire({
             title: 'MOTIVO DE ELIMINACION',
             input: 'select',
@@ -397,19 +408,27 @@ if (count($DataDetallado) <= 0) {
             preConfirm: (login) => {
                 $.ajax({
                     url: '../Controller/empaque.php?op=eliminarcaja',
-                    data: {"idError":login,
-                           "numCaja":numCaja,
-                           "idEmpaque":idEmpaque},
+                    data: {
+                        "idError": login,
+                        "numCaja": numCaja,
+                        "idEmpaque": idEmpaque
+                    },
                     type: 'POST',
                     success: function(lbljson) {
                         resplbl = lbljson.split('|')
                         if (resplbl[0] == 1) {
                             notificaSuc(resplbl[1])
                             cargaContent(<?= $id ?>);
+
                         } else {
                             notificaBad(resplbl[1])
+                            bloqueoBtn("bloqueo-btn-"+numCaja+"-"+idEmpaque, 2)
+
 
                         }
+                    },
+                    beforeSend: function() {
+                        bloqueoBtn("bloqueo-btn-"+numCaja+"-"+idEmpaque, 1)
                     }
                 })
 
@@ -460,7 +479,7 @@ if (count($DataDetallado) <= 0) {
         });
 
     }
-    
+
     /******* CAMBIA CAJA DE MATERIAL RECUPERADO*******/
     function cambiaLote0(checkbox, numCaja, idEmpaque) {
         lote0 = $(checkbox).prop('checked') ? '1' : '0';
@@ -476,13 +495,13 @@ if (count($DataDetallado) <= 0) {
                 resp = json.split('|')
                 if (resp[0] == 1) {
                     notificaSuc(resp[1])
-                  if(lote0=='1'){
-                    $(".tdpzas"+numCaja+idEmpaque).addClass("table-danger")
+                    if (lote0 == '1') {
+                        $(".tdpzas" + numCaja + idEmpaque).addClass("table-danger")
 
-                  }else{
-                    $(".tdpzas"+numCaja+idEmpaque).removeClass("table-danger")
+                    } else {
+                        $(".tdpzas" + numCaja + idEmpaque).removeClass("table-danger")
 
-                  }
+                    }
 
 
                 } else if (resp[0] == 0) {
@@ -491,8 +510,7 @@ if (count($DataDetallado) <= 0) {
 
                 }
             },
-            beforeSend: function() {
-            }
+            beforeSend: function() {}
 
         });
 

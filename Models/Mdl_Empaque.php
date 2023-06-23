@@ -95,11 +95,11 @@ class Empaque extends ConexionBD
         }
         $sql = "INSERT INTO  detcajas (numCaja, idEmpaque, tipo, idLote, remanente,
          fechaReg, idUserReg, _12, _3, _6, _9, total, usoRemanente, 
-         _12Rem, _3Rem, _6Rem, _9Rem,_12Rev, _3Rev, _6Rev, _9Rev, totalRev, interna, totalRem, lote0) 
+         _12Rem, _3Rem, _6Rem, _9Rem,_12Rev, _3Rev, _6Rev, _9Rev, totalRev, interna, totalRem, lote0, estado) 
          VALUE ('$caja', '$id', '$tipoLote', '$lote', '$remanente', NOW(),
          '$idUserReg', '$pzas_12', '$pzas_03', '$pzas_06', '$pzas_09', '$total', '0',
          '$pzas_12_rem', '$pzas_03_rem', '$pzas_06_rem', '$pzas_09_rem',
-         '0','0','0','0','0', '0', '$totalRem', '$lote0')";
+         '0','0','0','0','0', '0', '$totalRem', '$lote0', '1')";
         return $this->runQuery($sql, "registro de detalle de caja", true);
     }
     /// REVERSA DE LOTE QUE NO HA PASADO A ALMACEN 0
@@ -825,6 +825,7 @@ class Empaque extends ConexionBD
         r._6OKAct=IFNULL(r._6OKAct, 0)+IFNULL(d._6,0), 
         r._9OKAct=IFNULL(r._9OKAct, 0)+IFNULL(d._9,0),
         r.totalEmp=IFNULL(r.totalEmp, 0)-IFNULL(d.total,0),
+        r.setsEmpacados=(IFNULL(r.totalEmp, 0)-IFNULL(d.total,0))/4,
         i.pzasTotales= IFNULL(i.pzasTotales, 0)-IFNULL(d.total,0),
         r.regEmpaque='0'
         WHERE d.id='$idCja'";
@@ -843,6 +844,7 @@ class Empaque extends ConexionBD
         rem._9Rem=IFNULL(rem._9Rem, 0)+IFNULL(d._9,0),
         rem.totalRem=IFNULL(rem.totalRem, 0)+IFNULL(d.total,0),
         r.totalEmp=IFNULL(r.totalEmp, 0)-IFNULL(d.total,0),
+        r.setsEmpacados=(IFNULL(r.totalEmp, 0)-IFNULL(d.total,0))/4,
         i.pzasTotales= IFNULL(i.pzasTotales, 0)-IFNULL(d.total,0),
         rem.usoRemanente='0'
         WHERE d.id='$idCja'";
@@ -860,6 +862,7 @@ class Empaque extends ConexionBD
          rec._6=IFNULL(rec._6, 0)+IFNULL(d._6,0), 
          rec._9=IFNULL(rec._9, 0)+IFNULL(d._9,0),
          rec.pzasTotales=IFNULL(rec.pzasTotales, 0)+IFNULL(d.total,0),
+         r.setsEmpacados=(IFNULL(r.totalEmp, 0)-IFNULL(d.total,0))/4,
          r.totalEmp=IFNULL(r.totalEmp, 0)-IFNULL(d.total,0),
          r.totalRecu=IFNULL(r.totalRecu, 0)-IFNULL(d.total,0),
          r.setsRecuperados=(IFNULL(r.totalRecu, 0)-IFNULL(d.total,0))/4,
@@ -870,8 +873,10 @@ class Empaque extends ConexionBD
 
     public function registroDepuracion($idEmpaque, $numCaja, $idError)
     {
+        $idUserReg= $this->idUserReg;
         $sql = "UPDATE detcajas d
-        SET d.estado='0', d.idErrorLog='$idError'
+        SET d.estado='0', d.idErrorLog='$idError', fechaDep=NOW(),
+        idUserDep='$idUserReg'
         WHERE d.numCaja='$numCaja' AND d.idEmpaque='$idEmpaque'";
         return $this->runQuery($sql, "baja de caja en el empaque");
     }
@@ -913,7 +918,7 @@ class Empaque extends ConexionBD
         INNER JOIN empaques e ON dc.idEmpaque=e.id
         LEFT JOIN segusuarios su ON dc.idUserDep=su.id
         WHERE dc.estado='0' AND $filtradoFecha AND $filtradoPrograma
-        ORDER BY  dc.idEmpaque, dc.numCaja";
+        ORDER BY  e.fecha DESC, dc.idEmpaque, dc.numCaja";
         return $this->consultarQuery($sql, "cajas depuradas");
     }
 }
