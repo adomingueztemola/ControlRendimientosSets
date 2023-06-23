@@ -446,22 +446,32 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
 
 
     function getPorcRecorteWB() {
-        pesoRaspadoWB = parseFloat($("#pesoRaspadoWB").val());
-        pesoCorteWB = parseFloat($("#pesoCorteWB").val());
-        $("#recorteWB").val(((pesoCorteWB / pesoRaspadoWB) * 100).toFixed(2))
+        pesoRaspadoWB = $("#pesoRaspadoWB").val()==''?parseFloat('0'):parseFloat($("#pesoRaspadoWB").val());
+        pesoCorteWB = $("#pesoCorteWB").val()==''?parseFloat('0'):parseFloat($("#pesoCorteWB").val());
+        if (pesoRaspadoWB == '0.0') {
+            $("#recorteWB").val('0')
+        } else {
+            $("#recorteWB").val(((pesoCorteWB / pesoRaspadoWB) * 100).toFixed(2))
+        }
         guardarValor('recortewb', $("#recorteWB"))
     }
 
     function getPorcRecorteCrust() {
-        recortar = parseFloat($("#recortar").val());
-        pesar = parseFloat($("#pesar").val());
-        $("#recorteCrust").val(((recortar / pesar) * 100).toFixed(2))
+        recortar = $("#recortar").val()==''?parseFloat('0'):parseFloat($("#recortar").val());
+        pesar = $("#pesar").val()==''?parseFloat('0'):parseFloat($("#pesar").val());
+        if(pesar=='0'){
+            $("#recorteCrust").val('0')
+
+        }else{
+            $("#recorteCrust").val(((recortar / pesar) * 100).toFixed(2))
+
+        }
         guardarValor('recortecrust', $("#recorteCrust"))
     }
 
     function sumarRecorteAcab(sumRecorteAcab) {
-        v_sumRecorteAcab = parseFloat($("#sumRecorteAcab").val())
-        recorteAcabado = parseFloat($("#recorteAcabado").val())
+        v_sumRecorteAcab = $("#sumRecorteAcab").val()==''?parseFloat('0'):parseFloat($("#sumRecorteAcab").val())
+        recorteAcabado = $("#recorteAcabado").val()==''?parseFloat('0'):parseFloat($("#recorteAcabado").val())
 
         $.ajax({
             url: '../Controller/rendimiento.php?op=recorteacabado',
@@ -477,10 +487,12 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
                     // console.log(parseFloat(recorteAcabado) + parseFloat(v_sumRecorteAcab));
                     $("#recorteAcabado").val(parseFloat(recorteAcabado) + parseFloat(v_sumRecorteAcab))
                     $("#sumRecorteAcab").val(0)
+                    $("#success-recorteacabado").attr("hidden", false);
 
                 } else if (resp[0] == 0) {
                     notificaBad(resp[1])
                     bloqueoBtn("bloqueo-btn-ra", 2)
+                    $("#success-recorteacabado").attr("hidden", true);
 
 
                 }
@@ -533,8 +545,7 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
 
                         }
                     },
-                    beforeSend: function() {
-                    }
+                    beforeSend: function() {}
 
                 });
 
