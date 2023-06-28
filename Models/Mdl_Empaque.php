@@ -707,12 +707,12 @@ class Empaque extends ConexionBD
                  INNER JOIN rendimientos r ON d.idLote=r.id 
                  LEFT JOIN rendimientos lbl ON d.idLoteLbl=lbl.id
                  WHERE (d.remanente!='1' OR d.remanente IS NULL) 
-          
+                 AND (d.estado<>'0' OR d.estado IS NULL)
                  GROUP BY d.idEmpaque, d.numCaja ORDER BY d.idLote) d
              INNER JOIN empaques e ON d.idEmpaque=e.id
-             WHERE d.idLote='$idLote' AND (d.estado<>'0' OR d.estado IS NULL)
+             WHERE d.idLote='$idLote' 
              GROUP BY d.idEmpaque, d.numCaja";
-        return $this->consultarQuery($sql, "consulta detallado de cajas");
+        return $this->consultarQuery($sql, "detallado de cajas");
     }
 
     public function getReporteRemanente($filtradoPrograma = '1=1')
