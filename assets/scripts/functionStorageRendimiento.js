@@ -76,6 +76,14 @@ function validaCamposLlenos() {
       $(this).addClass("border");
       $(this).addClass("border-danger");
       log_result = false;
+    }else if (Number($(this).val()) == "0" && str_id == "areaFinalTeseo") {
+      $(this).addClass("border");
+      $(this).addClass("border-danger");
+      log_result = false;
+    } else if (Number($(this).val()) == "0" && str_id == "unidadesEmpacadas") {
+      $(this).addClass("border");
+      $(this).addClass("border-danger");
+      log_result = false;
     }  else if (
       str_id == "comentariosrechazo" &&
       $("#piezasRechazadas").val() > 0 &&

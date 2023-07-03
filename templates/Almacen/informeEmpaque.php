@@ -25,7 +25,7 @@ if (count($Data) == '0') {
         <h3><span class="label label-info label-rounded mb-2">CAJAS TOTALES: <span id="lbl_contadorCajas">0</span></span></h3>
         <h3><span class="label label-info label-rounded mb-2">CAJAS RECUPERADAS: <span id="lbl_contadorRecup">0</span></span></h3>
 
-        <h3><span class="label label-info label-rounded mb-2">PIEZAS TOTALES: <span id="lbl_contadorPzas">0</span></span></h3>
+        <h3><span class="label label-info label-rounded mb-2">PIEZAS TOTALES: <span class="lbl_contadorPzas">0</span></span></h3>
 
     </div>
     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
@@ -46,6 +46,14 @@ if (count($Data) == '0') {
                 <tr>
                     <td>Piezas Cortadas en Teseo </td>
                     <td><?= formatoMil($DataLote['pzasCortadasTeseo'], 0) ?></td>
+                </tr>
+                <tr>
+                    <td>Piezas OK </td>
+                    <td><?= formatoMil($DataLote['totalEmp'], 0) ?></td>
+                </tr>
+                <tr>
+                    <td>Piezas Empacadas</td>
+                    <td><span class="lbl_contadorPzas">0</span></span></td>
                 </tr>
             </tbody>
 
@@ -122,7 +130,7 @@ if (count($Data) == '0') {
 </div>
 <script>
     $("#lbl_contadorCajas").text("<?= $countCajas ?>")
-    $("#lbl_contadorPzas").text("<?= formatoMil($pzas, 0) ?>")
+    $(".lbl_contadorPzas").text("<?= formatoMil($pzas, 0) ?>")
     $("#lbl_contadorRecup").text("<?= formatoMil($countRecu, 0) ?>")
 
     //Ver Detallado de Caja

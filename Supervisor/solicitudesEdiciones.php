@@ -361,10 +361,10 @@ $space = 1;
 
                     $("#tipo").val("3")
                 } else if (
-                    respuesta.sum_9 < 0 &&
-                    respuesta.sum_6 < 0 &&
-                    respuesta.sum_12 < 0 &&
-                    respuesta.sum_3 < 0 &&
+                    respuesta.sum_9 < 0 ||
+                    respuesta.sum_6 < 0 ||
+                    respuesta.sum_12 < 0 ||
+                    respuesta.sum_3 < 0 ||
 
                     respuesta.dif_9 >= 0 &&
                     respuesta.dif_6 >= 0 &&
