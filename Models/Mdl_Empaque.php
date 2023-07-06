@@ -16,7 +16,16 @@ class Empaque extends ConexionBD
     {
         $this->close();
     }
+    public function getEmpaqueSelect2($filtradoPrograma='1=1',$busqId = ''){
+        $filtradoID = $busqId == '' ? '1=1' : "ca.nombre LIKE '%$busqId%'";
+        $sql="SELECT e.*, 
+        DATE_FORMAT(e.fecha,'%d/%m/%Y') AS fFecha
+        FROM empaques e
+        WHERE $filtradoPrograma AND $filtradoID
+        ORDER BY fecha DESC";
+        return  $this->consultarQuery($sql, "consultar Empaque");
 
+    }
     public function getDetRendimientos($id)
     {
         $sql = "SELECT r.*, DATE_FORMAT(r.fechaEngrase,'%d/%m/%Y') AS f_fechaEngrase,
@@ -920,5 +929,14 @@ class Empaque extends ConexionBD
         WHERE dc.estado='0' AND $filtradoFecha AND $filtradoPrograma
         ORDER BY  e.fecha DESC, dc.idEmpaque, dc.numCaja";
         return $this->consultarQuery($sql, "cajas depuradas");
+    }
+
+    public function cambiarNumCaja($numCaja, $idEmpaque, $cajaSiguiente, $idEmpaqueN){
+        $sql="UPDATE detcajas 
+        SET numCaja='$cajaSiguiente', idEmpaque='$idEmpaqueN'
+        WHERE numCaja='$numCaja' AND idEmpaque='$idEmpaque'
+        AND (estado<>'0' OR estado IS NULL)";
+        return $this->runQuery($sql, "cambio de caja en el empaque");
+
     }
 }

@@ -720,3 +720,26 @@ $(".ProgramaMedidoFilter").select2({
     cache: true,
   },
 });
+
+$(".EmpaqueFilter").select2({
+  placeholder: "Selecciona un empaque",
+
+  ajax: {
+    url: "../Controller/empaque.php?op=select2empaque",
+    type: "post",
+    dataType: "json",
+    delay: 250,
+    data: function (params) {
+      return {
+        programa: $(this).data("programa"),
+        palabraClave: params.term, // search term
+      };
+    },
+    processResults: function (response) {
+      return {
+        results: response,
+      };
+    },
+    cache: true,
+  },
+});

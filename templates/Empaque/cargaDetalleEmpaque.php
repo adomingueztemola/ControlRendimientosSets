@@ -20,6 +20,10 @@ if ($id == '') {
 }
 $obj_empaque = new Empaque($debug, $idUser); //Modelo de Empaque
 /***************************** Datos del Detalle de Empaque *******************************/
+$DataEmpaque = $obj_empaque->getDetEmpaque($id);
+$DataEmpaque = Excepciones::validaConsulta($DataEmpaque);
+$idCatPrograma = $DataEmpaque["idCatPrograma"];
+/***************************** Datos del Detalle de Cajas *******************************/
 $DataDetallado = $obj_empaque->getDetalladoCajas($id);
 $DataDetallado = Excepciones::validaConsulta($DataDetallado);
 if (count($DataDetallado) <= 0) {
@@ -74,6 +78,11 @@ if (count($DataDetallado) <= 0) {
                         $iconSales = $value['vendida'] == '1' ? '<i class="fas fa-shopping-cart"></i> Vendida ' . $lblInterno : "<input type='checkbox' $checkedInterno class='' onclick='cambiaCajaInterna(this,{$value['numCaja']}, {$value['idEmpaque']})' id='interno{$value['id']}' value='1' name='interno{$value['id']}'>
                         <label class='' for='interno'>Interna</label>";
                         $inputLote0 = $value['tipo'] == '3' ? "<input type='checkbox' $checkedLote0 class='' onclick='cambiaLote0(this,{$value['numCaja']}, {$value['idEmpaque']})' id='lote0{$value['id']}' value='1' name='lote0{$value['id']}'><label class='text-danger' for='lote0{$value['id']}'>Lote 0</label>" : "";
+                        //ELIMINACION DE EMPAQUE SOLO CUANDO LA CAJA NO SE HAYA VENDIDO
+                        $btnEditar = $value['vendida'] == '1'
+                            ? " <button data-toggle='modal' data-target='#edicionModal' onclick='editarCaja(\"{$value['numCaja']}\",\"{$value['idEmpaque']}\")' class='btn btn-info btn-xs'><i class='fas fa-pencil-alt'></i></button>"
+                            : " <button onclick='eliminarCaja(\"{$value['numCaja']}\",\"{$value['idEmpaque']}\")' class='btn btn-danger btn-xs'><i class='fas fa-trash-alt'></i></button>";
+
                         if ($cajaAnt != $value['numCaja']) {
                             if ($contadorLote > 0 and $contadorLote < 3) {
                                 echo "<tr><td colspan='5' class='text-center noSearch'></td></tr>";
@@ -109,7 +118,7 @@ if (count($DataDetallado) <= 0) {
                                     </button>
                                 </div>
                                 <div id='desbloqueo-btn-{$value['numCaja']}-{$value['idEmpaque']}'>
-                                    <button onclick='eliminarCaja(\"{$value['numCaja']}\",\"{$value['idEmpaque']}\")' class='btn btn-danger btn-xs'><i class='fas fa-trash-alt'></i></button>
+                                $btnEditar
                                 </div>
                             </div>
                             <div class='col-lg-3 col-md-3 col-sm-3 col-xs-3'>
@@ -220,7 +229,7 @@ if (count($DataDetallado) <= 0) {
         </div>
     </div>
 </div>
-<!-- Modal -->
+<!-- Modal Remanente-->
 <div class="modal fade" id="remanenteModal" role="dialog" aria-labelledby="remanenteModal" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content BlockModalRever">
@@ -303,9 +312,37 @@ if (count($DataDetallado) <= 0) {
         </div>
     </div>
 </div>
-
+<!-- Modal -->
+<div class="modal fade" id="edicionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content BlockModalEmp">
+            <div class="modal-header bg-TWM text-white">
+                <h5 class="modal-title" id="exampleModalLabel">Cambio de Empaque</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="formCambioEmpaque">
+                <input type="hidden" name="numCaja" id="numCajaEmp"  value="">
+                <input type="hidden" name="idEmpaque" id="idEmpaqueEmp" value="">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <select name="idEmpaqueN" style="width:100%" class="EmpaqueFilter" data-programa='<?= $idCatPrograma ?>'></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-ligth" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <script src="../assets/scripts/Empaque/buscarLotes.js"></script>
 <script src="../assets/scripts/clearDataSinSelect.js"></script>
+<script src="../assets/scripts/selectFiltros.js"></script>
 
 <script>
     $(function() {
@@ -390,6 +427,44 @@ if (count($DataDetallado) <= 0) {
 
         });
     });
+    //Ejecucion de cambio de caja de empaque
+    $("#formCambioEmpaque").submit(function(e) {
+        e.preventDefault();
+        formData = $(this).serialize();
+        $.ajax({
+            url: '../Controller/empaque.php?op=cambioempaque',
+            data: formData,
+            type: 'POST',
+            success: function(json) {
+                resp = json.split('|')
+                if (resp[0] == 1) {
+                    notificaSuc(resp[1])
+                    bloqueoModal(e, "BlockModalEmp", 2)
+                    clearForm("formCambioEmpaque")
+                    cerrarModal("edicionModal")
+                    setTimeout(() => {
+
+                        cargaContent('<?= $id ?>')
+                    }, 1000);
+
+
+                } else if (resp[0] == 0) {
+                    notificaBad(resp[1])
+                    bloqueoModal(e, "BlockModalEmp", 2)
+
+
+                }
+            },
+            beforeSend: function() {
+                bloqueoModal(e, "BlockModalEmp", 1)
+            }
+
+        });
+    });
+    function editarCaja(numCaja, idEmpaque){
+        $("#numCajaEmp").val(numCaja)
+        $("#idEmpaqueEmp").val(idEmpaque)
+    }
     //Eliminar caja 
     function eliminarCaja(numCaja, idEmpaque) {
         jsonOptions = {
@@ -422,13 +497,13 @@ if (count($DataDetallado) <= 0) {
 
                         } else {
                             notificaBad(resplbl[1])
-                            bloqueoBtn("bloqueo-btn-"+numCaja+"-"+idEmpaque, 2)
+                            bloqueoBtn("bloqueo-btn-" + numCaja + "-" + idEmpaque, 2)
 
 
                         }
                     },
                     beforeSend: function() {
-                        bloqueoBtn("bloqueo-btn-"+numCaja+"-"+idEmpaque, 1)
+                        bloqueoBtn("bloqueo-btn-" + numCaja + "-" + idEmpaque, 1)
                     }
                 })
 

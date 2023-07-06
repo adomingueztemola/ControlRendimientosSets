@@ -17,6 +17,30 @@ if ($debug == 1) {
 }
 
 switch ($_GET["op"]) {
+    case "select2empaque":
+        $programa = (isset($_POST['programa'])) ? trim($_POST['programa']) : '';
+        if (!isset($_POST['palabraClave'])) {
+            $Data = $obj_empaque->getEmpaqueSelect2("e.idCatPrograma='$programa'");
+            $Data = Excepciones::validaConsulta($Data);
+        } else {
+            $search = $_POST['palabraClave']; // Palabra a buscar
+            $Data = $obj_empaque->getEmpaqueSelect2("e.idCatPrograma='$programa'", $search);
+            $Data = Excepciones::validaConsulta($Data);
+        }
+        $response = array();
+
+        // Leer la informacion
+        foreach ($Data as $area) {
+            $response[] = array(
+                "id" => $area['id'],
+                "text" => $area['fFecha']
+            );
+        }
+
+        //Creamos el JSON
+        $json_string = json_encode($response);
+        echo $json_string;
+        break;
     case "cargajsonlotes":
         if (!isset($_GET['palabraClave'])) {
             $Data = $obj_empaque->getLotes();
@@ -410,10 +434,11 @@ switch ($_GET["op"]) {
                 $cierre = '1';
             }
             //SI EL LOTE QUEDA VACIO POR QUE ES UN ADJUNTO DE PIEZAS
-            if (($Data['_12OKAct'] - $pzas_12==0) &&
-            ($Data['_3OKAct'] - $pzas_03==0) &&
-            ($Data['_6OKAct'] - $pzas_06==0) &&
-            ($Data['_9OKAct'] - $pzas_09==0)) {
+            if (($Data['_12OKAct'] - $pzas_12 == 0) &&
+                ($Data['_3OKAct'] - $pzas_03 == 0) &&
+                ($Data['_6OKAct'] - $pzas_06 == 0) &&
+                ($Data['_9OKAct'] - $pzas_09 == 0)
+            ) {
                 $cierre = '1';
             }
             if ($remanente == '1') {
@@ -981,5 +1006,36 @@ switch ($_GET["op"]) {
         $response = array("data" => $response);
         $json_string = json_encode($response);
         echo $json_string;
+        break;
+    case "cambioempaque":
+        $numCaja = isset($_POST['numCaja']) ? $_POST['numCaja'] : '';
+        $idEmpaque = isset($_POST['idEmpaque']) ? $_POST['idEmpaque'] : '';
+        $idEmpaqueN = isset($_POST['idEmpaqueN']) ? $_POST['idEmpaqueN'] : '';
+        #VALIDACION DE DATOS
+        Excepciones::validaLlenadoDatos(array(
+            " Num. Caja" => $numCaja,
+            " Empaque" => $idEmpaque,
+            " Empaque Nuevo" => $idEmpaqueN
+        ), $obj_empaque);
+        $DataCaja = $obj_empaque->consultaLlenadoCaja($idEmpaqueN);
+        $DataCaja = Excepciones::validaConsulta($DataCaja);
+        $cajaSiguiente = $DataCaja["cajaSiguiente"];
+        $obj_empaque->beginTransaction();
+       
+        $datos = $obj_empaque->cambiarNumCaja($numCaja, $idEmpaque, $cajaSiguiente, $idEmpaqueN);
+        try {
+            Excepciones::validaMsjError($datos);
+        } catch (Exception $e) {
+            $obj_empaque->errorBD($e->getMessage(), 1);
+        }
+        $datos = $obj_empaque->reconteoCajas($idEmpaque, $numCaja);
+        try {
+            Excepciones::validaMsjError($datos);
+        } catch (Exception $e) {
+            $obj_empaque->errorBD($e->getMessage(), 1);
+        }
+
+        $obj_empaque->insertarCommit();
+        echo "1|Se cambió empaque de caja correctamente.";
         break;
 }
