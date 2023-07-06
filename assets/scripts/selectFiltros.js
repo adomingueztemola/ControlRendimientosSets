@@ -743,3 +743,65 @@ $(".EmpaqueFilter").select2({
     cache: true,
   },
 });
+
+$(".TodosLotesFilter").select2({
+  placeholder: "Selecciona un lote",
+  allowClear: true,
+
+  ajax: {
+    url: "../Controller/rendimiento.php?op=select2todoslotes",
+    dataType: "json",
+    type: "post",
+    data: function (params) {
+      return {
+        palabraClave: params.term, // search term
+      };
+    },
+    processResults: function (data) {
+      //Recorre JSON para generar option group de areas
+      textOpt = "";
+      jsonOpt = [];
+      childrenOpt = [];
+      data.forEach((element) => {
+        hijoOpt = {};
+        if (textOpt != element.nPrograma) {
+          //Agrega a jsonOpt
+          if (textOpt != "" && childrenOpt.length > 0) {
+            jsonOpt.push({
+              text: textOpt,
+              children: childrenOpt,
+              element: HTMLOptGroupElement,
+            });
+          }
+          /*********************/
+          childrenOpt = [];
+          //Agrega su hijito
+          hijoOpt.id = element.id;
+          hijoOpt.text = element.loteTemola;
+          hijoOpt.element = HTMLOptionElement;
+          childrenOpt.push(hijoOpt); //Agraga children OPT
+        } else {
+          //Agrega su hijito
+          hijoOpt.id = element.id;
+          hijoOpt.text = element.loteTemola;
+          hijoOpt.element = HTMLOptionElement;
+          childrenOpt.push(hijoOpt); //Agraga children OPT
+        }
+        textOpt = element.nPrograma;
+      });
+      //Agrega a jsonOpt
+      if (textOpt != "" && childrenOpt.length > 0) {
+        jsonOpt.push({
+          text: textOpt,
+          children: childrenOpt,
+          element: HTMLOptGroupElement,
+        });
+      }
+      return {
+        results: jsonOpt,
+      };
+    },
+    cache: true,
+  },
+ 
+});

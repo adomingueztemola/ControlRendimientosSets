@@ -34,6 +34,19 @@ switch ($_GET["op"]) {
         $json_string = json_encode($Data);
         echo $json_string;
         break;
+    case "select2todoslotes":
+        if (!isset($_POST['palabraClave'])) {
+            $Data = $obj_rendimiento->getLotesTodosSelect2();
+            $Data = Excepciones::validaConsulta($Data);
+        } else {
+            $search = $_POST['palabraClave']; // Palabra a buscar
+            $Data = $obj_rendimiento->getLotesTodosSelect2($search);
+            $Data = Excepciones::validaConsulta($Data);
+        }
+        //Creamos el JSON
+        $json_string = json_encode($Data);
+        echo $json_string;
+        break;
     case "select2lotespadres":
         if (!isset($_POST['palabraClave'])) {
             $Data = $obj_rendimiento->getLotesPadresSelect2();
@@ -1242,8 +1255,8 @@ switch ($_GET["op"]) {
             " 06:00" => $_6,
             " 09:00" => $_9
         ), $obj_rendimiento);
-        $setsCortadasTeseo=($_12+$_3+$_6+ $_9)/4;
-        $pzasCortadasTeseo=$_12+$_3+$_6+ $_9;
+        $setsCortadasTeseo = ($_12 + $_3 + $_6 + $_9) / 4;
+        $pzasCortadasTeseo = $_12 + $_3 + $_6 + $_9;
         #REGISTRO DE RENDIMIENTO
         $datos = $obj_rendimiento->insertarSolicitudTeseo($id, $areaTeseo, $yield, $_12, $_3, $_6, $_9, $pzasCortadasTeseo, $setsCortadasTeseo, $motivo);
         try {

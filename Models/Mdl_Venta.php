@@ -544,4 +544,15 @@ class Venta extends ConexionBD
         WHERE id='$idDetVenta'";
         return $this->runQuery($sql, "actualiza metros para venta");
     }
+
+    public function getVentaXLote($id){
+        $sql = "SELECT v.numPL, v.numFactura, dv.unidades,
+        DATE_FORMAT(v.fechaFact, '%d/%m/%Y') AS f_fechaFact
+        FROM detventas dv
+        INNER JOIN ventas v ON dv.idVenta=v.id
+        WHERE dv.idRendimiento='$id'
+        AND v.estado='2'
+        ORDER BY fechaFact DESC";
+        return $this->consultarQuery($sql, "consulta venta de lote");
+    }
 }

@@ -585,4 +585,13 @@ switch ($_GET["op"]) {
         $json_string = json_encode($Data);
         echo $json_string;
         break;
+    case "getventasxlote":
+        $id = (isset($_POST['id'])) ? trim($_POST['id']) : '';
+        $Data = $obj_venta->getVentaXLote($id);
+        $Data = Excepciones::validaConsulta($Data);
+
+        //Creamos el JSON
+        $json_string = json_encode($Data);
+        echo $json_string;
+        break;
 }

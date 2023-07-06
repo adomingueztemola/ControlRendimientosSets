@@ -47,7 +47,13 @@ $notHidden = $_abierto ? '' : 'hidden';
         <div class="page-wrapper">
             <div class="container-fluid">
                 <?php include("../templates/namePage.php"); ?>
+                <div class="row mb-2">
+                    <div class="col-md-10"></div>
+                    <div class="col-md-2 text-right">
+                        <button class="btn btn-TWM btn-md" data-toggle="modal" data-target="#consultaModal">Consulta Ventas</button>
+                    </div>
 
+                </div>
                 <div class="row">
                     <div class="col-md-9 col-lg-9">
                         <div class="card">
@@ -119,7 +125,7 @@ $notHidden = $_abierto ? '' : 'hidden';
                                         </div>
                                     </div>
                                     <hr>
-                                    <div class="row" id="inicioVenta" >
+                                    <div class="row" id="inicioVenta">
                                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                             <div id="bloqueo-btn-1" style="display:none">
                                                 <button class="btn btn-TWM" type="button" disabled="">
@@ -161,6 +167,48 @@ $notHidden = $_abierto ? '' : 'hidden';
                             </div>
                         </div>-->
                     </div>
+                    <!-- Modal -->
+                    <div class="modal fade" id="consultaModal" role="dialog" aria-labelledby="consultaModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header bg-TWM text-white">
+                                    <h5 class="modal-title" id="consultaModalLabel">Consulta Ventas del Lote</h5>
+                                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <select onchange="verVentas(this)" style="width:100%" class="TodosLotesFilter"></select>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-md-12">
+                                            <table class="table table-sm table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Fecha</th>
+                                                        <th>Num. Factura</th>
+                                                        <th>P.L.</th>
+                                                        <th>Cantidad</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tbody-ventas">
+                                                    <tr>
+                                                        <td colspan='4'><b>Sin resultados de la busqueda</b></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="reset" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -174,6 +222,7 @@ $notHidden = $_abierto ? '' : 'hidden';
 
 <script src="../assets/scripts/validaNumVenta.js"></script>
 <script src="../assets/scripts/validaNumPL.js"></script>
+<script src="../assets/scripts/selectFiltros.js"></script>
 
 <script>
     <?php
@@ -191,6 +240,44 @@ $notHidden = $_abierto ? '' : 'hidden';
         echo "updateRegistro()";
     }
     ?>
+
+    function verVentas(select) {
+        id = $(select).val()
+        $.ajax({
+            url: '../Controller/ventas.php?op=getventasxlote',
+            data: {
+                id: id
+            },
+            type: 'POST',
+            async: false,
+            dataType: "json",
+            success: function(respuesta) {
+                tabla = ""
+                if (!respuesta.length) {
+                    tabla = `<tr>
+                            <td colspan='4'><b>Sin resultados de la busqueda</b></td>
+                            </tr>`;
+                } else {
+                    contadorPack = 0;
+                    respuesta.forEach(element => {
+                        unidades = Number(parseFloat(element.unidades).toFixed(2)).toLocaleString('es-MX')
+                        tabla += `<tr>
+                            <td>${element.f_fechaFact}</td> 
+                            <td>${element.numFactura}</td> 
+                            <td>${element.numPL}</td> 
+                            <td>${unidades}</td> 
+
+                        </tr>`;
+                    });
+
+                }
+                $("#tbody-ventas").html(tabla);
+
+            },
+
+
+        });
+    }
 
     function updateRegistro() {
         //Tipo de Venta
