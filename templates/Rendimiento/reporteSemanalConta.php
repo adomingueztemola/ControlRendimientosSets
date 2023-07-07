@@ -30,12 +30,15 @@ if ($date_start != '' and $date_end != '') {
     $date = date('Y-m');
     $dateComplete = date('d-m-Y');
     $fechaInicio = $obj_rendimiento->firstWeekDay(date('W', strtotime($dateComplete)), date('Y'));
+    $fechaFin = $obj_rendimiento->endWeekDay(date('W', strtotime($dateComplete)), date('Y'));
 
-    if (strtotime($fechaInicio) < strtotime(date('Y-m-01'))) {
-        $date = date('Y-m', strtotime($fechaInicio));
+    if (strtotime($fechaInicio) < strtotime($fechaFin)) {
+       // $date = date('Y-m', strtotime($fechaInicio));
+       $dateInit = date('Y-m', strtotime($fechaInicio));
+       $dateFin = date('Y-m', strtotime($fechaFin));
     }
-    $filtrado_semana = "DATE_FORMAT(r.fechaEmpaque,'%Y-%m')='{$date}'";
-    $filtrado_semanaEtiq = "DATE_FORMAT(r.fechaFinal,'%Y-%m')='{$date}'";
+   $filtrado_semana = "DATE_FORMAT(r.fechaEmpaque,'%Y-%m') BETWEEN '{$dateInit}' AND '{$dateFin}'";
+    $filtrado_semanaEtiq = "DATE_FORMAT(r.fechaFinal,'%Y-%m') BETWEEN '{$dateInit}' AND '{$dateFin}'";
 }
 
 $DataSemana = $obj_rendimiento->getSemanasRendimiento($filtrado_semana, $filtrado_semanaEtiq, $filtrado_Etq);
@@ -360,6 +363,75 @@ $DataWB = $obj_rendimiento->getWetBlue("p.years BETWEEN '{$anioStart}' AND '{$an
                     }
                     ?>
                     <td><?= formatoMil($counti < 0 ? '0.00' : $totalResult / $counti) ?>USD</td>
+                </tr>
+                <tr class="c_Sets  collapse">
+                    <td>Dif. Área comprada vs Medida</td>
+                    <?php
+                    $totalResult = 0;
+                    $dif_Comprada = 0;
+                    foreach ($DataSemana as $key => $value) {
+                        $result = getRecorrerData($DataSemana[$key]['semanaProduccion'], "difAreaCompradaMedida", $DataSets);
+                        $result = $result == '' ? '0' : $result;
+                        $totalResult += $result;
+
+                        echo "<td>" . formatoMil($result) . "%</td>";
+                    }
+                    ?>
+                    <td><?= formatoMil($totalResult) ?>%</td>
+                </tr>
+                <tr class="c_Sets  collapse">
+                    <td>Dif. Area WB vs Crust Piel</td>
+
+                    <?php
+                    $totalResult = 0;
+                    $dif_Crust = 0;
+
+                    foreach ($DataSemana as $key => $value) {
+                        $result = getRecorrerData($DataSemana[$key]['semanaProduccion'], "difAreaCompVsCrust", $DataSets);
+                        $result = $result == '' ? '0' : $result;
+                        $totalResult += $result;
+
+                        echo "<td>" . formatoMil($result) . "%</td>";
+                    }
+
+                    ?>
+                    <td><?= formatoMil($totalResult) ?>%</td>
+                </tr>
+                <tr class="c_Sets  collapse">
+                    <td>Dif. Area Crust vs Teseo Piel</td>
+
+                    <?php
+                    $totalResult = 0;
+                    $dif_Crust = 0;
+
+                    foreach ($DataSemana as $key => $value) {
+                        $result = getRecorrerData($DataSemana[$key]['semanaProduccion'], "difAreaCrustTeseo", $DataSets);
+                        $result = $result == '' ? '0' : $result;
+                        $totalResult += $result;
+
+                        echo "<td>" . formatoMil($result) . "%</td>";
+                    }
+
+                    ?>
+                    <td><?= formatoMil($totalResult) ?>%</td>
+                </tr>
+                <tr class="c_Sets  collapse">
+                    <td>Total Dif.Area </td>
+                    <?php
+                    $totalResult = 0;
+                    $dif_Crust = 0;
+
+                    foreach ($DataSemana as $key => $value) {
+                        $result = getRecorrerData($DataSemana[$key]['semanaProduccion'], "totalDifArea", $DataSets);
+                        $result = $result == '' ? '0' : $result;
+                        $totalResult += $result;
+
+                        echo "<td>" . formatoMil($result) . "%</td>";
+                    }
+
+                    ?>
+                    <td><?= formatoMil($totalResult) ?>%</td>
+
                 </tr>
                 <!-- Fin de Set's-->
                 <!-- Inicio de AUTO CZA-->
