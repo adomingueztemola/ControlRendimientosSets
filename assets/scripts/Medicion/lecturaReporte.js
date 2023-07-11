@@ -3,19 +3,21 @@ function generateTable() {
   var data = $("textarea[id=excel_data]").val().trim();
   var rows = data.split("\n");
   //Validar que el formato no este vacio
-  if(rows.length<=1){
+  if (rows.length <= 1) {
     notificaBad("Verifica que el reporte no este vacío");
-    return 0
+    return 0;
   }
   var table = $('<table class="table table-sm table-bordered" />');
   for (var y in rows) {
     var cells = rows[y].split("\t");
     var row = $("<tr />");
     //validar que las celdas sean 3
-    if(cells.length>3){
-        notificaBad("Verifica que el reporte tenga 3 columnas: <br>-Número de serie<br>-Fecha creación<br>-Área real");
-        return 0
-      }
+    if (cells.length > 3) {
+      notificaBad(
+        "Verifica que el reporte tenga 3 columnas: <br>-Número de serie<br>-Fecha creación<br>-Área real"
+      );
+      return 0;
+    }
     for (var x in cells) {
       row.append("<td>" + cells[x] + "</td>");
       if (y == "0" && x == "2") {
@@ -24,6 +26,15 @@ function generateTable() {
         cells.push("Área FT2");
         cells.push("Redondeo Área FT2");
       }
+      if(y > "0" && x == "1"){
+        arrayDateTime=cells[x].split(' ');
+        console.log(arrayDateTime);
+        arrayDate= arrayDateTime[0].split('/');
+        newDate=arrayDate[2]+'-'+arrayDate[1].toString().padStart(2, '0')+'-'+arrayDate[0]+
+        ' '+arrayDateTime[1];
+        cells[x]=newDate;
+      }
+     
       if (y > "0" && x == "2") {
         convert = convertDM2aFT2(cells[x]);
         row.append("<td>" + convert + "</td>");
@@ -35,23 +46,23 @@ function generateTable() {
         cells.push(redondeo);
       }
     }
-    if(y>0){
-        result.push(cells);
+    if (y > 0) {
+      result.push(cells);
     }
     table.append(row);
   }
-  $("#reporte").val(JSON.stringify(result))
-  if($("#reporte").val()==''){
-    $("#btn-save").prop("disabled", true)
-  }else{
-    $("#btn-save").prop("disabled", false)
+  $("#reporte").val(JSON.stringify(result));
+  if ($("#reporte").val() == "") {
+    $("#btn-save").prop("disabled", true);
+  } else {
+    $("#btn-save").prop("disabled", false);
   }
   // Insert into DOM
   $("#excel_table").html(table);
 }
 //Convertir Área de Teseo
 function convertDM2aFT2(areaDM) {
-  return (parseFloat(areaDM) /9.29).toFixed(12);
+  return (parseFloat(areaDM) / 9.29).toFixed(12);
 }
 //Redondeo de Área en Base a Criterios
 function redondeoArea(areaFT) {
@@ -61,7 +72,7 @@ function redondeoArea(areaFT) {
   // console.log("Entero: "+entero);
   // console.log("Redondeo: "+redondAreaFT);
 
-  decimales = parseFloat(redondAreaFT%1).toFixed(2);
+  decimales = parseFloat(redondAreaFT % 1).toFixed(2);
   // console.log("Decimales: "+decimales);
   if (decimales <= 0.19) {
     result = entero;
@@ -78,8 +89,7 @@ function redondeoArea(areaFT) {
   if (decimales <= 0.99 && decimales >= 0.91) {
     result = entero + 1;
   }
-  console.log("Resultado: "+result);
+  console.log("Resultado: " + result);
 
   return parseFloat(result).toFixed(2);
 }
-

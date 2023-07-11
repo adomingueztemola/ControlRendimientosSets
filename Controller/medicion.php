@@ -55,7 +55,8 @@ switch ($_GET["op"]) {
         $funcQuery = function ($reporte, $idLote) {
             $query = "";
             foreach ($reporte as $value) {
-                $query .= "('$idLote', '{$value[0]}', '{$value[2]}',
+                $newDate = date("Y-m-d H:i:s", strtotime($value[1]));
+                $query .= "('$idLote', '{$value[0]}','{$newDate}', '{$value[2]}',
                 '{$value[3]}', '{$value[4]}', '1'),";
             }
             return substr($query, 0, -1);
@@ -128,8 +129,9 @@ switch ($_GET["op"]) {
         break;
     case "getdetreporte":
         $id = isset($_POST['id']) ? $_POST['id'] : '';
+        $order = isset($_POST['order']) ? $_POST['order'] : 'ASC';
 
-        $Data = $obj_medido->getDetReporteMedicion($id);
+        $Data = $obj_medido->getDetReporteMedicion($id,$order );
         $Data = Excepciones::validaConsulta($Data);
         $json_string = json_encode($Data);
         echo $json_string;

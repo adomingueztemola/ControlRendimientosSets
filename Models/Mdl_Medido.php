@@ -26,7 +26,7 @@ class Medido extends ConexionBD
     }
     public function agregarDetalladoLote($query)
     {
-        $sql = "INSERT INTO ladosmediciones (idLoteMedicion, numSerie, areaDM, areaFT,areaRedondFT, idCatSeleccion) 
+        $sql = "INSERT INTO ladosmediciones (idLoteMedicion, numSerie, fecha, areaDM, areaFT,areaRedondFT, idCatSeleccion) 
         VALUES $query";
         return $this->runQuery($sql, "agregar lote de medicion", 1);
     }
@@ -62,10 +62,11 @@ class Medido extends ConexionBD
         ORDER BY CAST(lm.numSerie AS unsigned) DESC";
         return  $this->consultarQuery($sql, "consultar Detalle de Reporte de Medición");
     }
-    public function getDetReporteMedicion($id)
+    public function getDetReporteMedicion($id, $order)
     {
-        $sql = "SELECT * FROM ladosmediciones lm
-        WHERE lm.idLoteMedicion='$id'";
+        $sql = "SELECT *, DATE_FORMAT(lm.fecha,'%d/%m/%Y %H:%i:%s' ) AS fFecha FROM ladosmediciones lm
+        WHERE lm.idLoteMedicion='$id'
+        ORDER BY lm.numSerie $order";
         return  $this->consultarQuery($sql, "consultar Detalle de Reporte de Medición");
     }
     

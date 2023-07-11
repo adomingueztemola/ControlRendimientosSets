@@ -149,7 +149,8 @@ $date_end = $date_end != "" ? date("Y-m-d", strtotime(str_replace("/", "-", $dat
         $.ajax({
             url: '../Controller/medicion.php?op=getdetreporte',
             data: {
-                id: d[0]
+                id: d[0],
+                order:'DESC'
             },
             type: 'POST',
             async: false,
@@ -163,6 +164,7 @@ $date_end = $date_end != "" ? date("Y-m-d", strtotime(str_replace("/", "-", $dat
                         <tr>
                             <th>#</th>
                             <th>Número de serie</th>
+                            <th>Fecha de creación</th>
                             <th>Área real DM<sup>2</sup></th>
                             <th>Área real FT<sup>2</sup></th>
                             <th>Redondeo</th>
@@ -186,6 +188,8 @@ $date_end = $date_end != "" ? date("Y-m-d", strtotime(str_replace("/", "-", $dat
                         <tr>
                             <td>${count}</td>
                             <td>${element.numSerie}</td>
+                            <td>${element.fFecha}</td>
+
                             <td>${areaDM}</td>
                             <td>${areaFT}</td>
                             <td>${areaRedondFT}</td>
