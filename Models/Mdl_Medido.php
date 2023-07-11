@@ -64,7 +64,7 @@ class Medido extends ConexionBD
     }
     public function getDetReporteMedicion($id, $order)
     {
-        $sql = "SELECT *, DATE_FORMAT(lm.fecha,'%d/%m/%Y %H:%i:%s' ) AS fFecha FROM ladosmediciones lm
+        $sql = "SELECT *, IFNULL(DATE_FORMAT(lm.fecha,'%d/%m/%Y %H:%i:%s'), 'n/a') AS fFecha FROM ladosmediciones lm
         WHERE lm.idLoteMedicion='$id'
         ORDER BY lm.numSerie $order";
         return  $this->consultarQuery($sql, "consultar Detalle de Reporte de Medición");
