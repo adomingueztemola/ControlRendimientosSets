@@ -1480,6 +1480,22 @@ class Rendimiento extends ConexionBD
                 '$pzasCortadasTeseo', '$areaTeseo', NOW(), '$idUserReg', '$motivo', '1' )";
         return  $this->runQuery($sql, "envio de solicitud de edicion de datos");
     }
+
+    public function getLotesEnRegistro(){
+        $sql = "SELECT r.id, DATE_FORMAT(r.fechaEngrase,'%d/%m/%Y') AS f_fechaEngrase,
+        r.loteTemola, cp.nombre AS nProceso, cp.codigo AS cProceso,
+        CONCAT(cp.codigo, '-', cp.nombre) AS cProcesoCompleto, 
+        cpr.nombre AS nPrograma, cm.nombre AS nMateriaPrima,
+        IFNULL(CONCAT(su.nombre, ' ', su.apellidos),'n/a') AS nUsuarioRend
+        
+        FROM rendimientos r
+        INNER JOIN catprocesos cp ON r.idCatProceso=cp.id
+        INNER JOIN catprogramas cpr ON r.idCatPrograma=cpr.id
+        INNER JOIN catmateriasprimas cm ON r.idCatMateriaPrima=cm.id
+        LEFT JOIN segusuarios su ON r.idUserRend=su.id
+        WHERE r.estado='3'";
+        return  $this->consultarQuery($sql, "consultar Lotes en Registro");
+    }
     /*************************************** 
      * CALCULO OPERACIONAL
      ***************************************/

@@ -1267,4 +1267,43 @@ switch ($_GET["op"]) {
         echo '1|Solicitud Enviada Correctamente.';
 
         break;
+    case "getlotesocupados":
+       // $id = (!empty($_POST['id'])) ? trim($_POST['id']) : '';
+        $Data = $obj_rendimiento->getLotesEnRegistro();
+        $Data = Excepciones::validaConsulta($Data);
+        $response = array();
+        $count = 1;
+        foreach ($Data as $value) {
+            array_push($response, [
+                $count,
+                $value['f_fechaEngrase'],
+                $value['loteTemola'],
+                $value['cProcesoCompleto'],
+                $value['nPrograma'],
+                $value['nMateriaPrima'],
+                $value['nUsuarioRend'],
+                $value['id']
+            ]);
+            $count++;
+        }
+
+        //Creamos el JSON
+        $response = array("data" => $response);
+        $json_string = json_encode($response);
+        echo $json_string;
+    
+        break;
+    case "desconexionlote":
+        $id = (!empty($_POST['id'])) ? trim($_POST['id']) : '';
+        Excepciones::validaLlenadoDatos(array(
+            " Lote" => $id
+        ), $obj_rendimiento);
+        $datos = Funciones::cambiarEstatus("rendimientos", "2", "estado", $id,  $obj_rendimiento->getConexion(), $debug);
+        try {
+            Excepciones::validaMsjError($datos);
+        } catch (Exception $e) {
+            $obj_rendimiento->errorBD($e->getMessage(), 1);
+        }
+        echo '1|Desvinculación Correcta del Lote Seleccionado.';
+        break;
 }
