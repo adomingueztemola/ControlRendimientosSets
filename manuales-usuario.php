@@ -56,7 +56,12 @@ session_start();
                             <i class="fas fa-book"></i>
                         </a></td>
                     </tr>
-                    
+                    <tr>
+                        <td>Manual de Usuario de Registro de Medición</td>
+                        <td class="text-center"><a href="doctos/Manuales/USUARIO REGISTRO MEDIDOR Rev1.2.pdf" target="_blank" rel="noopener noreferrer">
+                            <i class="fas fa-book"></i>
+                        </a></td>
+                    </tr>
                 </tbody>
             </table>
         </div>
