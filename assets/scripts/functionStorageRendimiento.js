@@ -19,7 +19,9 @@ function guardarValor(codigo, input, str = false) {
       //recalcular segun tipo de proceso
     } else if (codigo == "pzasrechazadas" && value_input <= 0) {
       $("#divCausaRechazo").attr("hidden", true);
-      
+      if ($("#tipoProceso").val() == "2") {
+        calculoAreaWBXDism();
+      }
     }
     if (codigo == "areawb") {
       if ($("#tipoProceso").val() == "2") {
