@@ -8,8 +8,23 @@ function guardarValor(codigo, input, str = false) {
     }
     if (codigo == "pzasrechazadas" && value_input > 0) {
       $("#divCausaRechazo").attr("hidden", false);
+      if ($("#tipoProceso").val() == "2") {
+        calculoAreaWBXDism();
+        value_input= $("#tipoMateriaPrima").val() =='2'?value_input/2:value_input;
+
+      }
+      else{
+       value_input= $("#tipoMateriaPrima").val() =='2'?value_input/2:value_input;
+      }
+      //recalcular segun tipo de proceso
     } else if (codigo == "pzasrechazadas" && value_input <= 0) {
       $("#divCausaRechazo").attr("hidden", true);
+      
+    }
+    if (codigo == "areawb") {
+      if ($("#tipoProceso").val() == "2") {
+        calculoAreaWBXDism();
+      }
     }
     if (codigo == "fechaempaque") {
       setSemanaInput("fechaEmpaque", "semanaProduccion");
@@ -25,17 +40,15 @@ function guardarValor(codigo, input, str = false) {
         resp = json.split("|");
         if (resp[0] == 1) {
           $("#success-" + codigo).attr("hidden", false);
-          if(codigo=='setsempacados' && value_input>0 ){
+          if (codigo == "setsempacados" && value_input > 0) {
             $("#btn-finalizarYield").prop("hidden", false);
-          }
-          else   if(codigo=='setsempacados' && value_input<=0 ){
+          } else if (codigo == "setsempacados" && value_input <= 0) {
             $("#btn-finalizarYield").prop("hidden", true);
           }
-          if(validaCamposLlenos()){
+          if (validaCamposLlenos()) {
             $("#btn-finalizarYield").prop("hidden", false);
-          }else{
+          } else {
             $("#btn-finalizarYield").prop("hidden", true);
-
           }
         } else if (resp[0] == 0) {
           notificaBad(resp[1], "toastr toast-bottom-left");
@@ -68,7 +81,7 @@ function validaCamposLlenos() {
       $(this).addClass("border");
       $(this).addClass("border-danger");
       log_result = false;
-    }else if (Number($(this).val()) == "0" && str_id == "areaCrust") {
+    } else if (Number($(this).val()) == "0" && str_id == "areaCrust") {
       $(this).addClass("border");
       $(this).addClass("border-danger");
       log_result = false;
@@ -76,7 +89,7 @@ function validaCamposLlenos() {
       $(this).addClass("border");
       $(this).addClass("border-danger");
       log_result = false;
-    }else if (Number($(this).val()) == "0" && str_id == "areaFinalTeseo") {
+    } else if (Number($(this).val()) == "0" && str_id == "areaFinalTeseo") {
       $(this).addClass("border");
       $(this).addClass("border-danger");
       log_result = false;
@@ -84,7 +97,7 @@ function validaCamposLlenos() {
       $(this).addClass("border");
       $(this).addClass("border-danger");
       log_result = false;
-    }  else if (
+    } else if (
       str_id == "comentariosrechazo" &&
       $("#piezasRechazadas").val() > 0 &&
       $(this).val() != ""
@@ -120,6 +133,24 @@ function getAreaPzasRechazo() {
   return 0;
 }
 
+function calculoAreaWBXDism() {
+ 
+  areaWB = $("#areaWBRecibida").val() == "" ? "0.0" : $("#areaWBRecibida").val();
+  total_s = $("#total_s").val() == "" ? "0.0" : $("#total_s").val();
+  value_input = $("#piezasRechazadas").val() == "" ? "0.0" : $("#piezasRechazadas").val();
+  areaWBxMP = areaWB / total_s;
+  dividendo = 1;
+  dividendo = $("#tipoMateriaPrima").val() == "1" ? "1" : dividendo;
+  dividendo = $("#tipoMateriaPrima").val() == "2" ? "1" : dividendo;//piel
+  totalSobrante = (total_s - value_input) / dividendo;
+  areaWBCalculada = totalSobrante * areaWBxMP;
+  $("#totalSobrante").text(totalSobrante.toLocaleString("es-MX"));
+  $("#areaWBCalculada").html(
+    areaWBCalculada.toFixed(2).toLocaleString("es-MX") + " ft<sup>2</sup>"
+  );
+  $("#areaWB").val(areaWBCalculada.toFixed(2));
+  $("#div-calculaArea").prop("hidden", false);
+}
 function getTotalRecorte() {
   if ($("#recorteWB").length && $("#recorteCrust").length) {
     let recorteWB = parseFloat($("#recorteWB").val().replace(",", ""));

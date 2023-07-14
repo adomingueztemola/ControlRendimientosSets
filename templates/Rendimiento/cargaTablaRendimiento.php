@@ -27,6 +27,8 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
         <div class="col-12">
             <table class="table table-sm">
                 <input type="hidden" name="tipoProceso" id="tipoProceso" value="">
+                <input type="hidden" name="tipoMateriaPrima" id="tipoMateriaPrima" value="">
+
                 <tbody>
                     <tr>
                         <td class="bg-success text-dark">
@@ -61,12 +63,25 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
 
                     <tr>
                         <td class="text-dark" style="background:#ffa0bd">
-                            <label for="areaWBRecibida">Área WB en Recibo (pie<sup>2</sup>)</label>
+                            <label for="areaWBRecibida">Área WB (pie<sup>2</sup>)</label>
                         </td>
                         <td>
                             <div class="row">
-                                <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
-                                    <input class="form-control Validate Positivos focusCampo" value="" onchange="guardarValor('areawb', this)" type="number" step="0.001" name="areaWBRecibida" id="areaWBRecibida"></input>
+                                <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="far fa-file"></i></span>
+                                        </div>
+                                        <input class="form-control Validate Positivos focusCampo" value="" onchange="guardarValor('areawb', this)" type="number" step="0.001" name="areaWBRecibida" id="areaWBRecibida"></input>
+                                    </div>
+                                </div>
+                                <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-sync-alt"></i></span>
+                                        </div>
+                                        <input class="form-control" readonly value="" type="number" id="areaWB"></input>
+                                    </div>
                                 </div>
                                 <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" hidden id="success-areawb">
                                     <i class="fas fa-check text-success"></i>
@@ -79,12 +94,25 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
 
                     <tr>
                         <td class="bg-success text-dark">
-                            <label for="piezasRechazadas">Hides Rechazados</label>
+                            <label id="lbl-pzasrechazadas" for="piezasRechazadas">Hides Rechazados</label>
                         </td>
                         <td>
                             <div class="row">
-                                <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
-                                    <input class="form-control focusCampo" type="number" step="1" min="0" name="piezasRechazadas" value="" onchange="guardarValor('pzasrechazadas', this)" id="piezasRechazadas"></input>
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                    <input type="number" class="form-control" name="" id="total_s" readonly>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">-</span>
+                                        </div>
+                                        <input class="form-control focusCampo" type="number" step="1" min="0" name="piezasRechazadas" value="" onchange="guardarValor('pzasrechazadas', this)" id="piezasRechazadas"></input>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" id="div-calculaArea" hidden>
+
+                                    <label>Hides Finales: <span id="totalSobrante">0.0</span></label>
+                                    <label>Área WB Calculada: <span id="areaWBCalculada">3500.00</span></label>
                                 </div>
                                 <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" hidden id="success-pzasrechazadas">
                                     <i class="fas fa-check text-success"></i>
@@ -109,7 +137,7 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
                     </tr>
                     <tr>
                         <td class="bg-success text-dark">
-                            <label for="piezasReasig">Hides Re-asignados</label>
+                            <label id="lbl-pzasreasig" for="piezasReasig">Hides Re-asignados</label>
                         </td>
                         <td>
                             <div class="row">
@@ -411,8 +439,43 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
                     $("#fechaEmpaque").val(respuesta.fechaEmpaque == null ? '' : respuesta.fechaEmpaque)
                     $("#semanaProduccion").val(respuesta.semanaProduccion == null ? '' : respuesta.yearWeek + "-W" + respuesta.semanaProduccion)
 
-                    $("#areaWBRecibida").val(respuesta.areaWB == null ? '0.0' : respuesta.areaWB)
-                    $("#piezasRechazadas").val(respuesta.piezasRechazadas == null ? '0' : respuesta.piezasRechazadas * 2)
+                    $("#areaWBRecibida").val(respuesta.areaWBOrig == null ? '0.0' : respuesta.areaWBOrig)
+                    $("#areaWB").val(respuesta.areaWB == null ? '0.0' : respuesta.areaWB)
+                    /*
+                    UNIDADES M.P. RECHAZADAS
+                    Proceso M2-carnaza->Crupones no se parten(2,1)
+                    Proceso M2-Piel->Piel se parte (2,2)              
+                    */
+                    if (respuesta.tipoMateriaPrima == '1' && respuesta.tipoProceso == '2') {
+                        $("#lbl-pzasrechazadas").text("Crupones Rechazados")
+                        $("#lbl-pzasreasig").text("Crupones Reasignados")
+                        $("#piezasRechazadas").val(respuesta.piezasRechazadas == null ? '0' : respuesta.piezasRechazadas)
+                    } else if (respuesta.tipoMateriaPrima == '2' && respuesta.tipoProceso == '2') {
+                        $("#lbl-pzasrechazadas").text("Hides Rechazados")
+                        $("#lbl-pzasreasig").text("Hides Reasignados")
+
+                        $("#piezasRechazadas").val(respuesta.piezasRechazadas == null ? '0' : respuesta.piezasRechazadas * 2)
+                    } else if (respuesta.tipoMateriaPrima == '2' && respuesta.tipoProceso == '1') {
+                        $("#piezasRechazadas").val(respuesta.piezasRechazadas == null ? '0' : respuesta.piezasRechazadas * 2)
+                        $("#lbl-pzasrechazadas").text("Hides Rechazados")
+                        $("#lbl-pzasreasig").text("Hides Reasignados")
+
+                    }
+                    /*
+                     UNIDADES M.P. TOTALES
+                     Proceso M2->(2)
+                     Proceso sets->(1)              
+                     */
+                    if (respuesta.tipoProceso == '1') {
+                        $("#total_s").val(respuesta.total_s == null ? '0' : respuesta.total_s * 2)
+
+                    } else if (respuesta.tipoMateriaPrima == '2' && respuesta.tipoProceso == '2') {
+                        $("#total_s").val(respuesta.total_s == null ? '0' : respuesta.total_s * 2)
+
+                    } else if (respuesta.tipoMateriaPrima == '1' && respuesta.tipoProceso == '2') {
+                        $("#total_s").val(respuesta.total_s == null ? '0' : respuesta.total_s)
+
+                    }
                     $("#piezasReasig").val(respuesta.piezasRecuperadas == null ? '0' : respuesta.piezasRecuperadas * 2)
                     $("#recorteWB").val(respuesta.porcRecorteWB == null ? '0.0' : respuesta.porcRecorteWB)
                     $("#recorteCrust").val(respuesta.porcRecorteCrust == null ? '0.0' : respuesta.porcRecorteCrust)
@@ -423,6 +486,8 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
                     $("#suavidad").val(respuesta.suavidad == null ? '0.0' : respuesta.suavidad)
                     $("#tipoProceso").val(respuesta.tipoProceso == null ? '0' : respuesta.tipoProceso)
                     $("#comentariosrechazo").text(respuesta.comentariosRechazo == null ? '' : respuesta.comentariosRechazo)
+                    $("#tipoMateriaPrima").val(respuesta.tipoMateriaPrima == null ? '0' : respuesta.tipoMateriaPrima)
+
                     //Comentarios de Rechazo
                     piezasRechazadas = respuesta.piezasRechazadas == null ? '0.0' : respuesta.piezasRechazadas;
                     if (piezasRechazadas > 0) {
@@ -446,8 +511,8 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
 
 
     function getPorcRecorteWB() {
-        pesoRaspadoWB = $("#pesoRaspadoWB").val()==''?parseFloat('0'):parseFloat($("#pesoRaspadoWB").val());
-        pesoCorteWB = $("#pesoCorteWB").val()==''?parseFloat('0'):parseFloat($("#pesoCorteWB").val());
+        pesoRaspadoWB = $("#pesoRaspadoWB").val() == '' ? parseFloat('0') : parseFloat($("#pesoRaspadoWB").val());
+        pesoCorteWB = $("#pesoCorteWB").val() == '' ? parseFloat('0') : parseFloat($("#pesoCorteWB").val());
         if (pesoRaspadoWB == '0.0') {
             $("#recorteWB").val('0')
         } else {
@@ -457,12 +522,12 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
     }
 
     function getPorcRecorteCrust() {
-        recortar = $("#recortar").val()==''?parseFloat('0'):parseFloat($("#recortar").val());
-        pesar = $("#pesar").val()==''?parseFloat('0'):parseFloat($("#pesar").val());
-        if(pesar=='0'){
+        recortar = $("#recortar").val() == '' ? parseFloat('0') : parseFloat($("#recortar").val());
+        pesar = $("#pesar").val() == '' ? parseFloat('0') : parseFloat($("#pesar").val());
+        if (pesar == '0') {
             $("#recorteCrust").val('0')
 
-        }else{
+        } else {
             $("#recorteCrust").val(((recortar / pesar) * 100).toFixed(2))
 
         }
@@ -470,8 +535,8 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
     }
 
     function sumarRecorteAcab(sumRecorteAcab) {
-        v_sumRecorteAcab = $("#sumRecorteAcab").val()==''?parseFloat('0'):parseFloat($("#sumRecorteAcab").val())
-        recorteAcabado = $("#recorteAcabado").val()==''?parseFloat('0'):parseFloat($("#recorteAcabado").val())
+        v_sumRecorteAcab = $("#sumRecorteAcab").val() == '' ? parseFloat('0') : parseFloat($("#sumRecorteAcab").val())
+        recorteAcabado = $("#recorteAcabado").val() == '' ? parseFloat('0') : parseFloat($("#recorteAcabado").val())
 
         $.ajax({
             url: '../Controller/rendimiento.php?op=recorteacabado',

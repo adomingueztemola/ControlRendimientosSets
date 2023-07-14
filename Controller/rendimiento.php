@@ -400,6 +400,10 @@ switch ($_GET["op"]) {
         } catch (Exception $e) {
             $obj_rendimiento->errorBD($e->getMessage(), 1);
         }
+        //SI HAY RECHAZOS DE MP, Y EL PROCESO ES PIEL METROS RECALCULAR
+
+
+        
         //Rendimiento
         $datos = $obj_rendimiento->calcularRendimiento($cambioPzas);
         try {
@@ -432,12 +436,18 @@ switch ($_GET["op"]) {
             $obj_rendimiento->errorBD($ErrorLog, 0);
         }
         $DatosAbiertos = $obj_rendimiento->getRendimientoAbierto();
-        $datos = Funciones::edicionBasica("rendimientos", "areaWB", $value, "id", $DatosAbiertos[0]['id'], $obj_rendimiento->getConexion(), $debug);
+        $datos=$obj_rendimiento->registrarAreaWB($DatosAbiertos[0]['id'], $value);
         try {
             Excepciones::validaMsjError($datos);
         } catch (Exception $e) {
-            $obj_materias->errorBD($e->getMessage(), 1);
+            $obj_rendimiento->errorBD($e->getMessage(), 1);
         }
+        // $datos = Funciones::edicionBasica("rendimientos", "areaWB", $value, "id", $DatosAbiertos[0]['id'], $obj_rendimiento->getConexion(), $debug);
+        // try {
+        //     Excepciones::validaMsjError($datos);
+        // } catch (Exception $e) {
+        //     $obj_materias->errorBD($e->getMessage(), 1);
+        // }
         echo '1| Registro de Área WB en Recibo (pie2) Correcto.';
 
         break;
@@ -449,14 +459,21 @@ switch ($_GET["op"]) {
             $ErrorLog .= ' intentalo de nuevo.';
             $obj_rendimiento->errorBD($ErrorLog, 0);
         }
-        $value = $value / 2;
-        $DatosAbiertos = $obj_rendimiento->getRendimientoAbierto();
-        $datos = Funciones::edicionBasica("rendimientos", "piezasRechazadas", $value, "id", $DatosAbiertos[0]['id'], $obj_rendimiento->getConexion(), $debug);
+         $DatosAbiertos = $obj_rendimiento->getRendimientoAbierto();
+        $datos=$obj_rendimiento->registrarMPRechazadas($DatosAbiertos[0]['id'], $value);
         try {
             Excepciones::validaMsjError($datos);
         } catch (Exception $e) {
-            $obj_materias->errorBD($e->getMessage(), 1);
+            $obj_rendimiento->errorBD($e->getMessage(), 1);
         }
+        //$value = $value / 2;
+        // $DatosAbiertos = $obj_rendimiento->getRendimientoAbierto();
+        // $datos = Funciones::edicionBasica("rendimientos", "piezasRechazadas", $value, "id", $DatosAbiertos[0]['id'], $obj_rendimiento->getConexion(), $debug);
+        // try {
+        //     Excepciones::validaMsjError($datos);
+        // } catch (Exception $e) {
+        //     $obj_materias->errorBD($e->getMessage(), 1);
+        // }
         echo '1| Registro de Cueros rechazados Correcto.';
 
         break;

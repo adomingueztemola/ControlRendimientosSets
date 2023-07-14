@@ -955,7 +955,7 @@ class Rendimiento extends ConexionBD
              IFNULL( p.areaProvPie2, 0 )/ IFNULL( p.totalCuerosFacturados, 0 )) * IFNULL( SUM( r.total_s ), 0 )))* 100 AS difAreaCompVsCrust,
      IFNULL( SUM( r.perdidaAreaCrustTeseo ), 0 ) */
         $sql = "SELECT
-     r.semanaProduccion,IFNULL( SUM( r.total_s ), 0 ) AS total_s,
+     r.semanaProduccion,IFNULL(SUM( IFNULL(total_desc_s,r.total_s)), 0 ) AS total_s,
      IFNULL( SUM( r.areaFinal ), 0 ) AS areaComprada,
      IFNULL( SUM( r.areaWB ), 0 ) AS areaWB,
      IFNULL( AVG( r.areaFinal ), 0 ) AS promComprada,
@@ -1031,7 +1031,7 @@ class Rendimiento extends ConexionBD
         $sql = "SELECT
      r.semanaProduccion, IFNULL( AVG( r.areaFinal ), 0 ) AS promComprada,
      IFNULL( SUM( r.areaWB ), 0 ) AS areaWB,
-     IFNULL( SUM( r.areaFinal ), 0 ) AS areaComprada,IFNULL( SUM( r.total_s ), 0 ) AS total_s,
+     IFNULL( SUM( r.areaFinal ), 0 ) AS areaComprada,IFNULL(SUM( IFNULL(total_desc_s,r.total_s)), 0 ) AS total_s,
      (
          IFNULL( SUM( r.diferenciaArea ), 0 )/((
              IFNULL( p.areaProvPie2, 0 )/ IFNULL( p.totalCuerosFacturados, 0 ))* IFNULL( SUM( r.total_s ), 0 )))* 100 AS difAreaCompradaMedida,
@@ -1495,6 +1495,21 @@ class Rendimiento extends ConexionBD
         LEFT JOIN segusuarios su ON r.idUserRend=su.id
         WHERE r.estado='3'";
         return  $this->consultarQuery($sql, "consultar Lotes en Registro");
+    }
+    public function registrarAreaWB($id, $areaWBOrig){
+        $sql="UPDATE rendimientos SET 
+        areaWBOrig='$areaWBOrig', areaWB=IF(tipoProceso='2',
+        ('$areaWBOrig'/total_s)*(total_desc_s), '$areaWBOrig')
+        WHERE id='$id'";
+        return  $this->runQuery($sql, "envio de solicitud de edicion de datos");
+    }
+    public function registrarMPRechazadas($id, $mp){
+        $sql="UPDATE rendimientos SET 
+        piezasRechazadas='$mp', 
+        total_desc_s=IF(tipoProceso='2',total_s-'$mp', total_s),
+        areaWB=IF(tipoProceso='2',(areaWBOrig/total_s)*(total_s-'$mp'), areaWB)
+        WHERE id='$id'";
+        return  $this->runQuery($sql, "envio de solicitud de edicion de datos");
     }
     /*************************************** 
      * CALCULO OPERACIONAL
