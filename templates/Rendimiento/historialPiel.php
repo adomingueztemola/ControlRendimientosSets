@@ -62,7 +62,10 @@ $DataRendimiento = $obj_rendimiento->getRendimientos(
                 <th>Programa</th>
                 <th>Proceso</th>
                 <th>Materia Prima</th>
-                <th>Área WB en Recibo (pie<sup>2</sup>)</th>
+                <th>Total M.P Inicial</th>
+                <th>Total M.P Real</th>
+                <th class="table-secondary">Área WB CURTITS (pie<sup>2</sup>)</th>
+                <th>Área WB Real (pie<sup>2</sup>)</th>
                 <th>Diferencia Área (pie<sup>2</sup>)</th>
                 <th>Promedio Área (WB)</th>
                 <th>% Dif. Area WB</th>
@@ -117,9 +120,11 @@ $DataRendimiento = $obj_rendimiento->getRendimientos(
 
             $suma_costoUnidad = 0;
             $suma_wbterminado = 0;
+            $suma_areaWBOrig=0;
             foreach ($DataRendimiento as $key => $value) {
                 $count++;
                 $suma_areaWB += $DataRendimiento[$key]['areaWB'];
+                $suma_areaWBOrig += $DataRendimiento[$key]['areaWBOrig'];
                 $suma_diferenciaWB += $DataRendimiento[$key]['diferenciaArea'];
                 $suma_promedioAreaWB += $DataRendimiento[$key]['promedioAreaWB'];
                 $suma_porcDifAreaWB += $DataRendimiento[$key]['porcDifAreaWB'];
@@ -160,8 +165,10 @@ $DataRendimiento = $obj_rendimiento->getRendimientos(
                     class="button btn btn-xs btn-outline-info" title="Enviar Solicitud"><i class="fas fa-edit"></i></button>' : $btnSolicitud;
                 $btnSolicitud = ($DataRendimiento[$key]['envioSolicitud'] == '2') ? '<button class="button btn btn-xs btn-info" title="Ir a la Edición" onclick="abrirEdicion(' . $DataRendimiento[$key]['id'] . ')" > <i class="fas fa-external-link-alt"></i></button>' : $btnSolicitud;
                 $btnSolicitud = ($DataRendimiento[$key]['envioSolicitud'] == '1') ? '<i class="fas fa-spinner fa-pulse"></i> <small>Espera</small>' : $btnSolicitud;
-
-            ?>
+                $totalInicial=($DataRendimiento[$key]['tipoMateriaPrima'] == '1') ?$DataRendimiento[$key]['total_s']:$DataRendimiento[$key]['total_s']*2;
+                $totalDesc=($DataRendimiento[$key]['tipoMateriaPrima'] == '1') ?$DataRendimiento[$key]['total_desc_s']:$DataRendimiento[$key]['total_desc_s']*2;
+                $totalDesc=$totalDesc==0?$totalInicial:$totalDesc;
+           ?>
                 <tr>
                     <td><?= $btnSolicitud ?></td>
                     <td><?= $DataRendimiento[$key]['f_fechaEngrase'] ?></td>
@@ -173,7 +180,11 @@ $DataRendimiento = $obj_rendimiento->getRendimientos(
                     <td><small><?= $DataRendimiento[$key]['n_programa'] ?></small></td>
                     <td><small><?= $DataRendimiento[$key]['n_proceso'] ?></small></td>
                     <td><small><?= $DataRendimiento[$key]['n_materia'] ?></small></td>
+                    <td><?= formatoMil($totalInicial) ?></td>
+                    <td><?= formatoMil($totalDesc) ?></td>
+                    <td class="table-secondary"><?= formatoMil($DataRendimiento[$key]['areaWBOrig']) ?></td>
                     <td><?= formatoMil($DataRendimiento[$key]['areaWB']) ?></td>
+
                     <td><?= $diferenciaArea ?></td>
                     <td><?= $promedioArea ?></td>
                     <td><?= $porcDifAreaWB ?></td>
@@ -217,11 +228,13 @@ $DataRendimiento = $obj_rendimiento->getRendimientos(
                 <td></td>
                 <td></td>
                 <td></td>
-
+                <td></td>
+                <td></td>
                 <td></td>
                 <td>Totales:</td>
-
+                <td><?= formatoMil($suma_areaWBOrig) ?></td>
                 <td><?= formatoMil($suma_areaWB) ?></td>
+
                 <td><?= formatoMil($suma_diferenciaWB) ?></td>
                 <td><?= formatoMil($suma_promedioAreaWB) ?></td>
                 <td><?= formatoMil($suma_porcDifAreaWB) ?></td>

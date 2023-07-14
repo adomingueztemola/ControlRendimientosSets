@@ -1499,7 +1499,7 @@ class Rendimiento extends ConexionBD
     public function registrarAreaWB($id, $areaWBOrig){
         $sql="UPDATE rendimientos SET 
         areaWBOrig='$areaWBOrig', areaWB=IF(tipoProceso='2',
-        ('$areaWBOrig'/total_s)*(total_desc_s), '$areaWBOrig')
+        ('$areaWBOrig'/total_s)*(IFNULL(total_desc_s,total_s)), '$areaWBOrig')
         WHERE id='$id'";
         return  $this->runQuery($sql, "envio de solicitud de edicion de datos");
     }
