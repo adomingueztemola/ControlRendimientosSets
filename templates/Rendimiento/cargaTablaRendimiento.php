@@ -82,7 +82,7 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
                                 </div>
                                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" id="div-calculaArea" hidden>
 
-                                    <label id="lbl-mpfinal">Hides Finales: <span id="totalSobrante">0.0</span></label>
+                                    <label><span id="lbl-mpfinal">Hides Finales: </span><span id="totalSobrante">0.0</span></label>
                                     <label>Área WB Calculada: <span id="areaWBCalculada">3500.00</span></label>
                                 </div>
                                 <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" hidden id="success-pzasrechazadas">
@@ -461,7 +461,7 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
                     if (respuesta.tipoMateriaPrima == '1' && respuesta.tipoProceso == '2') {
                         $("#lbl-pzasrechazadas").text("Crupones Rechazados")
                         $("#lbl-pzasreasig").text("Crupones Reasignados")
-                        $("#lbl-mpfinal").text("Crupones Finales")
+                        $("#lbl-mpfinal").text("Crupones Finales: ")
 
                         $("#piezasRechazadas").val(respuesta.piezasRechazadas == null ? '0' : respuesta.piezasRechazadas)
                         $("#piezasReasig").val(respuesta.cuerosReasig == null ? '0' : respuesta.cuerosReasig)
@@ -470,7 +470,7 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
                         $("#lbl-pzasrechazadas").text("Hides Rechazados")
                         $("#lbl-pzasreasig").text("Hides Reasignados")
                         $("#piezasReasig").val(respuesta.cuerosReasig == null ? '0' : respuesta.cuerosReasig * 2)
-                        $("#lbl-mpfinal").text("Hides Finales")
+                        $("#lbl-mpfinal").text("Hides Finales: ")
 
                         $("#piezasRechazadas").val(respuesta.piezasRechazadas == null ? '0' : respuesta.piezasRechazadas * 2)
                     } else if (respuesta.tipoMateriaPrima == '2' && respuesta.tipoProceso == '1') {
