@@ -403,7 +403,7 @@ switch ($_GET["op"]) {
         //SI HAY RECHAZOS DE MP, Y EL PROCESO ES PIEL METROS RECALCULAR
 
 
-        
+
         //Rendimiento
         $datos = $obj_rendimiento->calcularRendimiento($cambioPzas);
         try {
@@ -436,7 +436,7 @@ switch ($_GET["op"]) {
             $obj_rendimiento->errorBD($ErrorLog, 0);
         }
         $DatosAbiertos = $obj_rendimiento->getRendimientoAbierto();
-        $datos=$obj_rendimiento->registrarAreaWB($DatosAbiertos[0]['id'], $value);
+        $datos = $obj_rendimiento->registrarAreaWB($DatosAbiertos[0]['id'], $value);
         try {
             Excepciones::validaMsjError($datos);
         } catch (Exception $e) {
@@ -459,8 +459,8 @@ switch ($_GET["op"]) {
             $ErrorLog .= ' intentalo de nuevo.';
             $obj_rendimiento->errorBD($ErrorLog, 0);
         }
-         $DatosAbiertos = $obj_rendimiento->getRendimientoAbierto();
-        $datos=$obj_rendimiento->registrarMPRechazadas($DatosAbiertos[0]['id'], $value);
+        $DatosAbiertos = $obj_rendimiento->getRendimientoAbierto();
+        $datos = $obj_rendimiento->registrarMPRechazadas($DatosAbiertos[0]['id'], $value);
         try {
             Excepciones::validaMsjError($datos);
         } catch (Exception $e) {
@@ -485,15 +485,21 @@ switch ($_GET["op"]) {
             $ErrorLog .= ' intentalo de nuevo.';
             $obj_rendimiento->errorBD($ErrorLog, 0);
         }
-        $value = $value / 2;
+        // $value = $value / 2;
 
         $DatosAbiertos = $obj_rendimiento->getRendimientoAbierto();
-        $datos = Funciones::edicionBasica("rendimientos", "cuerosReasig", $value, "id", $DatosAbiertos[0]['id'], $obj_rendimiento->getConexion(), $debug);
+        $datos = $obj_rendimiento->registrarMPReasignadas($DatosAbiertos[0]['id'], $value);
         try {
             Excepciones::validaMsjError($datos);
         } catch (Exception $e) {
-            $obj_materias->errorBD($e->getMessage(), 1);
+            $obj_rendimiento->errorBD($e->getMessage(), 1);
         }
+        // $datos = Funciones::edicionBasica("rendimientos", "cuerosReasig", $value, "id", $DatosAbiertos[0]['id'], $obj_rendimiento->getConexion(), $debug);
+        // try {
+        //     Excepciones::validaMsjError($datos);
+        // } catch (Exception $e) {
+        //     $obj_materias->errorBD($e->getMessage(), 1);
+        // }
         echo '1| Registro de Cueros Asignados Correcto.';
         break;
     case 'comentariosrechazo':
@@ -1285,7 +1291,7 @@ switch ($_GET["op"]) {
 
         break;
     case "getlotesocupados":
-       // $id = (!empty($_POST['id'])) ? trim($_POST['id']) : '';
+        // $id = (!empty($_POST['id'])) ? trim($_POST['id']) : '';
         $Data = $obj_rendimiento->getLotesEnRegistro();
         $Data = Excepciones::validaConsulta($Data);
         $response = array();
@@ -1308,7 +1314,7 @@ switch ($_GET["op"]) {
         $response = array("data" => $response);
         $json_string = json_encode($response);
         echo $json_string;
-    
+
         break;
     case "desconexionlote":
         $id = (!empty($_POST['id'])) ? trim($_POST['id']) : '';

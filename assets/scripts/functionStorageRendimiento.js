@@ -23,6 +23,15 @@ function guardarValor(codigo, input, str = false) {
         calculoAreaWBXDism();
       }
     }
+    if (codigo == "pzasreasig") {
+      if ($("#tipoProceso").val() == "2") {
+        calculoAreaWBXAum();
+        value_input= $("#tipoMateriaPrima").val() =='2'?value_input/2:value_input;
+      }else{
+        value_input= $("#tipoMateriaPrima").val() =='2'?value_input/2:value_input;
+      }
+    }
+
     if (codigo == "areawb") {
       if ($("#tipoProceso").val() == "2") {
         calculoAreaWBXDism();
@@ -144,7 +153,9 @@ function calculoAreaWBXDism() {
   dividendo = 1;
   dividendo = $("#tipoMateriaPrima").val() == "1" ? "1" : dividendo;
   dividendo = $("#tipoMateriaPrima").val() == "2" ? "1" : dividendo;//piel
-  totalSobrante = (total_s - value_input) / dividendo;
+  piezasReasig = $("#piezasReasig").val() == "" ? "0.0" : $("#piezasReasig").val();
+
+  totalSobrante = (parseInt(total_s) - parseInt(value_input)+parseInt(piezasReasig)) / dividendo;
   areaWBCalculada = totalSobrante * areaWBxMP;
   $("#totalSobrante").text(totalSobrante.toLocaleString("es-MX"));
   $("#areaWBCalculada").html(
@@ -152,6 +163,26 @@ function calculoAreaWBXDism() {
   );
   $("#areaWB").val(areaWBCalculada.toFixed(2));
   $("#div-calculaArea").prop("hidden", false);
+  $("#total_mp").val(totalSobrante.toFixed(2));
+
+}
+function calculoAreaWBXAum() {
+  areaWB = $("#areaWBRecibida").val() == "" ? "0.0" : $("#areaWBRecibida").val();
+  total_s = $("#total_s").val() == "" ? "0.0" : $("#total_s").val();
+  total_mp = $("#total_mp").val() == "" ? "0.0" : $("#total_mp").val();
+
+  value_input = $("#piezasReasig").val() == "" ? "0.0" : $("#piezasReasig").val();
+  areaWBxMP = areaWB / total_s;
+  dividendo = 1;
+  dividendo = $("#tipoMateriaPrima").val() == "1" ? "1" : dividendo;
+  dividendo = $("#tipoMateriaPrima").val() == "2" ? "1" : dividendo;//piel
+  piezasRechazadas=$("#piezasRechazadas").val() == "" ? "0.0" : $("#piezasRechazadas").val();
+  total_mp = $("#total_mp").val() == "" ? "0.0" : $("#total_mp").val();
+  totalSobrante = (parseInt(total_s) + parseInt(value_input)-parseInt(piezasRechazadas)) / dividendo;
+  areaWBCalculada = totalSobrante * areaWBxMP;
+  $("#areaWB").val(areaWBCalculada.toFixed(2));
+  $("#total_mp").val(totalSobrante.toFixed(2));
+
 }
 function getTotalRecorte() {
   if ($("#recorteWB").length && $("#recorteCrust").length) {

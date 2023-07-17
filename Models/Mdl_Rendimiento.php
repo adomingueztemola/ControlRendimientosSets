@@ -1506,10 +1506,18 @@ class Rendimiento extends ConexionBD
     public function registrarMPRechazadas($id, $mp){
         $sql="UPDATE rendimientos SET 
         piezasRechazadas='$mp', 
-        total_desc_s=IF(tipoProceso='2',total_s-'$mp', total_s),
-        areaWB=IF(tipoProceso='2',(areaWBOrig/total_s)*(total_s-'$mp'), areaWB)
+        total_desc_s=IF(tipoProceso='2',total_s+IFNULL(cuerosReasig,0)-'$mp', total_s),
+        areaWB=IF(tipoProceso='2',(areaWBOrig/total_s)*(total_s+IFNULL(cuerosReasig,0)-'$mp'), areaWB)
         WHERE id='$id'";
-        return  $this->runQuery($sql, "envio de solicitud de edicion de datos");
+        return  $this->runQuery($sql, "registro de disminucion de materia prima.");
+    }
+    public function registrarMPReasignadas($id, $mp){
+        $sql="UPDATE rendimientos SET 
+        cuerosReasig='$mp', 
+        total_desc_s=IF(tipoProceso='2',total_s-IFNULL(piezasRechazadas,0)+'$mp', total_s),
+        areaWB=IF(tipoProceso='2',(areaWBOrig/total_s)*(total_s-piezasRechazadas+'$mp'), areaWB)
+        WHERE id='$id'";
+        return  $this->runQuery($sql, "registro de aumento de materia prima.");
     }
     /*************************************** 
      * CALCULO OPERACIONAL

@@ -61,36 +61,7 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
                         </td>
                     </tr>
 
-                    <tr>
-                        <td class="text-dark" style="background:#ffa0bd">
-                            <label for="areaWBRecibida">Área WB (pie<sup>2</sup>)</label>
-                        </td>
-                        <td>
-                            <div class="row">
-                                <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="far fa-file"></i></span>
-                                        </div>
-                                        <input class="form-control Validate Positivos focusCampo" value="" onchange="guardarValor('areawb', this)" type="number" step="0.001" name="areaWBRecibida" id="areaWBRecibida"></input>
-                                    </div>
-                                </div>
-                                <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-sync-alt"></i></span>
-                                        </div>
-                                        <input class="form-control" readonly value="" type="number" id="areaWB"></input>
-                                    </div>
-                                </div>
-                                <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" hidden id="success-areawb">
-                                    <i class="fas fa-check text-success"></i>
-                                </div>
 
-                            </div>
-                        </td>
-
-                    </tr>
 
                     <tr>
                         <td class="bg-success text-dark">
@@ -111,7 +82,7 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
                                 </div>
                                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" id="div-calculaArea" hidden>
 
-                                    <label>Hides Finales: <span id="totalSobrante">0.0</span></label>
+                                    <label id="lbl-mpfinal">Hides Finales: <span id="totalSobrante">0.0</span></label>
                                     <label>Área WB Calculada: <span id="areaWBCalculada">3500.00</span></label>
                                 </div>
                                 <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" hidden id="success-pzasrechazadas">
@@ -141,10 +112,51 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
                         </td>
                         <td>
                             <div class="row">
-                                <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
-                                    <input class="form-control focusCampo" type="number" step="1" min="0" name="piezasReasig" value="" onchange="guardarValor('pzasreasig', this)" id="piezasReasig"></input>
+                                <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">+</span>
+                                        </div>
+                                        <input class="form-control focusCampo" type="number" step="1" min="0" name="piezasReasig" value="" onchange="guardarValor('pzasreasig', this)" id="piezasReasig"></input>
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">=</span>
+                                        </div>
+                                        <input type="number" readonly name="" class="form-control" id="total_mp">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                 </div>
                                 <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" hidden id="success-pzasreasig">
+                                    <i class="fas fa-check text-success"></i>
+                                </div>
+
+                            </div>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td class="text-dark" style="background:#ffa0bd">
+                            <label for="areaWBRecibida">Área WB (pie<sup>2</sup>)</label>
+                        </td>
+                        <td>
+                            <div class="row">
+                                <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="far fa-file"></i></span>
+                                        </div>
+                                        <input class="form-control Validate Positivos focusCampo" value="" onchange="guardarValor('areawb', this)" type="number" step="0.001" name="areaWBRecibida" id="areaWBRecibida"></input>
+                                    </div>
+                                </div>
+                                <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-sync-alt"></i></span>
+                                        </div>
+                                        <input class="form-control" readonly value="" type="number" id="areaWB"></input>
+                                    </div>
+                                </div>
+                                <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" hidden id="success-areawb">
                                     <i class="fas fa-check text-success"></i>
                                 </div>
 
@@ -449,16 +461,23 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
                     if (respuesta.tipoMateriaPrima == '1' && respuesta.tipoProceso == '2') {
                         $("#lbl-pzasrechazadas").text("Crupones Rechazados")
                         $("#lbl-pzasreasig").text("Crupones Reasignados")
+                        $("#lbl-mpfinal").text("Crupones Finales")
+
                         $("#piezasRechazadas").val(respuesta.piezasRechazadas == null ? '0' : respuesta.piezasRechazadas)
+                        $("#piezasReasig").val(respuesta.cuerosReasig == null ? '0' : respuesta.cuerosReasig)
+
                     } else if (respuesta.tipoMateriaPrima == '2' && respuesta.tipoProceso == '2') {
                         $("#lbl-pzasrechazadas").text("Hides Rechazados")
                         $("#lbl-pzasreasig").text("Hides Reasignados")
+                        $("#piezasReasig").val(respuesta.cuerosReasig == null ? '0' : respuesta.cuerosReasig * 2)
+                        $("#lbl-mpfinal").text("Hides Finales")
 
                         $("#piezasRechazadas").val(respuesta.piezasRechazadas == null ? '0' : respuesta.piezasRechazadas * 2)
                     } else if (respuesta.tipoMateriaPrima == '2' && respuesta.tipoProceso == '1') {
                         $("#piezasRechazadas").val(respuesta.piezasRechazadas == null ? '0' : respuesta.piezasRechazadas * 2)
                         $("#lbl-pzasrechazadas").text("Hides Rechazados")
                         $("#lbl-pzasreasig").text("Hides Reasignados")
+                        $("#piezasReasig").val(respuesta.cuerosReasig == null ? '0' : respuesta.cuerosReasig * 2)
 
                     }
                     /*
@@ -468,15 +487,17 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
                      */
                     if (respuesta.tipoProceso == '1') {
                         $("#total_s").val(respuesta.total_s == null ? '0' : respuesta.total_s * 2)
+                        $("#total_mp").val(respuesta.total_desc_s == null ? respuesta.total_s*2 : respuesta.total_desc_s*2);
 
                     } else if (respuesta.tipoMateriaPrima == '2' && respuesta.tipoProceso == '2') {
                         $("#total_s").val(respuesta.total_s == null ? '0' : respuesta.total_s * 2)
+                        $("#total_mp").val(respuesta.total_desc_s == null ? respuesta.total_s*2 : respuesta.total_desc_s*2);
 
                     } else if (respuesta.tipoMateriaPrima == '1' && respuesta.tipoProceso == '2') {
                         $("#total_s").val(respuesta.total_s == null ? '0' : respuesta.total_s)
+                        $("#total_mp").val(respuesta.total_desc_s == null ? respuesta.total_s : respuesta.total_desc_s);
 
                     }
-                    $("#piezasReasig").val(respuesta.piezasRecuperadas == null ? '0' : respuesta.piezasRecuperadas * 2)
                     $("#recorteWB").val(respuesta.porcRecorteWB == null ? '0.0' : respuesta.porcRecorteWB)
                     $("#recorteCrust").val(respuesta.porcRecorteCrust == null ? '0.0' : respuesta.porcRecorteCrust)
                     $("#humedad").val(respuesta.humedad == null ? '0.0' : respuesta.humedad)
@@ -487,7 +508,6 @@ setlocale(LC_TIME, 'es_ES.UTF-8');
                     $("#tipoProceso").val(respuesta.tipoProceso == null ? '0' : respuesta.tipoProceso)
                     $("#comentariosrechazo").text(respuesta.comentariosRechazo == null ? '' : respuesta.comentariosRechazo)
                     $("#tipoMateriaPrima").val(respuesta.tipoMateriaPrima == null ? '0' : respuesta.tipoMateriaPrima)
-
                     //Comentarios de Rechazo
                     piezasRechazadas = respuesta.piezasRechazadas == null ? '0.0' : respuesta.piezasRechazadas;
                     if (piezasRechazadas > 0) {
