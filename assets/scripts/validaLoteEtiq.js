@@ -5,9 +5,9 @@ var delay = (function () {
     timer = setTimeout(callback, ms);
   };
 })();
-$("#lote").on("keyup", () => {
+$("#lot").on("keyup", () => {
   delay(function () {
-      let lote= $("#lote").val();
+      let lote= $("#lot").val();
 
     $.ajax({
       url: "../Controller/rendimientoEtiquetas.php?op=consultarlote",

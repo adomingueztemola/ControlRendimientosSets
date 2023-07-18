@@ -143,7 +143,7 @@ if (!$_abierto) {
     </div>
 </div>
 
-<script src="../assets/scripts/clearData.js"></script>
+<script src="../assets/scripts/clearDataSinSelect.js"></script>
 <script src="../assets/scripts/functionStorageRendimientoEtiquetas.js"></script>
 <script>
     <?php

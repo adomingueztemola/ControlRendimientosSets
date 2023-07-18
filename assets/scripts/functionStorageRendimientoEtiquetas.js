@@ -1,8 +1,8 @@
 var debug = "1";
 function guardarValor(codigo, input, str = false) {
+  console.log(codigo);
   let value_input = $(input).val();
   if (value_input != "" || codigo=="observaciones") {
-    value_input = value_input.replace(",", "");
     if (!str) {
       value_input = parseFloat(value_input);
     }
@@ -100,8 +100,8 @@ function getPromedioAreaWB() {
 }
 
 function getAreaPzasRechazo() {
-  let promedioAreaWB = parseFloat($("#promedioAreaWB").val().replace(",", ""));
-  let piezasRechazadas = parseFloat($("#piezasRechazadas").val().replace(",", ""));
+  let promedioAreaWB = parseFloat($("#avgAreaWB").val().replace(",", ""));
+  let piezasRechazadas = parseFloat($("#rejectedRawMt").val().replace(",", ""));
  
     return (promedioAreaWB * piezasRechazadas);
   
@@ -114,16 +114,16 @@ function getAreaPzasRechazo() {
 $(".PerdidaAreaWBTerminada").change(function () {
   let result = getPerdidaAreaWBTerminada().toFixed(2);
   let fto = new Intl.NumberFormat("es-MX").format(result);
-  $("#perdidaWBTerminado").val(result);
-  guardarValor("perdidawbterminado", $("#perdidaWBTerminado"));
+  $("#lostWBfinished").val(result);
+  guardarValor("perdidawbterminado", $("#lostWBfinished"));
 });
 
 
 $(".PromedioAreaWB").change(function () {
   let result = getPromedioAreaWB().toFixed(2);
   let fto = new Intl.NumberFormat("es-MX").format(result);
-  $("#promedioAreaWB").val(result);
-  guardarValor("promedioareawb", $("#promedioAreaWB"));
+  $("#avgAreaWB").val(result);
+  guardarValor("promedioareawb", $("#avgAreaWB"));
   AreaPzasRechazo();
 });
 
@@ -137,7 +137,7 @@ $(".AreaPzasRechazo").change(function () {
 function AreaPzasRechazo(){
   let result = getAreaPzasRechazo().toFixed(2);
   let fto = new Intl.NumberFormat("es-MX").format(result);
-  $("#areaPzasRechazo").val(result);
-  guardarValor("areapzasrechazo", $("#areaPzasRechazo"));
+  $("#rejectedRawMtArea").val(result);
+  guardarValor("areapzasrechazo", $("#rejectedRawMtArea"));
   getAreaPzasRechazo();
 }

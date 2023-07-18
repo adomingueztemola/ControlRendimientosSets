@@ -127,6 +127,20 @@ switch ($_GET["op"]) {
         $json_string = json_encode($Data);
         echo $json_string;
         break;
+    case "select2etiqcalz":
+        if (!isset($_POST['palabraClave'])) {
+            $Data = $obj_programa->getProgramasSetsSelect2("(ca.tipo='4' OR ca.tipo='2')");
+            $Data = Excepciones::validaConsulta($Data);
+        } else {
+            $search = $_POST['palabraClave']; // Palabra a buscar
+            $Data = $obj_programa->getProgramasSetsSelect2("(ca.tipo='4' OR ca.tipo='2')", $search);
+            $Data = Excepciones::validaConsulta($Data);
+        }
+       
+        //Creamos el JSON
+        $json_string = json_encode($Data);
+        echo $json_string;
+        break;
     case "agregarprograma":
         $programa = (isset($_POST['programa'])) ? trim($_POST['programa']) : '';
         $areaNeta = (isset($_POST['areaNeta'])) ? trim($_POST['areaNeta']) : '';

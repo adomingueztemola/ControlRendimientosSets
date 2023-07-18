@@ -24,6 +24,7 @@ class Programa extends ConexionBD
             WHEN ca.tipo = '1' THEN 'Sets'
             WHEN ca.tipo = '2' THEN 'Etiquetas'
             WHEN ca.tipo = '3' THEN 'Metros'
+            WHEN ca.tipo = '4' THEN 'Calzado'
         END AS nTipo
         FROM catprogramas ca
         WHERE $filtradoID AND 

@@ -805,3 +805,65 @@ $(".TodosLotesFilter").select2({
   },
  
 });
+
+$(".ProgramasEtiqCalzFilter").select2({
+  placeholder: "Selecciona un programa",
+  allowClear: true,
+
+  ajax: {
+    url: "../Controller/programas.php?op=select2etiqcalz",
+    dataType: "json",
+    type: "post",
+    data: function (params) {
+      return {
+        palabraClave: params.term, // search term
+      };
+    },
+    processResults: function (data) {
+      //Recorre JSON para generar option group de areas
+      textOpt = "";
+      jsonOpt = [];
+      childrenOpt = [];
+      data.forEach((element) => {
+        hijoOpt = {};
+        if (textOpt != element.nTipo) {
+          //Agrega a jsonOpt
+          if (textOpt != "" && childrenOpt.length > 0) {
+            jsonOpt.push({
+              text: textOpt,
+              children: childrenOpt,
+              element: HTMLOptGroupElement,
+            });
+          }
+          /*********************/
+          childrenOpt = [];
+          //Agrega su hijito
+          hijoOpt.id = element.id;
+          hijoOpt.text = element.nombre;
+          hijoOpt.element = HTMLOptionElement;
+          childrenOpt.push(hijoOpt); //Agraga children OPT
+        } else {
+          //Agrega su hijito
+          hijoOpt.id = element.id;
+          hijoOpt.text = element.nombre;
+          hijoOpt.element = HTMLOptionElement;
+          childrenOpt.push(hijoOpt); //Agraga children OPT
+        }
+        textOpt = element.nTipo;
+      });
+      //Agrega a jsonOpt
+      if (textOpt != "" && childrenOpt.length > 0) {
+        jsonOpt.push({
+          text: textOpt,
+          children: childrenOpt,
+          element: HTMLOptGroupElement,
+        });
+      }
+      return {
+        results: jsonOpt,
+      };
+    },
+    cache: true,
+  },
+ 
+});

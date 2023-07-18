@@ -168,28 +168,7 @@ class Rendimiento extends ConexionBD
         return $this->ejecutarQuery($sql, "registrar Inicio de Rendimiento");
     }
     //Agregar Lote (etiquetas) desde programacion
-    public function initRendimientoEtiquetas(
-        $fechaFinal,
-        $semanaProduccion,
-        $lote,
-        $programa,
-        $materiaPrima,
-        $_1s,
-        $_2s,
-        $_3s,
-        $_4s,
-        $total_s,
-        $proveedor,
-        $venta
-    ) {
-        $idUserReg = $this->idUserReg;
-
-        $sql = "INSERT INTO rendimientosetiquetas (semanaProduccion,fechaFinal,
-        loteTemola, idCatPrograma, idCatMateriaPrima, estado, idUserReg, fechaReg, 1s, 2s, 3s,4s, total_s, idCatProveedor, idTipoVenta) 
-        VALUES ('{$semanaProduccion}','{$fechaFinal}','{$lote}','{$programa}',
-        '{$materiaPrima}','1','{$idUserReg}',NOW(), '$_1s', '$_2s', '$_3s', '$_4s', '$total_s', '$proveedor', '$venta')";
-        return $this->ejecutarQuery($sql, "registrar Inicio de Rendimiento");
-    }
+   
     //Consultar Lotes (carnaza o piel) Pre Registrados
     public function getLotesPreRegistrados()
     {
