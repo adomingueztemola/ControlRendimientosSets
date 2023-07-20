@@ -859,12 +859,12 @@ class Rendimiento extends ConexionBD
         $sql = "SELECT v.id, tv.nombre AS n_tipoVenta, v.numPL, v.numFactura, 
         v.fechaFact, DATE_FORMAT(v.fechaFact, '%d/%m/%Y') AS f_fechaFact, cp.nombre AS nPrograma,
         r.loteTemola, r.semanaProduccion, dv.total_s AS tCuerosUsados,
-        r.setsCortadosTeseo, (r.unidadesEmpacadas/ci.pzasEnSets) AS setsEmpacados, r.areaWB,
-        (r.unidadesEmpacadas+IFNULL(r.piezasRecuperadas,0))/ci.pzasEnSets AS setsEmpacadosRecu,
+        r.setsCortadosTeseo, (r.totalEmp/ci.pzasEnSets) AS setsEmpacados, r.areaWB,
+        (r.totalEmp+IFNULL(r.piezasRecuperadas,0))/ci.pzasEnSets AS setsEmpacadosRecu,
         dv.unidades/ci.pzasEnSets AS unidFacturadas,
         vwi.setsTotalEmp AS setsActuales,  
-        r.areaWB/((r.unidadesEmpacadas+IFNULL(r.piezasRecuperadas,0))/ci.pzasEnSets) AS areaWBXSetsRecu,
-        r.areaWB/(r.unidadesEmpacadas/ci.pzasEnSets) AS areaWBXSets
+        r.areaWB/((r.totalEmp+IFNULL(r.piezasRecuperadas,0))/ci.pzasEnSets) AS areaWBXSetsRecu,
+        r.areaWB/(r.totalEmp/ci.pzasEnSets) AS areaWBXSets
         FROM ventas v  
             INNER JOIN cattiposventas tv ON v.idTipoVenta=tv.id
             INNER JOIN detventas dv ON v.id=dv.idVenta
